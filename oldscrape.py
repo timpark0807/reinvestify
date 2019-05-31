@@ -3,7 +3,7 @@ from selenium import webdriver
 from bs4 import BeautifulSoup
 
 
-def listing(url):
+def listing_meta(url):
 
     """Scrapes Realtor.com home listings and returns content.
 
@@ -38,20 +38,18 @@ def listing(url):
     container = soup.find('div', {'class':'listing-header-main'})
 
     if len(container) > 0 or container is not None:
-        price = container.find('span', {'itemprop':'price'}).text
-        bed = container.find('li', {'data-label':'property-meta-beds'}).text
-        bath = container.find('li', {'data-label':'property-meta-bath'}).text
-        sqft = container.find('li', {'data-label':'property-meta-sqft'}).text
+        price = container.find('span', {'itemprop': 'price'}).text
+        bed = container.find('li', {'data-label': 'property-meta-beds'}).text
+        bath = container.find('li', {'data-label': 'property-meta-bath'}).text
+        sqft = container.find('li', {'data-label': 'property-meta-sqft'}).text
     else:
         print('Check code')
 
     # clean scraped variables
-    price = price.split()[0].split('$')[1].replace(',','')
-    bed = bed.split()[0]
-    bath = bath.split()[0]
-    sqft = sqft.split()[0].repace(',','')
+    list_price = price.split()[0].split('$')[1].replace(',', '')
+    bedrooms = bed.split()[0]
+    bathrooms = bath.split()[0]
+    sqft = sqft.split()[0].replace(',', '')
 
-    print(price)
-    print(bed)
-    print(bath)
-    print(sqft)
+
+    return list_price, bedrooms, bathrooms, sqft
