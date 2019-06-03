@@ -1,8 +1,140 @@
 {% extends "layout_paperdash.html" %}
 {% set active_page = "about" %}
-{% block body_content %}
+{% block content %}
+
+	<head>
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+		<script type=text/javascript>
+			$(function() {
+			  $('a#process_input').bind('click', function() {
+				$.getJSON('/background_process', {
+				  proglang: $('input[name="proglang"]').val(),
+				}, function(data) {
+				  $("#result").text(data.result);
+				});
+				return false;
+			  });
+			});
+		</script>
+	</head>
+
+<!--BEGIN ROW-->
+
+    <div class="content">
+        <div class="row">
+
+        <!--BEGIN MORTGAGE INPUT CARD-->
+
+            <div class="col-md-4">
+                <div class="card ">
+
+
+            <!--BEGIN MORTGAGE INPUT HEADER-->
+
+                    <div class="card-header ">
+                        <h5 class="card-title">Mortgage Information</h5>
+                    </div>
+
+            <!--END MORTGAGE INPUT HEADER-->
+
+
+            <!--BEGIN MORTGAGE INPUT FORM-->
+
+                    <div class="card-body">
+                    <form>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label>Purchase Price</label>
+                                    <input type="text" class="form-control" id="price_id" name="price">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label>Downpayment</label>
+                                    <input type="text" class="form-control" id="down_payment_id" name="down_payment">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label>Term</label>
+                                    <input type="text" class="form-control" name="input_term">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label>Interest Rate</label>
+                                    <input type="text" class="form-control" name="input_interest_rate">
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="row">
+                            <div class="update ml-auto mr-auto">
+                                <button type="submit" class="btn btn-primary btn-round">Submit</button>
+                            </div>
+                        </div>
+
+                    </form>
+                    </div>
+
+            <!--END MORTGAGE INPUT FORM-->
+
+                     <hr>
+                </div>
+            </div>
+
+        <!--END MORTGAGE INPUT CARD-->
 
 
 
+        <!--BEGIN MORTGAGE OUTPUT CARD -->
 
-{% endblock body_content %}
+            <div class="col-md-8">
+                <div class="card">
+
+                    <div class="card-header">
+                        <h5 class="card-title">Payment Breakdown:</h5>
+                        <p class="card-category">Line Chart with Points</p>
+                    </div>
+
+                    <div class="card-body ">
+
+
+                        <p class="address">2429 Rainbow Lane Brea, CA 92821</p>
+                        <p id="down_payment_output">10</p>
+                        <p class="bed">Beds: 3</p>
+                        <p class="bath">Bath: 3</p>
+                    </div>
+                    <hr/>
+
+                </div>
+            </div>
+
+        <!--END MORTGAGE OUTPUT CARD -->
+        </div>
+    </div>
+<!--END ROW-->
+
+
+        <div>
+            <h3> Which is the best programming language of them all?</h3>
+            <form>
+                <input type="text" size="5" name="proglang">
+                <a href='#' id="process_input"><button class='btn btn-default'>Submit</button></a>
+            </form>
+            <p id="result">...</p>
+        </div>
+
+{% endblock content %}

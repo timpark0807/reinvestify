@@ -2,25 +2,84 @@
 {% set active_page = "calculator" %}
 
 {% block content %}
-<div class="content">
 
-      <div class="row">
-          <div class="col-md-4">
-            <div class="card ">
-              <div class="card-header ">
-                <h5 class="card-title">Mortgage Information</h5>
+    <div class="content">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card ">
 
-              </div>
-              <div class="card-body ">
 
-              <p class="homevalue">Home Value:</p>
-                <p class="downpayment">Downpayment:</p>
-                <p class="term">Term:</p>
-                <p class="interest">Interest Rate:</p>
-              </div>
-              <hr>
+<!--BEGIN MORTGAGE INPUT HEADER-->
+
+                    <div class="card-header ">
+                        <h5 class="card-title">Mortgage Information</h5>
+                    </div>
+
+<!--END MORTGAGE INPUT HEADER-->
+
+
+<!--BEGIN MORTGAGE INPUT FORM-->
+
+                    <div class="card-body">
+                        <form>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Purchase Price</label>
+                                            <input type="text" class="form-control" name="inputprice">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Downpayment</label>
+                                            <input type="text" class="form-control" name="inputdown">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Term</label>
+                                            <input type="text" class="form-control" name="inputterm">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Interest Rate</label>
+                                            <input type="text" class="form-control" name="inputrate">
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="row">
+                                <div class="update ml-auto mr-auto">
+                                    <button type="submit" class="btn btn-primary btn-round">Submit</button>
+                                </div>
+                            </div>
+
+                        </form>
+                        </div>
+
+<!--END MORTGAGE INPUT FORM-->
+
+                         <hr>
+                </div>
             </div>
-          </div>
+
+
+
+
+
+
+
           <div class="col-md-8">
             <div class="card">
               <div class="card-header">
@@ -38,8 +97,9 @@
             </div>
           </div>
       </div>
-</div>
+      </div>
 
+    </div>       </div>
 
 
 {% endblock content %}
