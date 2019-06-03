@@ -3,6 +3,9 @@
 
 {% block content %}
 <div class="content">
+
+<!--BEGIN CARD ICONS -->
+
         <div class="row">
           <div class="col-lg-3 col-md-6 col-sm-6">
             <div class="card card-stats">
@@ -15,21 +18,19 @@
                   </div>
                   <div class="col-7 col-md-8">
                     <div class="numbers">
-                      <p class="card-category">Price</p>
-                      <p class="card-title">150GB
-                        <p>
+                      <p class="card-category">Purchase Price</p>
+                      <p class="card-title">$540,000<p>
                     </div>
                   </div>
                 </div>
               </div>
-              <div class="card-footer ">
-                <hr>
-                <div class="stats">
-                  <i class="fa fa-refresh"></i> Update Now
-                </div>
-              </div>
+            <div class="card-footer ">
+              <hr>
             </div>
           </div>
+        </div>
+
+
           <div class="col-lg-3 col-md-6 col-sm-6">
             <div class="card card-stats">
               <div class="card-body ">
@@ -39,20 +40,21 @@
                       <i class="nc-icon nc-money-coins text-success"></i>
                     </div>
                   </div>
+
                   <div class="col-7 col-md-8">
                     <div class="numbers">
-                      <p class="card-category">Revenue</p>
-                      <p class="card-title">$ 1,345
-                        <p>
+                      <p class="card-category">NOI</p>
+                      <p class="card-title">50,000
+
                     </div>
                   </div>
                 </div>
               </div>
               <div class="card-footer ">
                 <hr>
-                <div class="stats">
-                  <i class="fa fa-calendar-o"></i> Last day
-                </div>
+                <!--<div class="stats">-->
+                  <!--<i class="fa fa-calendar-o"></i> Last day-->
+                <!--</div>-->
               </div>
             </div>
           </div>
@@ -67,8 +69,8 @@
                   </div>
                   <div class="col-7 col-md-8">
                     <div class="numbers">
-                      <p class="card-category">Errors</p>
-                      <p class="card-title">23
+                      <p class="card-category">Annual Cashflow</p>
+                      <p class="card-title">$23,000
                         <p>
                     </div>
                   </div>
@@ -76,9 +78,9 @@
               </div>
               <div class="card-footer ">
                 <hr>
-                <div class="stats">
-                  <i class="fa fa-clock-o"></i> In the last hour
-                </div>
+                <!--<div class="stats">-->
+                  <!--<i class="fa fa-clock-o"></i> In the last hour-->
+                <!--</div>-->
               </div>
             </div>
           </div>
@@ -93,8 +95,8 @@
                   </div>
                   <div class="col-7 col-md-8">
                     <div class="numbers">
-                      <p class="card-category">Followers</p>
-                      <p class="card-title">+45K
+                      <p class="card-category">CAP Rate</p>
+                      <p class="card-title">8.0%
                         <p>
                     </div>
                   </div>
@@ -102,13 +104,61 @@
               </div>
               <div class="card-footer ">
                 <hr>
-                <div class="stats">
-                  <i class="fa fa-refresh"></i> Update now
-                </div>
+                <!--<div class="stats">-->
+                  <!--<i class="fa fa-refresh"></i> Update now-->
+                <!--</div>-->
               </div>
             </div>
           </div>
         </div>
+
+<!--END CARD ICONS -->
+
+<!--BEGIN PROPERTY DETAIL  -->
+          <div class="row">
+          <div class="col-md-4">
+            <div class="card ">
+              <div class="card-header ">
+                <h5 class="card-title">Grassland Lane</h5>
+                <p class="card-category">2420 Rainbow Lane Brea, CA 92821</p>
+              </div>
+              <div class="card-body ">
+              </div>
+          <hr>
+            </div>
+          </div>
+          <div class="col-md-8">
+            <div class="card card-chart">
+              <div class="card-header">
+                <h5 class="card-title">Property Overview:</h5>
+                <p class="card-category">Line Chart with Points</p>
+              </div>
+              <div class="card-body ">
+               <p class="address">2429 Rainbow Lane Brea, CA 92821</p>
+               <p class="bed">Beds: 3</p>
+               <p class="bath">Bath: 3</p>
+              </div>
+                <hr/>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-12">
+            <div class="card ">
+              <div class="card-header ">
+                <h5 class="card-title">Property Detail</h5>
+                <h8></h8>
+              </div>
+
+                <hr>
+            </div>
+          </div>
+        </div>
+
+<!--END PROPERTY DETAIL  -->
+
+
         <div class="row">
           <div class="col-md-12">
             <div class="card ">
@@ -128,54 +178,8 @@
             </div>
           </div>
         </div>
-        <div class="row">
-          <div class="col-md-4">
-            <div class="card ">
-              <div class="card-header ">
-                <h5 class="card-title">Email Statistics</h5>
-                <p class="card-category">Last Campaign Performance</p>
-              </div>
-              <div class="card-body ">
-                <canvas id="chartEmail"></canvas>
-              </div>
-              <div class="card-footer ">
-                <div class="legend">
-                  <i class="fa fa-circle text-primary"></i> Opened
-                  <i class="fa fa-circle text-warning"></i> Read
-                  <i class="fa fa-circle text-danger"></i> Deleted
-                  <i class="fa fa-circle text-gray"></i> Unopened
-                </div>
-                <hr>
-                <div class="stats">
-                  <i class="fa fa-calendar"></i> Number of emails sent
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-8">
-            <div class="card card-chart">
-              <div class="card-header">
-                <h5 class="card-title">NASDAQ: AAPL</h5>
-                <p class="card-category">Line Chart with Points</p>
-              </div>
-              <div class="card-body">
-                <canvas id="speedChart" width="400" height="100"></canvas>
-              </div>
-              <div class="card-footer">
-                <div class="chart-legend">
-                  <i class="fa fa-circle text-info"></i> Tesla Model S
-                  <i class="fa fa-circle text-warning"></i> BMW 5 Series
-                </div>
-                <hr/>
-                <div class="card-stats">
-                  <i class="fa fa-check"></i> Data information certified
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
 
+      </div>
 
 
 {% endblock content %}
