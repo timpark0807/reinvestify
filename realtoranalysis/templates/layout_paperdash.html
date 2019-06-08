@@ -153,6 +153,7 @@
     </div>
 
     <!--   Core JS Files   -->
+
     <script src="{{ url_for('static', filename='jquery.min.js') }}"></script>
     <script src="{{ url_for('static', filename='popper.min.js') }}"></script>
     <script src="{{ url_for('static', filename='bootstrap.min.js') }}"></script>
@@ -168,6 +169,8 @@
 
     <script id="baseScript" src="{{ url_for('static', filename='newjs.js') }}"
     data-path="{{ request.path }}"></script>
+    <script src="{{ (url_for('static', filename='form.js')) }}"></script>
+
 
 
   </body>
