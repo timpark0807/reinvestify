@@ -1,105 +1,130 @@
 {% extends "layout_paperdash.html" %}
 {% set active_page = "calculator" %}
-
 {% block content %}
+
+<head>
+    <script src="{{ url_for('static', filename='jquery.min.js') }}"></script>
+</head>
+<!--BEGIN ROW-->
 
     <div class="content">
         <div class="row">
+
+        <!--BEGIN MORTGAGE INPUT CARD-->
+
             <div class="col-md-4">
                 <div class="card ">
 
 
-<!--BEGIN MORTGAGE INPUT HEADER-->
+            <!--BEGIN MORTGAGE INPUT HEADER-->
 
                     <div class="card-header ">
                         <h5 class="card-title">Mortgage Information</h5>
                     </div>
 
-<!--END MORTGAGE INPUT HEADER-->
+            <!--END MORTGAGE INPUT HEADER-->
 
 
-<!--BEGIN MORTGAGE INPUT FORM-->
+            <!--BEGIN MORTGAGE INPUT FORM-->
 
                     <div class="card-body">
-                        <form>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label>Purchase Price</label>
-                                            <input type="text" class="form-control" name="inputprice">
-                                    </div>
+                    <form>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group ">
+                                    <label>Purchase Price ($)</label>
+                                    <input type="text" class="form-control" id="price_id" name="price" value="100000">
                                 </div>
                             </div>
-
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label>Downpayment</label>
-                                            <input type="text" class="form-control" name="inputdown">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label>Term</label>
-                                            <input type="text" class="form-control" name="inputterm">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label>Interest Rate</label>
-                                            <input type="text" class="form-control" name="inputrate">
-                                    </div>
-                                </div>
-                            </div>
-
-
-                            <div class="row">
-                                <div class="update ml-auto mr-auto">
-                                    <button type="submit" class="btn btn-primary btn-round">Submit</button>
-                                </div>
-                            </div>
-
-                        </form>
                         </div>
 
-<!--END MORTGAGE INPUT FORM-->
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label>Downpayment (%)</label>
+                                    <input type="text" class="form-control" id="down_payment_id" value="20">
+                                </div>
+                            </div>
+                        </div>
 
-                         <hr>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label>Term</label>
+                                    <br>
+                                    <select class="selectpicker" name="term_id" id="term_id" >
+                                        <option value="30">30 year fixed</option>
+                                        <option value="15">15 year fixed</option>
+                                    </select>
+                <script type="text/javascript">
+                    $('selectpicker').on('change', function() {
+                        alert( $(this).find(":selected").val() );
+                    });
+                </script>
+                                    <!--<input type="text" class="form-control" id="term_id" name="input_term" placeholder="30">-->
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label>Interest Rate (%)</label>
+                                    <input type="text" class="form-control" id="interest_rate_id" name="input_interest_rate" value="5.0">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="update ml-auto mr-auto">
+                                <button type="submit" class="btn btn-primary btn-round">Submit</button>
+                            </div>
+                        </div>
+
+                    </form>
+                    </div>
+
+            <!--END MORTGAGE INPUT FORM-->
+
+                     <hr>
                 </div>
             </div>
 
+        <!--END MORTGAGE INPUT CARD-->
 
 
 
+        <!--BEGIN MORTGAGE OUTPUT CARD -->
 
+            <div class="col-md-8">
+                <div class="card">
 
+                    <div class="card-header">
+                        <h5 class="card-title">Payment Breakdown:</h5>
+                        <p class="card-category">Subtitle</p>
+                    </div>
 
-          <div class="col-md-8">
-            <div class="card">
-              <div class="card-header">
-                <h5 class="card-title">Payment Breakdown:</h5>
-                <p class="card-category">Line Chart with Points</p>
-              </div>
-              <div class="card-body ">
+                    <div class="card-body ">
 
+                    <label>Down Payment</label>
+                    <p id="down_payment_output">Out of Pocket</p>
 
-               <p class="address">2429 Rainbow Lane Brea, CA 92821</p>
-               <p class="bed">Beds: 3</p>
-               <p class="bath">Bath: 3</p>
-              </div>
-                <hr/>
+                    <label>Monthly Mortgage Payment</label>
+                    <p id="mortgage_payment_output"></p>
+
+                    </div>
+                    <hr/>
+
+                </div>
             </div>
-          </div>
-      </div>
-      </div>
 
-    </div>       </div>
+        <!--END MORTGAGE OUTPUT CARD -->
+        </div>
+    </div>
+<!--END ROW-->
+
 
 
 {% endblock content %}
