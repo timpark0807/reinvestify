@@ -1,7 +1,7 @@
 from realtoranalysis import app
 import json
 from flask import render_template, jsonify, request
-from realtoranalysis.scripts.calculator import mortgage_calc
+from realtoranalysis.scripts.calculator import mortgage_calc, downpayment_calc
 
 
 @app.route("/")
@@ -45,11 +45,14 @@ def process():
     input_price = request.form['price']
     input_down_payment = request.form['down_payment']
     input_term = request.form['term']
-    # input_term = request.form.get('term')
     input_interest_rate = request.form['interest_rate']
-    term_2 = float(input_term.split()[0])
-    # down_amount = float(input_price) * float(input_down_payment)
 
-    mortgage_payment = mortgage_calc(float(input_price), float(input_interest_rate), input_term)
+    down_payment = downpayment_calc(float(input_price),
+                                    float(input_down_payment))
 
-    return jsonify({'mortgage_payment': mortgage_payment})
+    mortgage_payment = mortgage_calc(float(input_price),
+                                     float(input_down_payment),
+                                     float(input_interest_rate),
+                                     input_term)
+
+    return jsonify({'mortgage_payment': mortgage_payment, 'down_payment': down_payment})

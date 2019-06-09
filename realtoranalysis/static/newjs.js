@@ -1,5 +1,6 @@
 $(document).ready(function() {
 
+
     $('form').on('submit', function(event) {
 
         $.ajax({
@@ -15,6 +16,7 @@ $(document).ready(function() {
         .done(function(data) {
 
           $('#mortgage_payment_output').text(data.mortgage_payment).show;
+          $('#down_payment_output').text(data.down_payment).show;
 
 
         });
@@ -23,5 +25,6 @@ $(document).ready(function() {
 
 
     });
+
 
 });
