@@ -2,22 +2,10 @@
 {% set active_page = "about" %}
 {% block content %}
 
-	<head>
-		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-		<script type=text/javascript>
-			$(function() {
-			  $('a#process_input').bind('click', function() {
-				$.getJSON('/background_process', {
-				  proglang: $('input[name="proglang"]').val(),
-				}, function(data) {
-				  $("#result").text(data.result);
-				});
-				return false;
-			  });
-			});
-		</script>
-	</head>
-
+<head>
+    <script src="{{ url_for('static', filename='jquery.min.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.3.0/Chart.min.js"> </script>
+</head>
 <!--BEGIN ROW-->
 
     <div class="content">
@@ -45,9 +33,9 @@
 
                         <div class="row">
                             <div class="col-md-12">
-                                <div class="form-group">
-                                    <label>Purchase Price</label>
-                                    <input type="text" class="form-control" id="price_id" name="price">
+                                <div class="form-group ">
+                                    <label>Purchase Price ($)</label>
+                                    <input type="text" class="form-control" id="price_id" name="price" value="100000">
                                 </div>
                             </div>
                         </div>
@@ -55,8 +43,8 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label>Downpayment</label>
-                                    <input type="text" class="form-control" id="down_payment_id" name="down_payment">
+                                    <label>Downpayment (%)</label>
+                                    <input type="text" class="form-control" id="down_payment_id" value="20">
                                 </div>
                             </div>
                         </div>
@@ -65,20 +53,30 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label>Term</label>
-                                    <input type="text" class="form-control" name="input_term">
+                                    <br>
+                                    <select class="selectpicker" name="term_id" id="term_id" >
+                                        <option value="30">30 year fixed</option>
+                                        <option value="15">15 year fixed</option>
+                                    </select>
+                <script type="text/javascript">
+                    $('selectpicker').on('change', function() {
+                        alert( $(this).find(":selected").val() );
+                    });
+                </script>
+                                    <!--<input type="text" class="form-control" id="term_id" name="input_term" placeholder="30">-->
                                 </div>
                             </div>
                         </div>
+
 
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label>Interest Rate</label>
-                                    <input type="text" class="form-control" name="input_interest_rate">
+                                    <label>Interest Rate (%)</label>
+                                    <input type="text" class="form-control" id="interest_rate_id" name="input_interest_rate" value="5.0">
                                 </div>
                             </div>
                         </div>
-
 
                         <div class="row">
                             <div class="update ml-auto mr-auto">
@@ -106,16 +104,21 @@
 
                     <div class="card-header">
                         <h5 class="card-title">Payment Breakdown:</h5>
-                        <p class="card-category">Line Chart with Points</p>
+                        <p class="card-category">Subtitle</p>
                     </div>
 
                     <div class="card-body ">
 
+                    <div>
+                    <canvas id="mycanvas" width="256" height="256"></canvas>
+                    </div>
 
-                        <p class="address">2429 Rainbow Lane Brea, CA 92821</p>
-                        <p id="down_payment_output">10</p>
-                        <p class="bed">Beds: 3</p>
-                        <p class="bath">Bath: 3</p>
+                    <label>Down Payment</label>
+                    <p id="down_payment_output">Out of Pocket</p>
+
+                    <label>Monthly Mortgage Payment</label>
+                    <p id="mortgage_payment_output"></p>
+
                     </div>
                     <hr/>
 
@@ -128,13 +131,5 @@
 <!--END ROW-->
 
 
-        <div>
-            <h3> Which is the best programming language of them all?</h3>
-            <form>
-                <input type="text" size="5" name="proglang">
-                <a href='#' id="process_input"><button class='btn btn-default'>Submit</button></a>
-            </form>
-            <p id="result">...</p>
-        </div>
 
 {% endblock content %}
