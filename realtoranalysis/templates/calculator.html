@@ -55,12 +55,12 @@
                                 <div class="form-group">
                                     <label>Term</label>
                                     <br>
-                                    <select class="selectpicker" name="term_id" id="term_id" >
+                                    <select class="form-control" name="term_id" id="term_id" >
                                         <option value="30">30 year fixed</option>
                                         <option value="15">15 year fixed</option>
                                     </select>
                 <script type="text/javascript">
-                    $('selectpicker').on('change', function() {
+                    $('form-control').on('change', function() {
                         alert( $(this).find(":selected").val() );
                     });
                 </script>

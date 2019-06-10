@@ -5,6 +5,7 @@
 <head>
     <script src="{{ url_for('static', filename='jquery.min.js') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.3.0/Chart.min.js"> </script>
+    <script src="{{ url_for('static', filename='script1.js') }}"></script>
 </head>
 <!--BEGIN ROW-->
 
@@ -13,7 +14,7 @@
 
         <!--BEGIN MORTGAGE INPUT CARD-->
 
-            <div class="col-md-4">
+            <div class="col-auto mb-3">
                 <div class="card ">
 
 
@@ -33,28 +34,40 @@
 
                         <div class="row">
                             <div class="col-md-12">
-                                <div class="form-group ">
-                                    <label>Purchase Price ($)</label>
-                                    <input type="text" class="form-control" id="price_id" name="price" value="100000">
+
+                            <label>Purchase Price ($)</label>
+                              <div class="input-group">
+                                <div class="input-group-prepend">
+
+                                  <span class="input-group-text" id="inputGroupPrepend">$</span>
+                                </div>
+                                <input type="text" class="form-control" id="price_id" name="price" value="100000" aria-describedby="inputGroupPrepend" required>
+                              </div>
+
+                            </div>
+                        </div>
+
+
+                        <div class="row">
+                            <div class="col-md-12">
+                            <label>Downpayment</label>
+
+                                <div class="input-group mb-3">
+                                  <input type="text" class="form-control" id="down_payment_id" value="20" aria-label="Amount (to the nearest dollar)">
+                                  <div class="input-group-append">
+                                    <span class="input-group-text">%</span>
+                                  </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <label>Downpayment (%)</label>
-                                    <input type="text" class="form-control" id="down_payment_id" value="20">
-                                </div>
-                            </div>
-                        </div>
 
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label>Term</label>
                                     <br>
-                                    <select class="selectpicker" name="term_id" id="term_id" >
+                                    <select class="form-control" name="term_id" id="term_id" >
                                         <option value="30">30 year fixed</option>
                                         <option value="15">15 year fixed</option>
                                     </select>
@@ -63,7 +76,7 @@
                         alert( $(this).find(":selected").val() );
                     });
                 </script>
-                                    <!--<input type="text" class="form-control" id="term_id" name="input_term" placeholder="30">-->
+
                                 </div>
                             </div>
                         </div>
@@ -71,9 +84,13 @@
 
                         <div class="row">
                             <div class="col-md-12">
-                                <div class="form-group">
-                                    <label>Interest Rate (%)</label>
-                                    <input type="text" class="form-control" id="interest_rate_id" name="input_interest_rate" value="5.0">
+                            <label>Interest Rate</label>
+
+                                <div class="input-group mb-3">
+                                  <input type="text" class="form-control" id="interest_rate_id" name="input_interest_rate" value="5.0" aria-label="Amount (to the nearest dollar)">
+                                  <div class="input-group-append">
+                                    <span class="input-group-text">%</span>
+                                  </div>
                                 </div>
                             </div>
                         </div>
@@ -104,17 +121,14 @@
 
                     <div class="card-header">
                         <h5 class="card-title">Payment Breakdown:</h5>
-                        <p class="card-category">Subtitle</p>
                     </div>
 
                     <div class="card-body ">
+                        <canvas id="bar-chart" ></canvas>
 
-                    <div>
-                    <canvas id="mycanvas" width="256" height="256"></canvas>
-                    </div>
 
                     <label>Down Payment</label>
-                    <p id="down_payment_output">Out of Pocket</p>
+                    <p id="down_payment_output"></p>
 
                     <label>Monthly Mortgage Payment</label>
                     <p id="mortgage_payment_output"></p>
@@ -126,6 +140,8 @@
             </div>
 
         <!--END MORTGAGE OUTPUT CARD -->
+
+
         </div>
     </div>
 <!--END ROW-->
