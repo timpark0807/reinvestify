@@ -47,7 +47,7 @@ $(document).ready(function(){
             })
 
 
-    // Script that loads new ajax calls
+// This refreshes donut chart on submit via ajax calls
 
     $('form').on('submit', function(event) {
 

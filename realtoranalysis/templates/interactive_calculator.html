@@ -3,9 +3,11 @@
 {% block content %}
 
 <head>
-    <script src="{{ url_for('static', filename='jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.3.0/Chart.min.js"> </script>
-    <script src="{{ url_for('static', filename='script1.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/script1.js') }}"></script>
+    <script id="baseScript" src="{{ url_for('static', filename='js/calculator.js') }}"
+    data-path="{{ request.path }}"></script>
 </head>
 <!--BEGIN ROW-->
 

@@ -3,10 +3,10 @@
 
 {% block content %}
 <head>
-<link href="{{ (url_for('static', filename='multiform.css')) }}" rel="stylesheet" id="bootstrap-css">
+<link href="{{ (url_for('static', filename='css/multiform.css')) }}" rel="stylesheet" id="bootstrap-css">
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<script src="{{ (url_for('static', filename='multiform.js')) }}"></script>
+<script src="{{ (url_for('static', filename='js/multiform.js')) }}"></script>
 </head>
 
 <!------ Include the above in your HEAD tag ---------->
@@ -178,40 +178,108 @@
                                         </div>
                                     </div>
                                 </div>
-                                    </div>
-                                    <ul class="list-inline text-md-center">
-                                        <li>
-                                            <button type="button" id="prev-2" class="btn btn-lg btn-common next-step next-button">Previous</button>
-                                            <button type="button" id="next-2" class="btn btn-lg btn-common next-step next-button">Next Step</button>
-                                        </li>
-                                    </ul>
                             </div>
-
-
-
-
-
-
-
+                                <ul class="list-inline text-md-center">
+                                    <li>
+                                        <button type="button" id="prev-2" class="btn btn-lg btn-common next-step next-button">Previous</button>
+                                        <button type="button" id="next-2" class="btn btn-lg btn-common next-step next-button">Next Step</button>
+                                    </li>
+                                </ul>
+                        </div>
 
 
                         <div class="tab-pane" role="tabpanel" id="step3">
-                            <h1 class="text-md-center">Step 3</h1>
-                            <div class="row">
 
+                                <div class="card-header">
+                                    <h6 class="card-title">Purchase:</h6>
+                                </div>
+
+                                <div class="card-body ">
+
+                                    <div class="form-row">
+                                        <div class="col-md-8">
+                                            <div class="form-group">
+                                                <label>Price ($)</label>
+                                                <input type="text" class="form-control" id="purchase_price_id" name="price" value="">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label>Term </label>
+
+                                                <select class="form-control" id="purchase_term_id" name="term">
+                                                        <option value="30">30 Year Fixed</option>
+                                                        <option value="15">15 Year Fixed</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                   <div class="form-row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label>Down (%)</label>
+                                                <input type="text" class="form-control" id="purchase_down_id" name="down" value="">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label>Interest (%)</label>
+                                                <input type="text" class="form-control" id="purchase_interest_id" name="interest"value="">
+                                            </div>
+                                        </div>
+                                   </div>
                             </div>
-                            <ul class="list-inline text-md-center">
-                                 <li>
-                                    <button type="button" id="prev-3" class="btn btn-lg btn-common next-step next-button">Previous</button>
-                                    <button type="button" id="next-3" class="btn btn-lg btn-common next-step next-button">Next Step</button>
-                                 </li>
-                            </ul>
+                                <ul class="list-inline text-md-center">
+                                     <li>
+                                        <button type="button" id="prev-3" class="btn btn-lg btn-common next-step next-button">Previous</button>
+                                        <button type="button" id="next-3" class="btn btn-lg btn-common next-step next-button">Next Step</button>
+                                     </li>
+                                </ul>
                         </div>
 
-                        <div class="tab-pane" role="tabpanel" id="step4">
-                            <h1 class="text-md-center">Step 4</h1>
-                            <div class="row">
 
+
+                        <div class="tab-pane" role="tabpanel" id="step4">
+
+                            <div class="card-header">
+                                <h6 class="card-title">Assumptions:</h6>
+
+                            </div>
+
+                            <div class="card-body ">
+
+                                <div class="form-row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Gross Rent ($)</label>
+                                            <input type="text" class="form-control" id="cashflow_grossrent_id" name="grossrent" value="">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Vacancy (%)</label>
+                                            <input type="text" class="form-control" id="cashflow_vacancy_id" name="vacancy" value="">
+                                        </div>
+                                    </div>
+                                </div>
+
+                               <div class="form-row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Taxes ($)</label>
+                                            <input type="text" class="form-control" id="cashflow_taxes_id" name="taxes" value="">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Expense (%) </label>
+                                            <input type="text" class="form-control" id="cashflow_expenses_id" name="expenses" value="">
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <ul class="list-inline text-md-center">
                                  <li>
@@ -220,6 +288,8 @@
                                  </li>
                             </ul>
                         </div>
+
+
 
                         <div class="tab-pane" role="tabpanel" id="step5">
                             <h1 class="text-md-center">Complete</h1>

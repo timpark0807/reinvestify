@@ -13,6 +13,7 @@ $(document).ready(function() {
             type : 'POST',
             url : '/process'
         })
+
         .done(function(data) {
 
           $('#mortgage_payment_output').text(data.mortgage_payment).show;
