@@ -50,7 +50,7 @@
                             <li role="presentation" class="nav-item">
                                 <a href="#step4" data-toggle="tab" id="stepicon4" aria-controls="step4" role="tab" title="Step 4" class="nav-link disabled">
                             <span class="round-tab">
-                                <i class="fa fa-phone"></i>
+                                <i class="far fa-edit"></i>
                             </span>
                                 </a>
                             </li>
@@ -199,8 +199,15 @@
                                     <div class="form-row">
                                         <div class="col-md-8">
                                             <div class="form-group">
-                                                <label>Price ($)</label>
-                                                <input type="text" class="form-control" id="purchase_price_id" name="price" value="">
+
+                                                <label>Price</label>
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                      <span class="input-group-text" id="inputGroupPrepend">$</span>
+                                                    </div>
+                                                    <input type="text" class="form-control" id="price_id" name="price" value="100000" aria-describedby="inputGroupPrepend" required>
+                                                </div>
+
                                             </div>
                                         </div>
 
@@ -208,7 +215,7 @@
                                             <div class="form-group">
                                                 <label>Term </label>
 
-                                                <select class="form-control" id="purchase_term_id" name="term">
+                                                <select class="form-control form-control-lg" id="purchase_term_id" name="term">
                                                         <option value="30">30 Year Fixed</option>
                                                         <option value="15">15 Year Fixed</option>
                                                 </select>
@@ -220,13 +227,23 @@
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label>Down (%)</label>
-                                                <input type="text" class="form-control" id="purchase_down_id" name="down" value="">
+                                                <div class="input-group mb-3">
+                                                  <input type="text" class="form-control" id="down_payment_id" value="20" aria-label="Amount">
+                                                  <div class="input-group-append">
+                                                    <span class="input-group-text">%</span>
+                                                  </div>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label>Interest (%)</label>
-                                                <input type="text" class="form-control" id="purchase_interest_id" name="interest"value="">
+                                                <div class="input-group mb-3">
+                                                  <input type="text" class="form-control" id="interest_rate_id" name="input_interest_rate" value="5.0" aria-label="Amount (to the nearest dollar)">
+                                                  <div class="input-group-append">
+                                                    <span class="input-group-text">%</span>
+                                                  </div>
+                                                </div>
                                             </div>
                                         </div>
                                    </div>
@@ -254,14 +271,24 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Gross Rent ($)</label>
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                  <span class="input-group-text">$</span>
+                                                </div>
                                             <input type="text" class="form-control" id="cashflow_grossrent_id" name="grossrent" value="">
+                                            </div>
                                         </div>
                                     </div>
 
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Vacancy (%)</label>
-                                            <input type="text" class="form-control" id="cashflow_vacancy_id" name="vacancy" value="">
+                                            <div class="input-group mb-3">
+                                                <input type="text" class="form-control" id="cashflow_vacancy_id" name="vacancy" value="">
+                                                <div class="input-group-append">
+                                                <span class="input-group-text">%</span>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -270,13 +297,23 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Taxes ($)</label>
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                  <span class="input-group-text">$</span>
+                                                </div>
                                             <input type="text" class="form-control" id="cashflow_taxes_id" name="taxes" value="">
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Expense (%) </label>
-                                            <input type="text" class="form-control" id="cashflow_expenses_id" name="expenses" value="">
+                                            <div class="input-group mb-3">
+                                                <input type="text" class="form-control" id="cashflow_expenses_id" name="expenses" value="">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text">%</span>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
