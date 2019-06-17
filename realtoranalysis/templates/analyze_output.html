@@ -1,0 +1,286 @@
+{% extends "layout_paperdash.html" %}
+{% set active_page = "analyze" %}
+
+{% block content %}
+<div class="content">
+    <div class="row">
+        <div class="col-md-7">
+              <!--<h5 class="card-title">{{title}}</h5>-->
+              <h5 class="address" style="line-height:15px;">{{street}}, {{city}}, {{state}} {{zipcode}}</h5>
+              <p class="bed" style="line-height:20px;">{{bed}} bd | {{bath}} ba | {{sqft}} sqft | {{type}} | Built in {{year}}</p>
+        </div>
+    </div>
+
+  <!--BEGIN FIRST ROW OF CARD ICONS -->
+
+        <div class="row">
+          <div class="col-lg-3 col-md-6 col-sm-6">
+            <div class="card card-stats">
+              <div class="card-body ">
+                <div class="row">
+                  <!--<div class="col-5 col-md-4">-->
+                    <!--<div class="icon-big text-center icon-warning">-->
+                      <!--<i class="nc-icon nc-globe text-warning"></i>-->
+                    <!--</div>-->
+                  <!--</div>-->
+                  <div class="col-12 col-md-12">
+                    <div class="numbers">
+                      <p class="card-category">Purchase Price</p>
+                      <p class="card-title">{{price}}<p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="card-footer ">
+              </div>
+            </div>
+          </div>
+
+
+          <div class="col-lg-3 col-md-6 col-sm-6">
+            <div class="card card-stats">
+              <div class="card-body ">
+                <div class="row">
+                  <div class="col-5 col-md-4">
+                    <div class="icon-big text-center icon-warning">
+                      <i class="nc-icon nc-money-coins text-success"></i>
+                    </div>
+                  </div>
+
+                  <div class="col-7 col-md-8">
+                    <div class="numbers">
+                      <p class="card-category">Out of Pocket</p>
+                      <p class="card-title">{{outofpocket}}</p>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="card-footer ">
+              </div>
+            </div>
+          </div>
+
+
+          <div class="col-lg-3 col-md-6 col-sm-6">
+            <div class="card card-stats">
+              <div class="card-body ">
+                <div class="row">
+                  <div class="col-5 col-md-4">
+                    <div class="icon-big text-center icon-warning">
+                      <i class="nc-icon nc-vector text-danger"></i>
+                    </div>
+                  </div>
+                  <div class="col-7 col-md-8">
+                    <div class="numbers">
+                      <p class="card-category">Cap Rate</p>
+                      <p class="card-title">{{cap_rate}}
+                        <p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="card-footer ">
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-6 col-sm-6">
+            <div class="card card-stats">
+              <div class="card-body ">
+                <div class="row">
+                  <div class="col-5 col-md-4">
+                    <div class="icon-big text-center icon-warning">
+                      <i class="nc-icon nc-favourite-28 text-primary"></i>
+                    </div>
+                  </div>
+                  <div class="col-7 col-md-8">
+                    <div class="numbers">
+                      <p class="card-category">Cash on Cash</p>
+                      <p class="card-title">{{ cashflow }}<p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="card-footer ">
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+<!--END 1ST ROW OF CARD ICONS -->
+
+
+<!--BEGIN FIRST ROW OF CARD ICONS -->
+
+        <div class="row">
+          <div class="col-lg-3 col-md-6 col-sm-6">
+            <div class="card card-stats">
+              <div class="card-body ">
+                <div class="row">
+                  <div class="col-5 col-md-4">
+                    <div class="icon-big text-center icon-warning">
+                      <i class="nc-icon nc-globe text-warning"></i>
+                    </div>
+                  </div>
+                  <div class="col-7 col-md-8">
+                    <div class="numbers">
+                      <p class="card-category">Operating Income</p>
+                      <p class="card-title">{{operating_income}}<p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            <div class="card-footer ">
+            </div>
+          </div>
+        </div>
+
+
+          <div class="col-lg-3 col-md-6 col-sm-6">
+            <div class="card card-stats">
+              <div class="card-body ">
+                <div class="row">
+                  <div class="col-5 col-md-4">
+                    <div class="icon-big text-center icon-warning">
+                      <i class="nc-icon nc-money-coins text-success"></i>
+                    </div>
+                  </div>
+
+                  <div class="col-7 col-md-8">
+                    <div class="numbers">
+                      <p class="card-category">Monthly Expenses</p>
+                      <p class="card-title">({{monthly_expense}})</p>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="card-footer ">
+              </div>
+            </div>
+          </div>
+
+
+          <div class="col-lg-3 col-md-6 col-sm-6">
+            <div class="card card-stats">
+              <div class="card-body ">
+                <div class="row">
+                  <div class="col-5 col-md-4">
+                    <div class="icon-big text-center icon-warning">
+                      <i class="nc-icon nc-vector text-danger"></i>
+                    </div>
+                  </div>
+                  <div class="col-7 col-md-8">
+                    <div class="numbers">
+                      <p class="card-category">Mortgage</p>
+                      <p class="card-title">({{mortgage_payment}})
+                        <p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="card-footer ">
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-6 col-sm-6">
+            <div class="card card-stats">
+              <div class="card-body ">
+                <div class="row">
+                  <div class="col-5 col-md-4">
+                    <div class="icon-big text-center icon-warning">
+                      <i class="nc-icon nc-favourite-28 text-primary"></i>
+                    </div>
+                  </div>
+                  <div class="col-7 col-md-8">
+                    <div class="numbers">
+                      <p class="card-category">Cash Flow</p>
+                      <p class="card-title">{{ cashflow }}<p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="card-footer ">
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+<!--END 1ST ROW OF CARD ICONS -->
+
+
+
+<!--BEGIN PROPERTY DETAIL  -->
+          <!--<div class="row">-->
+              <!--<div class="col-md-4">-->
+                <!--<div class="card ">-->
+                  <!--<div class="card-header ">-->
+                    <!--<h5 class="card-title">{{title}}</h5>-->
+                    <!--<p class="card-category" style="line-height:15px;">{{street}}, {{city}}, {{state}} {{zipcode}}</p>-->
+                  <!--</div>-->
+                  <!--<div class="card-body ">-->
+                    <!--<p class="bed" style="line-height:10px;">{{bed}} bd | {{bath}} ba | {{sqft}} sqft</p>-->
+                    <!--<p class="type" style="line-height:10px;">{{type}} | Built in {{year}}</p>-->
+                  <!--</div>-->
+                      <!--<hr>-->
+                <!--</div>-->
+              <!--</div>-->
+              <!--<div class="col-md-8">-->
+                <!--<div class="card card-chart">-->
+                  <!--<div class="card-header">-->
+                    <!--<h5 class="card-title">Property Overview:</h5>-->
+                    <!--<p class="card-category">Line Chart with Points</p>-->
+                  <!--</div>-->
+                  <!--<div class="card-body ">-->
+                   <!--&lt;!&ndash;<p class="type">Type: {{type}}</p>&ndash;&gt;-->
+                   <!--&lt;!&ndash;<p class="bed">Beds: {{bed}}</p>&ndash;&gt;-->
+                   <!--&lt;!&ndash;<p class="bath">Bath: {{bath}}</p>&ndash;&gt;-->
+                   <!--&lt;!&ndash;<p class="sqft">Sq Ft: {{sqft}}</p>&ndash;&gt;-->
+                  <!--</div>-->
+                    <!--<hr/>-->
+                <!--</div>-->
+              <!--</div>-->
+          <!--</div>-->
+
+        <!--<div class="row">-->
+          <!--<div class="col-md-12">-->
+            <!--<div class="card ">-->
+              <!--<div class="card-header ">-->
+                <!--<h5 class="card-title">Property Detail</h5>-->
+                <!--<h8></h8>-->
+              <!--</div>-->
+
+                <!--<hr>-->
+            <!--</div>-->
+          <!--</div>-->
+        <!--</div>-->
+
+<!--END PROPERTY DETAIL  -->
+
+
+        <div class="row">
+          <div class="col-md-12">
+            <div class="card ">
+              <div class="card-header ">
+                <h5 class="card-title">Users Behavior</h5>
+                <p class="card-category">24 Hours performance</p>
+              </div>
+              <div class="card-body ">
+                <canvas id=chartHours width="400" height="100"></canvas>
+              </div>
+              <div class="card-footer ">
+                <hr>
+                <div class="stats">
+                  <i class="fa fa-history"></i> Updated 3 minutes ago
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+
+{% endblock content %}

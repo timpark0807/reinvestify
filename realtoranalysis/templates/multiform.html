@@ -78,13 +78,13 @@
                                     <div class="col-md-7">
                                         <div class="form-group ">
                                             <label>Report Title</label>
-                                            <input type="text" class="form-control" id="title" name="report_title" value="">
+                                            <input type="text" class="form-control" id="title" name="title" value="">
                                         </div>
                                     </div>
                                     <div class="col-md-5">
                                         <div class="form-group ">
                                             <label>URL</label>
-                                            <input type="text" class="form-control" id="url" name="report_title" value="">
+                                            <input type="text" class="form-control" id="url" name="url" value="">
                                         </div>
                                     </div>
                                 </div>
@@ -224,22 +224,33 @@
                                     </div>
 
                                    <div class="form-row">
-                                        <div class="col-md-6">
+                                        <div class="col-md-4">
                                             <div class="form-group">
-                                                <label>Down (%)</label>
+                                                <label>Down Payment</label>
                                                 <div class="input-group mb-3">
-                                                  <input type="text" class="form-control" id="down_payment_id" value="20" aria-label="Amount">
+                                                  <input type="text" class="form-control" id="down_payment_id" name="down" value="20" aria-label="Amount">
                                                   <div class="input-group-append">
                                                     <span class="input-group-text">%</span>
                                                   </div>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-6">
+                                        <div class="col-md-4">
                                             <div class="form-group">
-                                                <label>Interest (%)</label>
+                                                <label>Interest</label>
                                                 <div class="input-group mb-3">
-                                                  <input type="text" class="form-control" id="interest_rate_id" name="input_interest_rate" value="5.0" aria-label="Amount (to the nearest dollar)">
+                                                  <input type="text" class="form-control" id="interest_rate_id" name="interest" value="5.0" aria-label="Amount (to the nearest dollar)">
+                                                  <div class="input-group-append">
+                                                    <span class="input-group-text">%</span>
+                                                  </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label>Closing Costs</label>
+                                                <div class="input-group mb-3">
+                                                  <input type="text" class="form-control" id="closing_id" name="closing" value="2.0" aria-label="Amount (to the nearest dollar)">
                                                   <div class="input-group-append">
                                                     <span class="input-group-text">%</span>
                                                   </div>
@@ -270,44 +281,18 @@
                                 <div class="form-row">
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label>Gross Rent ($)</label>
+                                            <label>Monthly Rent</label>
                                             <div class="input-group">
                                                 <div class="input-group-prepend">
                                                   <span class="input-group-text">$</span>
                                                 </div>
-                                            <input type="text" class="form-control" id="cashflow_grossrent_id" name="grossrent" value="">
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label>Vacancy (%)</label>
-                                            <div class="input-group mb-3">
-                                                <input type="text" class="form-control" id="cashflow_vacancy_id" name="vacancy" value="">
-                                                <div class="input-group-append">
-                                                <span class="input-group-text">%</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                               <div class="form-row">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label>Taxes ($)</label>
-                                            <div class="input-group">
-                                                <div class="input-group-prepend">
-                                                  <span class="input-group-text">$</span>
-                                                </div>
-                                            <input type="text" class="form-control" id="cashflow_taxes_id" name="taxes" value="">
+                                            <input type="text" class="form-control" id="cashflow_grossrent_id" name="rent" value="">
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label>Expense (%) </label>
+                                            <label>Operating Expenses </label>
                                             <div class="input-group mb-3">
                                                 <input type="text" class="form-control" id="cashflow_expenses_id" name="expenses" value="">
                                                 <div class="input-group-append">
@@ -316,6 +301,35 @@
                                             </div>
                                         </div>
                                     </div>
+
+                                </div>
+
+                               <div class="form-row">
+
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Placeholder</label>
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                  <span class="input-group-text">$</span>
+                                                </div>
+                                            <input type="text" class="form-control" id="cashflow_taxes_id" name="taxes" value="">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                     <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Vacancy</label>
+                                            <div class="input-group mb-3">
+                                                <input type="text" class="form-control" id="cashflow_vacancy_id" name="vacancy" value="">
+                                                <div class="input-group-append">
+                                                <span class="input-group-text">%</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                 </div>
                             </div>
                             <ul class="list-inline text-md-center">
