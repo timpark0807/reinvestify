@@ -1,8 +1,10 @@
 from realtoranalysis import app
 import json
-from flask import render_template, jsonify, request
-from realtoranalysis.scripts.calculator import mortgage_calc, downpayment_calc
+from flask import render_template, jsonify, request, redirect, url_for
+from realtoranalysis.forms import Analyze_Form
+# from realtoranalysis.scripts.calculator import mortgage_calc, downpayment_calc, comma_dollar, cap_rate, noi, outofpocket, cashflow
 
+from realtoranalysis.scripts.calculator import Calculations, comma_dollar
 
 @app.route("/")
 @app.route("/dashboard")
@@ -12,7 +14,7 @@ def dashboard():
 
 @app.route("/about")
 def about():
-    return render_template('about.html', methods=['POST'])
+    return render_template('multiform.html', methods=['POST'])
 
 
 @app.route("/data")
@@ -20,7 +22,7 @@ def test():
     values = [12, 19, 3]
     labels = ['Red', 'Blue', 'Yellow']
     colors = ['#ff0000','#0000ff','#008000']
-    return render_template('calculator.html', values=values, labels=labels, colors=colors)
+    return render_template('interactive_calculator.html', values=values, labels=labels, colors=colors)
 
 
 @app.route("/get_data")
@@ -30,14 +32,70 @@ def handle_test():
     return jsonify({'payload':json.dumps({'data':data, 'labels':labels})})
 
 
-@app.route("/analyze")
+@app.route("/analyze", methods=['GET','POST'])
 def analyze():
-    return render_template('analyze.html', methods=['POST'])
+    form = Analyze_Form()
+    return render_template('analyze.html', form=form)
+
+
+@app.route("/handle_analyze", methods=['POST'])
+def handle_analyze():
+    if request.method == 'POST':
+        title = request.form['title']
+        street = request.form['street']
+        city = request.form['city']
+        state = request.form['state']
+        zipcode = request.form['zipcode']
+        type = request.form['type']
+        year = request.form['year']
+        bed = request.form['bed']
+        bath = request.form['bath']
+        sqft = request.form['sqft']
+        price = request.form['price']
+        term = request.form['term']
+        down = request.form['down']
+        interest = request.form['interest']
+        closing = request.form['closing']
+        rent = request.form['rent']
+        vacancy = request.form['vacancy']
+        taxes = request.form['taxes']
+        expenses = request.form['expenses']
+
+        house = Calculations(price, down, interest, term, rent, expenses, vacancy)
+
+        monthly_income = comma_dollar(int(rent))
+        monthly_expense = comma_dollar(house.monthly_expenses())
+        mortgage_payment = house.mortgage_calc()
+        down_payment = house.downpayment_calc()
+        oop = house.outofpocket(closing)
+        oi = house.operating_income()
+        monthly_noi = house.noi(oi)
+        cap_rate = house.cap_rate()
+
+        cash_flow = house.cashflow(monthly_noi, mortgage_payment)
+
+        clean_oi = comma_dollar(oi)
+        clean_down_payment = comma_dollar(down_payment)
+        clean_price = comma_dollar(int(price))
+        clean_mortgage_payment = comma_dollar(mortgage_payment)
+        clean_outofpocket = comma_dollar(oop)
+        clean_cash_flow = comma_dollar(cash_flow)
+
+    return render_template('analyze_output.html', title=title, street=street, city=city, state=state, zipcode=zipcode,
+                                                  price=clean_price, type=type, year=year, bed=bed, bath=bath,
+                                                  sqft=sqft,
+                                                  mortgage_payment=clean_mortgage_payment,
+                                                  cap_rate=cap_rate,
+                                                  operating_income=clean_oi,
+                                                  monthly_income=monthly_income, monthly_expense=monthly_expense,
+                                                  down_payment=clean_down_payment,
+                                                  outofpocket=clean_outofpocket,
+                                                  cashflow=clean_cash_flow)
 
 
 @app.route("/calculator")
 def calculator():
-    return render_template('calculator.html')
+    return render_template('interactive_calculator.html')
 
 
 @app.route("/process", methods=['POST'])
@@ -47,6 +105,7 @@ def process():
     input_term = request.form['term']
     input_interest_rate = request.form['interest_rate']
 
+    # Calculates the payment with input as float
     down_payment = downpayment_calc(float(input_price),
                                     float(input_down_payment))
 
@@ -55,4 +114,17 @@ def process():
                                      float(input_interest_rate),
                                      input_term)
 
-    return jsonify({'mortgage_payment': mortgage_payment, 'down_payment': down_payment})
+    # Returns floats as a string with dollar sign and comma separators
+    down_payment_clean = comma_dollar(down_payment)
+    mortgage_payment_clean = comma_dollar(mortgage_payment)
+
+
+    labels = ["Mortgage", "Taxes", "Insurance"]
+    number = [mortgage_payment, 90, 80]
+    total = mortgage_payment + 90 + 80
+    return jsonify({'mortgage_payment': mortgage_payment_clean,
+                    'down_payment': down_payment_clean,
+                    'number': number,
+                    'labels': labels,
+                    'total' : total
+                })
