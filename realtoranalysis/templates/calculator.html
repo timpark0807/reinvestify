@@ -3,8 +3,10 @@
 {% block content %}
 
 <head>
-    <script src="{{ url_for('static', filename='jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.3.0/Chart.min.js"> </script>
+    <script id="baseScript" src="{{ url_for('static', filename='js/calculator.js') }}"
+    data-path="{{ request.path }}"></script>
 </head>
 <!--BEGIN ROW-->
 
@@ -45,7 +47,7 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label>Downpayment (%)</label>
-                                    <input type="text" class="form-control" id="down_payment_id" name="down_payment"value="20">
+                                    <input type="text" class="form-control" id="down_payment_id" name="down_payment" value="20">
                                 </div>
                             </div>
                         </div>
@@ -59,6 +61,7 @@
                                         <option value="30">30 year fixed</option>
                                         <option value="15">15 year fixed</option>
                                     </select>
+
                 <script type="text/javascript">
                     $('form-control').on('change', function() {
                         alert( $(this).find(":selected").val() );
@@ -124,7 +127,7 @@
         </div>
     </div>
 <!--END ROW-->
-
+    </div>
 
 
 {% endblock content %}

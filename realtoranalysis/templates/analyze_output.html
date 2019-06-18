@@ -4,16 +4,16 @@
 {% block content %}
 <div class="content">
     <div class="row">
-        <div class="col-md-7">
+        <div class="col-md-12">
               <!--<h5 class="card-title">{{title}}</h5>-->
               <h5 class="address" style="line-height:15px;">{{street}}, {{city}}, {{state}} {{zipcode}}</h5>
               <p class="bed" style="line-height:20px;">{{bed}} bd | {{bath}} ba | {{sqft}} sqft | {{type}} | Built in {{year}}</p>
         </div>
     </div>
-
+        <hr style="margin-top:-2px; ">
   <!--BEGIN FIRST ROW OF CARD ICONS -->
 
-        <div class="row">
+        <div class="row ">
           <div class="col-lg-3 col-md-6 col-sm-6">
             <div class="card card-stats">
               <div class="card-body ">
@@ -41,13 +41,7 @@
             <div class="card card-stats">
               <div class="card-body ">
                 <div class="row">
-                  <div class="col-5 col-md-4">
-                    <div class="icon-big text-center icon-warning">
-                      <i class="nc-icon nc-money-coins text-success"></i>
-                    </div>
-                  </div>
-
-                  <div class="col-7 col-md-8">
+                  <div class="col-12 col-md-12">
                     <div class="numbers">
                       <p class="card-category">Out of Pocket</p>
                       <p class="card-title">{{outofpocket}}</p>
@@ -66,12 +60,7 @@
             <div class="card card-stats">
               <div class="card-body ">
                 <div class="row">
-                  <div class="col-5 col-md-4">
-                    <div class="icon-big text-center icon-warning">
-                      <i class="nc-icon nc-vector text-danger"></i>
-                    </div>
-                  </div>
-                  <div class="col-7 col-md-8">
+                  <div class="col-12 col-md-12">
                     <div class="numbers">
                       <p class="card-category">Cap Rate</p>
                       <p class="card-title">{{cap_rate}}
@@ -88,12 +77,7 @@
             <div class="card card-stats">
               <div class="card-body ">
                 <div class="row">
-                  <div class="col-5 col-md-4">
-                    <div class="icon-big text-center icon-warning">
-                      <i class="nc-icon nc-favourite-28 text-primary"></i>
-                    </div>
-                  </div>
-                  <div class="col-7 col-md-8">
+                  <div class="col-12 col-md-12">
                     <div class="numbers">
                       <p class="card-category">Cash on Cash</p>
                       <p class="card-title">{{ cashflow }}<p>
@@ -107,7 +91,6 @@
           </div>
 
         </div>
-
 <!--END 1ST ROW OF CARD ICONS -->
 
 
@@ -118,14 +101,9 @@
             <div class="card card-stats">
               <div class="card-body ">
                 <div class="row">
-                  <div class="col-5 col-md-4">
-                    <div class="icon-big text-center icon-warning">
-                      <i class="nc-icon nc-globe text-warning"></i>
-                    </div>
-                  </div>
-                  <div class="col-7 col-md-8">
+                  <div class="col-12 col-md-12">
                     <div class="numbers">
-                      <p class="card-category">Operating Income</p>
+                      <p class="card-category">Monthly Income</p>
                       <p class="card-title">{{operating_income}}<p>
                     </div>
                   </div>
@@ -141,13 +119,7 @@
             <div class="card card-stats">
               <div class="card-body ">
                 <div class="row">
-                  <div class="col-5 col-md-4">
-                    <div class="icon-big text-center icon-warning">
-                      <i class="nc-icon nc-money-coins text-success"></i>
-                    </div>
-                  </div>
-
-                  <div class="col-7 col-md-8">
+                  <div class="col-12 col-md-12">
                     <div class="numbers">
                       <p class="card-category">Monthly Expenses</p>
                       <p class="card-title">({{monthly_expense}})</p>
@@ -166,12 +138,7 @@
             <div class="card card-stats">
               <div class="card-body ">
                 <div class="row">
-                  <div class="col-5 col-md-4">
-                    <div class="icon-big text-center icon-warning">
-                      <i class="nc-icon nc-vector text-danger"></i>
-                    </div>
-                  </div>
-                  <div class="col-7 col-md-8">
+                  <div class="col-12 col-md-12">
                     <div class="numbers">
                       <p class="card-category">Mortgage</p>
                       <p class="card-title">({{mortgage_payment}})
@@ -188,12 +155,7 @@
             <div class="card card-stats">
               <div class="card-body ">
                 <div class="row">
-                  <div class="col-5 col-md-4">
-                    <div class="icon-big text-center icon-warning">
-                      <i class="nc-icon nc-favourite-28 text-primary"></i>
-                    </div>
-                  </div>
-                  <div class="col-7 col-md-8">
+                  <div class="col-12 col-md-12">
                     <div class="numbers">
                       <p class="card-category">Cash Flow</p>
                       <p class="card-title">{{ cashflow }}<p>

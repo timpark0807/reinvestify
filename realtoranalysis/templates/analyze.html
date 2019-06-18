@@ -8,7 +8,7 @@
         <div class="row">
             <div class="col-md-6">
 
-                        <h2 class="card-title"><b>Property Analysis</b></h2>
+            <h2 class="card-title"><b>Property Analysis</b></h2>
             <br>
             </div>
 
@@ -34,18 +34,18 @@
             <!--BEGIN ADDRESS FORM-->
 
                     <div class="card-body">
-                    <form>
+                    <form method="POST" action="{{ url_for('handle_analyze') }}">
 
-                        <div class="row">
+                        <div class="form-row">
                             <div class="col-md-12">
                                 <div class="form-group ">
                                     <label>Street</label>
-                                    <input type="text" class="form-control" id="address_street_id" name="address" value="">
+                                    <input type="text" class="form-control" id="address_street_id" name="street" value="">
                                 </div>
                             </div>
                         </div>
 
-                        <div class="row">
+                        <div class="form-row">
                             <div class="col-md-5">
                                 <div class="form-group ">
                                     <label>City</label>
@@ -71,6 +71,11 @@
                                 <!--<button type="submit" class="btn btn-primary btn-round">Submit</button>-->
                             <!--</div>-->
                         <!--</div>-->
+                        <div class="form-row">
+                            <div class="update ml-auto mr-auto">
+                                <button type="submit" class="btn btn-primary btn-round">Submit</button>
+                            </div>
+                        </div>
 
                     </form>
                     </div>
@@ -112,40 +117,56 @@
                         <!--</div>-->
 
 
-                        <div class="row">
+                        <div class="form-row">
+
                             <div class="col-md-8">
                                 <div class="form-group">
-                                    <label>Type </label>
-                                    <input type="text" class="form-control" id="detail_type_id" value="">
-                                </div>
+                                    <label>Type</label>
+                                    <br>
+                                    <select class="form-control" id="detail_type_id" name="type">
+                                        <option value="Single Family">Single Family</option>
+                                        <option value="Multi Family">Multi Family</option>
+                                        <option value="Apartment">Apartment Unit</option>
+                                        <option value="Condo">Condo</option>
+                                        <option value="Townhouse">Townhouse</option>
+                                    </select>
+
+                    <script type="text/javascript">
+                        $('form-control').on('change', function() {
+                            alert( $(this).find(":selected").val() );
+                        });
+                    </script>
+                                    </div>
                             </div>
+
 
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label>Year Built </label>
-                                    <input type="text" class="form-control" id="detail_year_id" value="">
+                                    <input type="text" class="form-control" id="detail_year_id" name="year" value="">
                                 </div>
                             </div>
+
                         </div>
 
-                       <div class="row">
+                       <div class="form-row">
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label>Bed </label>
-                                    <input type="text" class="form-control" id="detail_bed_id" value="">
+                                    <input type="text" class="form-control" id="detail_bed_id" name="bed" value="">
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label>Bath </label>
-                                    <input type="text" class="form-control" id="detail_bath_id" value="">
+                                    <input type="text" class="form-control" id="detail_bath_id" name="bath" value="">
                                 </div>
 
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label>Sq Ft </label>
-                                    <input type="text" class="form-control" id="detail_sqft_id" value="">
+                                    <input type="text" class="form-control" id="detail_sqft_id" name="sqft" value="">
                                 </div>
                             </div>
                         </div>
@@ -170,41 +191,43 @@
                     </div>
 
                     <div class="card-body ">
-                    <form>
 
-                        <div class="row">
+                        <div class="form-row">
                             <div class="col-md-8">
                                 <div class="form-group">
-                                    <label>Price </label>
-                                    <input type="text" class="form-control" id="purchase_price_id" value="">
+                                    <label>Price ($)</label>
+                                    <input type="text" class="form-control" id="purchase_price_id" name="price" value="">
                                 </div>
                             </div>
 
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label>Term </label>
-                                    <input type="text" class="form-control" id="purchase_sqft_id" value="">
+
+                                    <select class="form-control" id="purchase_term_id" name="term">
+                                            <option value="30">30 Year Fixed</option>
+                                            <option value="15">15 Year Fixed</option>
+                                    </select>
                                 </div>
                             </div>
                         </div>
 
-                       <div class="row">
+                       <div class="form-row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Down </label>
-                                    <input type="text" class="form-control" id="purchase_bed_id" value="">
+                                    <label>Down (%)</label>
+                                    <input type="text" class="form-control" id="purchase_down_id" name="down" value="">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Interest </label>
-                                    <input type="text" class="form-control" id="purchase_bath_id" value="">
+                                    <label>Interest (%)</label>
+                                    <input type="text" class="form-control" id="purchase_interest_id" name="interest"value="">
                                 </div>
 
                             </div>
                         </div>
 
-                    </form>
                     </div>
                 <hr/>
 
@@ -226,33 +249,33 @@
                     <div class="card-body ">
                     <form>
 
-                        <div class="row">
+                        <div class="form-row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Gross Rent </label>
-                                    <input type="text" class="form-control" id="cashflow_price_id" value="">
+                                    <label>Gross Rent ($)</label>
+                                    <input type="text" class="form-control" id="cashflow_grossrent_id" name="grossrent" value="">
                                 </div>
                             </div>
 
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Vacancy </label>
-                                    <input type="text" class="form-control" id="cashflow_sqft_id" value="">
+                                    <label>Vacancy (%)</label>
+                                    <input type="text" class="form-control" id="cashflow_vacancy_id" name="vacancy" value="">
                                 </div>
                             </div>
                         </div>
 
-                       <div class="row">
+                       <div class="form-row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Taxes </label>
-                                    <input type="text" class="form-control" id="cashflow_bed_id" value="">
+                                    <label>Taxes ($)</label>
+                                    <input type="text" class="form-control" id="cashflow_taxes_id" name="taxes" value="">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>Expense (%) </label>
-                                    <input type="text" class="form-control" id="cashflow_bath_id" value="">
+                                    <input type="text" class="form-control" id="cashflow_expenses_id" name="expenses" value="">
                                 </div>
 
                             </div>

@@ -11,11 +11,11 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet">
     <!-- CSS Files -->
-    <link href="{{ url_for('static', filename='bootstrap.min.css') }}" rel="stylesheet" />
-    <link href="{{ url_for('static', filename='paper-dashboard.css') }}" rel="stylesheet" />
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet" />
+    <link href="{{ url_for('static', filename='css/paper-dashboard.css') }}" rel="stylesheet" />
   </head>
 
-  <body class="">
+  <body>
 
     <div class="wrapper ">
 
@@ -107,28 +107,7 @@
 
         {% block content %}{% endblock %}
 
-  <!--</div>-->
-      <div class="content">
-            <div class="row">
-              <div class="col-md-12">
-                <div class="card ">
-                  <div class="card-header ">
-                    <h5 class="card-title">Blank Template</h5>
-                    <p class="card-category">This card is a placeholder</p>
-                  </div>
-                  <div class="card-body ">
-                    <canvas id=chartHours width="400" height="100"></canvas>
-                  </div>
-                  <div class="card-footer ">
-                    <hr>
-
-                  </div>
-                </div>
-              </div>
-            </div>
-
-
-
+        <hr>
         <footer class="footer footer-black  footer-white ">
           <div class="container-fluid">
             <div class="row">
@@ -154,22 +133,21 @@
 
     <!--   Core JS Files   -->
 
-    <script src="{{ url_for('static', filename='jquery.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='popper.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='bootstrap.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='perfect-scrollbar.jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/popper.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/perfect-scrollbar.jquery.min.js') }}"></script>
       <!-- Chart JS -->
-    <script src="{{ url_for('static', filename='chartjs.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/chartjs.min.js') }}"></script>
 
     <!--  Notifications Plugin    -->
-    <script src="{{ url_for('static', filename='bootstrap-notify.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap-notify.js') }}"></script>
 
     <!-- Control Center for Now Ui Dashboard: parallax effects, scripts for the example pages etc -->
-    <script src="{{ url_for('static', filename='paper-dashboard.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/paper-dashboard.js') }}"></script>
 
-    <script id="baseScript" src="{{ url_for('static', filename='newjs.js') }}"
-    data-path="{{ request.path }}"></script>
-    <script src="{{ (url_for('static', filename='form.js')) }}"></script>
+
+    <!--<script src="{{ (url_for('static', filename='form.js')) }}"></script>-->
 
 
 
