@@ -104,15 +104,22 @@ def process():
     input_down_payment = request.form['down_payment']
     input_term = request.form['term']
     input_interest_rate = request.form['interest_rate']
+    input_property_tax = request.form['property_tax']
+    input_insurance = request.form['insurance']
+
+    calc = Calculations(input_price, input_down_payment, input_interest_rate, input_term, 0,0,0)
+    down_payment = calc.downpayment_calc()
+    mortgage_payment = calc.mortgage_calc()
+
 
     # Calculates the payment with input as float
-    down_payment = downpayment_calc(float(input_price),
-                                    float(input_down_payment))
-
-    mortgage_payment = mortgage_calc(float(input_price),
-                                     float(input_down_payment),
-                                     float(input_interest_rate),
-                                     input_term)
+    # down_payment = downpayment_calc(float(input_price),
+    #                                 float(input_down_payment))
+    #
+    # mortgage_payment = mortgage_calc(float(input_price),
+    #                                  float(input_down_payment),
+    #                                  float(input_interest_rate),
+    #                                  input_term)
 
     # Returns floats as a string with dollar sign and comma separators
     down_payment_clean = comma_dollar(down_payment)
@@ -120,11 +127,12 @@ def process():
 
 
     labels = ["Mortgage", "Taxes", "Insurance"]
-    number = [mortgage_payment, 90, 80]
-    total = mortgage_payment + 90 + 80
+    number = [int(mortgage_payment), int(input_property_tax), int(input_insurance)]
+    total = int(mortgage_payment) + int(input_property_tax) + int(input_insurance)
+
     return jsonify({'mortgage_payment': mortgage_payment_clean,
                     'down_payment': down_payment_clean,
                     'number': number,
                     'labels': labels,
-                    'total' : total
+                    'total': total
                 })

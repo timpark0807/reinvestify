@@ -97,11 +97,56 @@
                             </div>
                         </div>
 
-                        <div class="row">
+
+
+           <!--Begin drop down property tax and insurance-->
+              <p data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                 <i class="fas fa-angle-double-down"></i>
+                 <u><i>  Property Tax & Insurance</i> </u>
+              </p>
+
+            <div class="collapse" id="collapseExample">
+
+                       <div class="row">
+                            <div class="col-md-12">
+
+                            <label>Property Tax</label>
+                              <div class="input-group">
+                                <div class="input-group-prepend">
+
+                                  <span class="input-group-text">$</span>
+                                </div>
+                                <input type="text" class="form-control" id="property_tax_id" name="property_tax" value="90" aria-describedby="inputGroupPrepend" >
+                              </div>
+
+                            </div>
+                        </div>
+
+                       <div class="row">
+                            <div class="col-md-12">
+
+                            <label>Insurance</label>
+                              <div class="input-group">
+                                <div class="input-group-prepend">
+
+                                  <span class="input-group-text">$</span>
+                                </div>
+                                <input type="text" class="form-control" id="insurance_id" name="input_insurance" value="80" aria-describedby="inputGroupPrepend" >
+                              </div>
+
+                            </div>
+                       </div>
+
+            </div>
+
+           <!--End drop down property tax and insurance-->
+         <div class="row">
                             <div class="update ml-auto mr-auto">
                                 <button type="submit" class="btn btn-primary btn-round">Submit</button>
                             </div>
                         </div>
+
+
 
                     </form>
                     </div>
@@ -126,14 +171,14 @@
                     </div>
 
                     <div class="card-body ">
+
                         <canvas id="bar-chart" ></canvas>
 
+                        <label>Down Payment</label>
+                        <p id="down_payment_output"></p>
 
-                    <label>Down Payment</label>
-                    <p id="down_payment_output"></p>
-
-                    <label>Monthly Mortgage Payment</label>
-                    <p id="mortgage_payment_output"></p>
+                        <label>Monthly Mortgage Payment</label>
+                        <p id="mortgage_payment_output"></p>
 
                     </div>
                     <hr/>

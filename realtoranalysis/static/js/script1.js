@@ -1,5 +1,6 @@
 $(document).ready(function(){
 
+
 // This loads a doughnut chart when you open the page
          chartx = new Chart(document.getElementById("bar-chart"), {
                       type: 'doughnut',
@@ -51,12 +52,15 @@ $(document).ready(function(){
 
     $('form').on('submit', function(event) {
 
+
         $.ajax({
             data : {
                 price : $('#price_id').val(),
                 down_payment : $('#down_payment_id').val(),
                 term : $('#term_id').val(),
-                interest_rate : $('#interest_rate_id').val()
+                interest_rate : $('#interest_rate_id').val(),
+                property_tax : $('#property_tax_id').val(),
+                insurance : $('#insurance_id').val()
             },
             type : 'POST',
             url : '/process'
@@ -103,8 +107,10 @@ $(document).ready(function(){
                     textX = Math.round((width - ctx.measureText(text).width) / 2),
                     textY = (height / 2)-12;
 
+
                 ctx.fillText(text, textX, textY);
                 ctx.save();
+
               }
 
             })
