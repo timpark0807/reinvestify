@@ -7,14 +7,14 @@ from realtoranalysis.forms import Analyze_Form
 from realtoranalysis.scripts.calculator import Calculations, comma_dollar
 
 @app.route("/")
-@app.route("/dashboard")
-def dashboard():
-    return render_template('dashboard.html', methods=['POST'])
+@app.route("/home")
+def home():
+    return render_template('home.html', methods=['POST'])
 
 
 @app.route("/about")
 def about():
-    return render_template('multiform.html', methods=['POST'])
+    return render_template('home.html', methods=['POST'])
 
 
 @app.route("/data")
@@ -72,7 +72,10 @@ def handle_analyze():
         monthly_noi = house.noi(oi)
         cap_rate = house.cap_rate()
 
+
         cash_flow = house.cashflow(monthly_noi, mortgage_payment)
+        coc = house.cashoncash(cash_flow, oop)
+
 
         clean_oi = comma_dollar(oi)
         clean_down_payment = comma_dollar(down_payment)
@@ -90,7 +93,8 @@ def handle_analyze():
                                                   monthly_income=monthly_income, monthly_expense=monthly_expense,
                                                   down_payment=clean_down_payment,
                                                   outofpocket=clean_outofpocket,
-                                                  cashflow=clean_cash_flow)
+                                                  cashflow=clean_cash_flow,
+                                                  cashoncash=coc)
 
 
 @app.route("/calculator")

@@ -22,16 +22,16 @@
       <div class="sidebar" data-color="black" data-active-color="danger">
         <div class="logo">
           <a href=# class="simple-text logo-mini"></a>
-          <a href="{{ url_for('dashboard') }}" class="simple-text logo-normal">REInvest</a>
+          <a href="{{ url_for('home') }}" class="simple-text logo-normal">REInvest</a>
         </div>
 
         <div class="sidebar-wrapper">
           <ul class="nav">
 
             <li class="{{ 'active' if active_page == 'dashboard' else '' }}">
-                <a href="{{ url_for('dashboard') }}">
+                <a href="{{ url_for('home') }}">
                 <i class="fas fa-home"></i>
-                <p>Dashboard</p>
+                <p>Home</p>
               </a>
             </li>
 

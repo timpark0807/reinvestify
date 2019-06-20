@@ -3,6 +3,8 @@
 
 {% block content %}
 <div class="content">
+  <div class="container mt-3">
+
     <div class="row">
         <div class="col-md-12">
               <!--<h5 class="card-title">{{title}}</h5>-->
@@ -80,7 +82,7 @@
                   <div class="col-12 col-md-12">
                     <div class="numbers">
                       <p class="card-category">Cash on Cash</p>
-                      <p class="card-title">{{ cashflow }}<p>
+                      <p class="card-title">{{cashoncash}}<p>
                     </div>
                   </div>
                 </div>
@@ -103,7 +105,7 @@
                 <div class="row">
                   <div class="col-12 col-md-12">
                     <div class="numbers">
-                      <p class="card-category">Monthly Income</p>
+                      <p class="card-category">Operating Income</p>
                       <p class="card-title">{{operating_income}}<p>
                     </div>
                   </div>
@@ -121,7 +123,7 @@
                 <div class="row">
                   <div class="col-12 col-md-12">
                     <div class="numbers">
-                      <p class="card-category">Monthly Expenses</p>
+                      <p class="card-category">Operating Expenses</p>
                       <p class="card-title">({{monthly_expense}})</p>
 
                     </div>
@@ -223,26 +225,100 @@
 
 
         <div class="row">
-          <div class="col-md-12">
+          <div class="col-md-8">
             <div class="card ">
               <div class="card-header ">
-                <h5 class="card-title">Users Behavior</h5>
-                <p class="card-category">24 Hours performance</p>
+                <h5 class="card-title">Income Statement</h5>
+                <p class="card-category">Year 1</p>
               </div>
-              <div class="card-body ">
-                <canvas id=chartHours width="400" height="100"></canvas>
-              </div>
-              <div class="card-footer ">
-                <hr>
-                <div class="stats">
-                  <i class="fa fa-history"></i> Updated 3 minutes ago
+              <div class="card-body">
+                <div class="content table-responsive table-full-width">
+                  <table class="table ">
+                    <thead>
+                      <tr>
+                        <th>CASH FLOW</th>
+                        <th></th>
+                        <th style="text-align: right; padding-right: 15px;">Monthly</th>
+                        <th style="text-align: right;">Yearly</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                          <td> Gross Rent</td>
+                          <td> </td>
+                          <td style="text-align: right; padding-right: 15px;"> $1,500</td>
+                          <td style="text-align: right;"> $18,000</td>
+                        </tr>
+
+                        <tr>
+                          <td> Vacancy (10%)</td>
+                          <td> - </td>
+                          <td style="text-align: right; padding-right: 15px;"> $150</td>
+                          <td style="text-align: right;"> $1,800</td>
+                        </tr>
+
+                        <tr>
+                          <td style="border-bottom:1pt solid black;"> Other Income</td>
+                          <td style="border-bottom:1pt solid black;"> + </td>
+                          <td style="text-align: right; padding-right: 15px; border-bottom:1pt solid black;"> $0</td>
+                          <td style="text-align: right; border-bottom:1pt solid black;"> $0</td>
+                        </tr>
+
+                        <tr>
+                          <td> Operating Income</td>
+                          <td> = </td>
+                          <td style="text-align: right; padding-right: 15px;"> $1,350</td>
+                          <td style="text-align: right;"> $16,200</td>
+                        </tr>
+
+                        <tr>
+                          <td style="border-bottom:1pt solid black;"> Operating Expenses (50%)</td>
+                          <td style="border-bottom:1pt solid black;"> - </td>
+                          <td style="text-align: right; padding-right: 15px;border-bottom:1pt solid black;"> $750</td>
+                          <td style="text-align: right;border-bottom:1pt solid black;"> $9,000</td>
+                        </tr>
+
+                        <tr>
+                          <td> Net Operating Income</td>
+                          <td> = </td>
+                          <td style="text-align: right; padding-right: 15px;"> $600</td>
+                          <td style="text-align: right;"> $7,200</td>
+                        </tr>
+
+                        <tr>
+                          <td> Loan Payment</td>
+                          <td> - </td>
+                          <td style="text-align: right; padding-right: 15px;"> $429</td>
+                          <td style="text-align: right;"> $5,153</td>
+                        </tr>
+
+                        <tr style="border-bottom:2pt solid black;">
+                          <td ><b>Cash Flow</b></td>
+                          <td> = </td>
+                          <td style="text-align: right; padding-right: 15px;"><b> $171 </b></td>
+                          <td style="text-align: right;"><b> $2,047 </b></td>
+                        </tr>
+                    </tbody>
+
+                  </table>
+
                 </div>
               </div>
+
+            </div>
+        </div>
+
+
+          <div class="col-md-4">
+            <div class="card ">
+            <div class="card-body">asdf</div>
             </div>
           </div>
+
+
         </div>
 
       </div>
 
-
+</div>
 {% endblock content %}
