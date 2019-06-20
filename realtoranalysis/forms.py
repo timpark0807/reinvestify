@@ -15,6 +15,7 @@ class Analyze_Form(FlaskForm):
     price = StringField('Price')
     term = StringField('Term')
     down = StringField('Down')
+    closing = StringField('Closing')
     interest = StringField('Interest')
     grossrent = StringField('GrossRent')
     grossrent = StringField('Vacancy')

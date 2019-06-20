@@ -106,6 +106,11 @@ class Calculations:
         oop = (self.price*down_percent) + (self.price*closing_percent)
         return oop
 
+    def cashoncash(self, cashflow, outofpocket):
+        coc = ((cashflow * 12) / outofpocket) * 100
+        return str(round(coc,1)) + "%"
+
+
 
 def comma_dollar(number):
     payment_1 = format(round(number), ',d')
