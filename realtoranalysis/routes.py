@@ -2,8 +2,6 @@ from realtoranalysis import app
 import json
 from flask import render_template, jsonify, request, redirect, url_for
 from realtoranalysis.forms import Analyze_Form
-# from realtoranalysis.scripts.calculator import mortgage_calc, downpayment_calc, comma_dollar, cap_rate, noi, outofpocket, cashflow
-
 from realtoranalysis.scripts.calculator import Calculations, comma_dollar
 
 @app.route("/")
@@ -60,6 +58,8 @@ def handle_analyze():
         vacancy = request.form['vacancy']
         taxes = request.form['taxes']
         expenses = request.form['expenses']
+        appreciation = request.form['appreciation']
+
 
         house = Calculations(price, down, interest, term, rent, expenses, vacancy)
 
@@ -72,10 +72,8 @@ def handle_analyze():
         monthly_noi = house.noi(oi)
         cap_rate = house.cap_rate()
 
-
         cash_flow = house.cashflow(monthly_noi, mortgage_payment)
         coc = house.cashoncash(cash_flow, oop)
-
 
         clean_oi = comma_dollar(oi)
         clean_down_payment = comma_dollar(down_payment)
@@ -84,17 +82,29 @@ def handle_analyze():
         clean_outofpocket = comma_dollar(oop)
         clean_cash_flow = comma_dollar(cash_flow)
 
+        # graph
+        model_year, model_appreciation, model_loan, model_equity = house.year30model(appreciation, 2)
+        data = {'model_year':model_year,
+                'model_appreciation': model_appreciation,
+                'model_loan': model_loan,
+                'model_equity': model_equity,
+                'pie_monthly': 10,
+                'pie_expense': 20}
+
+
     return render_template('analyze_output.html', title=title, street=street, city=city, state=state, zipcode=zipcode,
                                                   price=clean_price, type=type, year=year, bed=bed, bath=bath,
                                                   sqft=sqft,
                                                   mortgage_payment=clean_mortgage_payment,
                                                   cap_rate=cap_rate,
-                                                  operating_income=clean_oi,
+                                                  operating_income=clean_oi, expenses=expenses,
                                                   monthly_income=monthly_income, monthly_expense=monthly_expense,
                                                   down_payment=clean_down_payment,
                                                   outofpocket=clean_outofpocket,
                                                   cashflow=clean_cash_flow,
-                                                  cashoncash=coc)
+                                                  cashoncash=coc,
+                                                  data=data
+                                                   )
 
 
 @app.route("/calculator")

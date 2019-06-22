@@ -1,3 +1,5 @@
+import numpy
+
 
 class Calculations:
 
@@ -95,7 +97,10 @@ class Calculations:
 
         noi = operating_income * (self.expenses/100)
         output = (noi/self.price)
-        return str(output*100) + '%'
+        if output < 0:
+            return "(" + str(round((output * 100))*-1, 1) + '%)'
+        else:
+            return str(round(output*100,1)) + '%'
 
 
     def outofpocket(self, closing):
@@ -108,11 +113,66 @@ class Calculations:
 
     def cashoncash(self, cashflow, outofpocket):
         coc = ((cashflow * 12) / outofpocket) * 100
-        return str(round(coc,1)) + "%"
+        if coc < 0:
+            return "(" + str(round(coc*-1, 1)) + "%)"
+        else:
+            return str(round(coc,1)) + "%"
+
+
+    def year30model(self, appreciation, income_growth):
+        appreciation = int(appreciation)
+
+        # set the initial value of the house, rent, and expenses for Year 0 of the model
+        initial_value = self.price
+        initial_rent = self.rent
+        initial_expense = self.rent * .5
+
+        # These are the form inputs for expected annual increase in house value
+        appreciation_assumption = 1 + (appreciation/100)
+
+        # calculate the monthly mortgage and down payment by calling previously defined function
+        monthly_mortgage = self.mortgage_calc()
+        downpayment = self.downpayment_calc()
+
+        # Set up Loan Balance - Present Value calculation variables
+        rate = (self.interest/100)/12
+        num_of_periods = (self.term * 12)
+
+        # Appreciated value used in the for loop. Year 0 values will be equal to the initial house and rent value
+        appreciated_value = initial_value
+
+        # empty lists to append loop results to
+        year_list = []
+        new_values_list = []
+        loan_balance_list = []
+        equity_list = []
+
+        for i in range(1,31):
+
+            # the appreciated value of the house is the initial value times appreciation assumption
+            appreciated_value = round(appreciated_value * appreciation_assumption)
+
+            loan_balance = round(numpy.pv(rate, num_of_periods - (12 * i), monthly_mortgage)) * -1
+
+            equity = (initial_value - loan_balance + (appreciated_value-initial_value))
+
+            year_list.append(i)
+            new_values_list.append(appreciated_value)
+            loan_balance_list.append(loan_balance)
+            equity_list.append(equity)
+
+            # loan_balance = round(numpy.pv((.05 / 12), 360 - (12 * i), monthly_mortgage)) * -1
+        return year_list, new_values_list, loan_balance_list, equity_list
+
 
 
 
 def comma_dollar(number):
-    payment_1 = format(round(number), ',d')
-    str_payment = "$" + str(payment_1)
-    return str_payment
+    if number < 0:
+        payment_1 = format(round(number * -1), ',d')
+        str_payment = "($" + str(payment_1) + ")"
+        return str_payment
+    else:
+        payment_1 = format(round(number), ',d')
+        str_payment = "$" + str(payment_1)
+        return str_payment
