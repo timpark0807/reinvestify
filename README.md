@@ -1,3 +1,20 @@
+# Real Estate Investing Portal 
+## RE-Invest 
+
+RE-Invest is a web based application for real estate investors. My goal was to learn more about programming by creating an application that interested me. 
+
+Features:
+1. Property Analyzer
+2. Mortgage Calculator
+
+Property Analyzer takes inputs from the users and creates a report with metrics such as Net Operating Income, Cash on Cash Return, etc. 
+
+
+
+
+
+
+
 You will need the following packages:
 -BeautifulSoup
 -Requests
