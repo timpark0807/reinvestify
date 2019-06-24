@@ -89,8 +89,13 @@ def handle_analyze():
                 'model_loan': model_loan,
                 'model_equity': model_equity,
                 'pie_monthly': 10,
-                'pie_expense': 20}
-
+                'pie_expense': 20,
+                'grossrent': comma_dollar(int(rent)),
+                'operating_income': clean_oi,
+                'operating_expenses': comma_dollar(int(rent) * (1-(int(expenses)/100))),
+                'loan_payment': clean_mortgage_payment,
+                'cashflow': clean_cash_flow
+                }
 
     return render_template('analyze_output.html', title=title, street=street, city=city, state=state, zipcode=zipcode,
                                                   price=clean_price, type=type, year=year, bed=bed, bath=bath,
@@ -103,8 +108,7 @@ def handle_analyze():
                                                   outofpocket=clean_outofpocket,
                                                   cashflow=clean_cash_flow,
                                                   cashoncash=coc,
-                                                  data=data
-                                                   )
+                                                  data=data)
 
 
 @app.route("/calculator")
