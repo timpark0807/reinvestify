@@ -2,12 +2,30 @@
 {% set active_page = "analyze" %}
 
 {% block content %}
+<head>
+  <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.3.0/Chart.min.js"> </script>
+   <script type="text/javascript">
+      var year = {{ data.model_year }}
+      var appreciation = {{ data.model_appreciation }}
+      var loan = {{ data.model_loan }}
+      var equity = {{ data.model_equity }}
+      var pie_mortgage = {{ data.pie_mortgage }}
+      var pie_expenses = {{ data.pie_expense}}
+      var pie_cashflow = {{ data.pie_cashflow }}
+
+  </script>
+
+  <script src="{{url_for('static', filename='js/dashboardpie.js')}}"></script>
+  <script src="{{url_for('static', filename='js/house.js')}}"></script>
+
+
+</head>
 <div class="content">
   <div class="container mt-3">
 
     <div class="row">
         <div class="col-md-12">
-              <!--<h5 class="card-title">{{title}}</h5>-->
               <h5 class="address" style="line-height:15px;">{{street}}, {{city}}, {{state}} {{zipcode}}</h5>
               <p class="bed" style="line-height:20px;">{{bed}} bd | {{bath}} ba | {{sqft}} sqft | {{type}} | Built in {{year}}</p>
         </div>
@@ -172,71 +190,36 @@
 
         </div>
 
-<!--END 1ST ROW OF CARD ICONS -->
+    <div class="card-deck">
+        <div class="card">
+          <div class="card-body">
+                          <h6 class="card-title text-center">30 Year Model</h6>
+
+                                    <canvas id="line-chart" height="200"></canvas>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-body">
+                          <h6 class="card-title text-center">Payment Breakdown</h6>
+
+                                <canvas id="bar-chart"height="200"></canvas>
 
 
+          </div>
+        </div>
+    </div>
 
-<!--BEGIN PROPERTY DETAIL  -->
-          <!--<div class="row">-->
-              <!--<div class="col-md-4">-->
-                <!--<div class="card ">-->
-                  <!--<div class="card-header ">-->
-                    <!--<h5 class="card-title">{{title}}</h5>-->
-                    <!--<p class="card-category" style="line-height:15px;">{{street}}, {{city}}, {{state}} {{zipcode}}</p>-->
-                  <!--</div>-->
-                  <!--<div class="card-body ">-->
-                    <!--<p class="bed" style="line-height:10px;">{{bed}} bd | {{bath}} ba | {{sqft}} sqft</p>-->
-                    <!--<p class="type" style="line-height:10px;">{{type}} | Built in {{year}}</p>-->
-                  <!--</div>-->
-                      <!--<hr>-->
-                <!--</div>-->
-              <!--</div>-->
-              <!--<div class="col-md-8">-->
-                <!--<div class="card card-chart">-->
-                  <!--<div class="card-header">-->
-                    <!--<h5 class="card-title">Property Overview:</h5>-->
-                    <!--<p class="card-category">Line Chart with Points</p>-->
-                  <!--</div>-->
-                  <!--<div class="card-body ">-->
-                   <!--&lt;!&ndash;<p class="type">Type: {{type}}</p>&ndash;&gt;-->
-                   <!--&lt;!&ndash;<p class="bed">Beds: {{bed}}</p>&ndash;&gt;-->
-                   <!--&lt;!&ndash;<p class="bath">Bath: {{bath}}</p>&ndash;&gt;-->
-                   <!--&lt;!&ndash;<p class="sqft">Sq Ft: {{sqft}}</p>&ndash;&gt;-->
-                  <!--</div>-->
-                    <!--<hr/>-->
-                <!--</div>-->
-              <!--</div>-->
-          <!--</div>-->
-
-        <!--<div class="row">-->
-          <!--<div class="col-md-12">-->
-            <!--<div class="card ">-->
-              <!--<div class="card-header ">-->
-                <!--<h5 class="card-title">Property Detail</h5>-->
-                <!--<h8></h8>-->
-              <!--</div>-->
-
-                <!--<hr>-->
-            <!--</div>-->
-          <!--</div>-->
-        <!--</div>-->
-
-<!--END PROPERTY DETAIL  -->
-
-
+<br>
         <div class="row">
-          <div class="col-md-8">
+          <div class="col-md-12">
             <div class="card ">
-              <div class="card-header ">
-                <h5 class="card-title">Income Statement</h5>
-                <p class="card-category">Year 1</p>
-              </div>
               <div class="card-body">
+                <h5 class="card-title">Cash Flow</h5>
                 <div class="content table-responsive table-full-width">
                   <table class="table ">
                     <thead>
                       <tr>
-                        <th>CASH FLOW</th>
+                        <th></th>
                         <th></th>
                         <th style="text-align: right; padding-right: 15px;">Monthly</th>
                         <th style="text-align: right;">Yearly</th>
@@ -246,57 +229,57 @@
                         <tr>
                           <td> Gross Rent</td>
                           <td> </td>
-                          <td style="text-align: right; padding-right: 15px;"> $1,500</td>
-                          <td style="text-align: right;"> $18,000</td>
+                          <td style="text-align: right; padding-right: 15px;"> {{cashflow_data.grossrent}}</td>
+                          <td style="text-align: right;"> {{cashflow_data.annual_grossrent}}</td>
                         </tr>
 
                         <tr>
                           <td> Vacancy (10%)</td>
                           <td> - </td>
-                          <td style="text-align: right; padding-right: 15px;"> $150</td>
-                          <td style="text-align: right;"> $1,800</td>
+                          <td style="text-align: right; padding-right: 15px;"> {{ cashflow_data.vacancy }}</td>
+                          <td style="text-align: right;"> {{cashflow_data.annual_vacancy}}</td>
                         </tr>
 
                         <tr>
                           <td style="border-bottom:1pt solid black;"> Other Income</td>
                           <td style="border-bottom:1pt solid black;"> + </td>
-                          <td style="text-align: right; padding-right: 15px; border-bottom:1pt solid black;"> $0</td>
-                          <td style="text-align: right; border-bottom:1pt solid black;"> $0</td>
+                          <td style="text-align: right; padding-right: 15px; border-bottom:1pt solid black;"> {{cashflow_data.other_income}}</td>
+                          <td style="text-align: right; border-bottom:1pt solid black;"> {{cashflow_data.annual_other_income}}</td>
                         </tr>
 
                         <tr>
                           <td> Operating Income</td>
                           <td> = </td>
-                          <td style="text-align: right; padding-right: 15px;"> $1,350</td>
-                          <td style="text-align: right;"> $16,200</td>
+                          <td style="text-align: right; padding-right: 15px;"> {{cashflow_data.operating_income}}</td>
+                          <td style="text-align: right;"> {{cashflow_data.annual_operating_income}}</td>
                         </tr>
 
                         <tr>
-                          <td style="border-bottom:1pt solid black;"> Operating Expenses (50%)</td>
+                          <td style="border-bottom:1pt solid black;"> Operating Expenses ({{expenses}}%)</td>
                           <td style="border-bottom:1pt solid black;"> - </td>
-                          <td style="text-align: right; padding-right: 15px;border-bottom:1pt solid black;"> $750</td>
-                          <td style="text-align: right;border-bottom:1pt solid black;"> $9,000</td>
+                          <td style="text-align: right; padding-right: 15px;border-bottom:1pt solid black;"> {{cashflow_data.operating_expenses}}</td>
+                          <td style="text-align: right;border-bottom:1pt solid black;"> {{cashflow_data.annual_operating_expenses}}</td>
                         </tr>
 
                         <tr>
                           <td> Net Operating Income</td>
                           <td> = </td>
-                          <td style="text-align: right; padding-right: 15px;"> $600</td>
-                          <td style="text-align: right;"> $7,200</td>
+                          <td style="text-align: right; padding-right: 15px;"> {{ cashflow_data.noi }} </td>
+                          <td style="text-align: right;"> {{ cashflow_data.annual_noi }} </td>
                         </tr>
 
                         <tr>
                           <td> Loan Payment</td>
                           <td> - </td>
-                          <td style="text-align: right; padding-right: 15px;"> $429</td>
-                          <td style="text-align: right;"> $5,153</td>
+                          <td style="text-align: right; padding-right: 15px;"> {{ cashflow_data.loan_payment }} </td>
+                          <td style="text-align: right;"> {{ cashflow_data.annual_loan_payment }}</td>
                         </tr>
 
                         <tr style="border-bottom:2pt solid black;">
                           <td ><b>Cash Flow</b></td>
                           <td> = </td>
-                          <td style="text-align: right; padding-right: 15px;"><b> $171 </b></td>
-                          <td style="text-align: right;"><b> $2,047 </b></td>
+                          <td style="text-align: right; padding-right: 15px;"><b> {{ cashflow_data.cashflow }} </b></td>
+                          <td style="text-align: right;"><b> {{ cashflow_data.annual_cashflow }}</b></td>
                         </tr>
                     </tbody>
 
@@ -304,16 +287,11 @@
 
                 </div>
               </div>
-
             </div>
         </div>
 
 
-          <div class="col-md-4">
-            <div class="card ">
-            <div class="card-body">asdf</div>
-            </div>
-          </div>
+
 
 
         </div>

@@ -10,6 +10,10 @@ def home():
     return render_template('home.html', methods=['POST'])
 
 
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html')
+
 @app.route("/about")
 def about():
     return render_template('home.html', methods=['POST'])
@@ -60,10 +64,11 @@ def handle_analyze():
         expenses = request.form['expenses']
         appreciation = request.form['appreciation']
 
-
         house = Calculations(price, down, interest, term, rent, expenses, vacancy)
 
-        monthly_income = comma_dollar(int(rent))
+        cashflow_data = house.income_statement(10)
+
+        monthly_income = comma_dollar(rent)
         monthly_expense = comma_dollar(house.monthly_expenses())
         mortgage_payment = house.mortgage_calc()
         down_payment = house.downpayment_calc()
@@ -77,7 +82,7 @@ def handle_analyze():
 
         clean_oi = comma_dollar(oi)
         clean_down_payment = comma_dollar(down_payment)
-        clean_price = comma_dollar(int(price))
+        clean_price = comma_dollar(price.replace(',',''))
         clean_mortgage_payment = comma_dollar(mortgage_payment)
         clean_outofpocket = comma_dollar(oop)
         clean_cash_flow = comma_dollar(cash_flow)
@@ -88,8 +93,9 @@ def handle_analyze():
                 'model_appreciation': model_appreciation,
                 'model_loan': model_loan,
                 'model_equity': model_equity,
-                'pie_monthly': 10,
-                'pie_expense': 20,
+                'pie_mortgage': mortgage_payment,
+                'pie_expense': house.monthly_expenses(),
+                'pie_cashflow': cash_flow,
                 'grossrent': comma_dollar(int(rent)),
                 'operating_income': clean_oi,
                 'operating_expenses': comma_dollar(int(rent) * (1-(int(expenses)/100))),
@@ -108,7 +114,7 @@ def handle_analyze():
                                                   outofpocket=clean_outofpocket,
                                                   cashflow=clean_cash_flow,
                                                   cashoncash=coc,
-                                                  data=data)
+                                                  data=data, cashflow_data=cashflow_data)
 
 
 @app.route("/calculator")
