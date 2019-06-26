@@ -1,0 +1,50 @@
+{% extends "layout_paperdash.html" %}
+{% block content %}
+
+<head>
+<title>Internal Server Error</title>
+
+<script language="JavaScript" type="text/javascript">
+var seconds =11;
+// countdown timer. took 6 because page takes approx 1 sec to load
+var url="{{url_for('dashboard')}}";
+// variable for home.html url
+function redirect(){
+ if (seconds <=0){
+ // redirect to new url after counter  down.
+  window.location = url;
+ } else {
+  seconds--;
+  document.getElementById("pageInfo").innerHTML="Redirecting to Home Page after ".italics()
++seconds+" seconds."
+  setTimeout("redirect()", 1000)
+ }
+}
+</script>
+</head>
+
+<div class ="content">
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+             <div class="col-6">
+                    <div class="card">
+                        <div class="card-header">
+                           <h6>An unexpected error has occurred</h6>
+                           <p>The administrator has been notified. Sorry for the inconvenience!</p>
+                        </div>
+
+                        <div class="card-body">
+                              <div class="content-section">
+                                  <p>Use the left navigation bar to return to a specific page...</p>
+                                  <p id="pageInfo"></p>
+                              </div>
+                        </div>
+                    </div>
+             </div>
+        </div>
+    </div>
+     <body onload="redirect()"></body>
+</div>
+{% endblock content %}
+
+{% endblock content %}

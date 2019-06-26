@@ -68,11 +68,13 @@ def register():
 def page_not_found(e):
     return render_template('404.html')
 
+@app.errorhandler(500)
+def internal_error(e):
+    return render_template('500.html'), 500
 
 @app.route("/about")
 def about():
     return render_template('home.html', methods=['POST'])
-
 
 @app.route("/data")
 def test():
