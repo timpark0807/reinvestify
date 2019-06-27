@@ -1,6 +1,6 @@
 from realtoranalysis import app, db, bcrypt
 import json
-from flask import render_template, jsonify, request, redirect, url_for, flash
+from flask import render_template, jsonify, request, redirect, url_for, flash, abort
 from realtoranalysis.forms import Analyze_Form, LoginForm, RegistrationForm
 from realtoranalysis.scripts.calculator import Calculations, comma_dollar
 from realtoranalysis.models import User, Post
@@ -10,7 +10,9 @@ from flask_login import login_user, current_user, logout_user, login_required
 @app.route("/")
 @app.route("/home")
 def home():
-    return render_template('home.html', methods=['POST'])
+    posts = Post.query.filter_by(title='title').first()
+    print(posts)
+    return render_template('home.html', post=posts)
 
 
 @app.route("/account")
@@ -81,7 +83,7 @@ def test():
     values = [12, 19, 3]
     labels = ['Red', 'Blue', 'Yellow']
     colors = ['#ff0000','#0000ff','#008000']
-    return render_template('interactive_calculator.html', values=values, labels=labels, colors=colors)
+    return render_template('calculator.html', values=values, labels=labels, colors=colors)
 
 
 @app.route("/get_data")
@@ -89,6 +91,77 @@ def handle_test():
     labels = ["Africa", "Asia", "Europe", "Latin America", "North America"]
     data = [5578,5267,734,784,433]
     return jsonify({'payload':json.dumps({'data':data, 'labels':labels})})
+
+@app.route("/analyze2", methods=['GET','POST'])
+def analyze2():
+    form = Analyze_Form()
+    if form.is_submitted():
+        title = request.form['title']
+        street = request.form['street']
+        city = request.form['city']
+        state = request.form['state']
+        zipcode = request.form['zipcode']
+        type = request.form['type']
+        year = request.form['year']
+        bed = request.form['bed']
+        bath = request.form['bath']
+        sqft = request.form['sqft']
+        price = request.form['price']
+        term = request.form['term']
+        down = request.form['down']
+        interest = request.form['interest']
+        closing = request.form['closing']
+        rent = request.form['rent']
+        vacancy = request.form['vacancy']
+        taxes = request.form['taxes']
+        expenses = request.form['expenses']
+        appreciation = request.form['appreciation']
+
+        house = Calculations(price, down, interest, term, rent, expenses, vacancy)
+
+        cashflow_data = house.income_statement(10)
+
+        monthly_income = comma_dollar(rent)
+        monthly_expense = comma_dollar(house.monthly_expenses())
+        mortgage_payment = house.mortgage_calc()
+        down_payment = house.downpayment_calc()
+        oop = house.outofpocket(closing)
+        oi = house.operating_income()
+        monthly_noi = house.noi(oi)
+        cap_rate = house.cap_rate()
+
+        cash_flow = house.cashflow(monthly_noi, mortgage_payment)
+        coc = house.cashoncash(cash_flow, oop)
+
+        clean_oi = comma_dollar(oi)
+        clean_down_payment = comma_dollar(down_payment)
+        clean_price = comma_dollar(price.replace(',', ''))
+        clean_mortgage_payment = comma_dollar(mortgage_payment)
+        clean_outofpocket = comma_dollar(oop)
+        clean_cash_flow = comma_dollar(cash_flow)
+
+
+        post = Post(title=title,
+                    street=street,
+                    zipcode=zipcode,
+                    price=clean_price,
+                    mortgage=clean_mortgage_payment,
+                    author=current_user)
+        db.session.add(post)
+        db.session.commit()
+        return redirect(url_for('post', post_id=post.id))
+    return render_template('analyze_2.html', form=form)
+
+
+@app.route("/analyze/<int:post_id>")
+def post(post_id):
+    post = Post.query.get_or_404(post_id)
+
+    # TODO: Customize a 403 page
+    # can't view report unless you are the user who created it
+    if post.author != current_user:
+        abort(403)
+    return render_template("analyze_output_2.html", title=post.title, post=post)
 
 
 @app.route("/analyze", methods=['GET','POST'])
@@ -176,7 +249,7 @@ def handle_analyze():
 
 @app.route("/calculator")
 def calculator():
-    return render_template('interactive_calculator.html')
+    return render_template('calculator.html')
 
 
 @app.route("/process", methods=['POST'])
