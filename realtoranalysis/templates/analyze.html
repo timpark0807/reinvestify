@@ -1,4 +1,4 @@
-{% extends "layout_paperdash.html" %}
+{% extends "base.html" %}
 {% set active_page = "analyze" %}
 
 {% block content %}
@@ -17,6 +17,7 @@
             <div class="card ">
             <section>
             <form method="POST" action="{{ url_for('handle_analyze') }}">
+                <!--<form method="POST">-->
                 <div class="wizard">
                     <div class="wizard-inner">
                         <div class="connecting-line"></div>
@@ -228,7 +229,7 @@
                                             <div class="form-group">
                                                 <label>Down Payment</label>
                                                 <div class="input-group mb-3">
-                                                  <input type="text" class="form-control" id="down_payment_id" name="down" value="20" aria-label="Amount">
+                                                  <input type="text" class="form-control" id="down_payment_id" name="down" value="20.0" aria-label="Amount">
                                                   <div class="input-group-append">
                                                     <span class="input-group-text">%</span>
                                                   </div>
@@ -297,7 +298,7 @@
                                                 <div class="input-group-prepend">
                                                   <span class="input-group-text">$</span>
                                                 </div>
-                                            <input type="text" class="form-control" id="cashflow_taxes_id" name="taxes" value="">
+                                            <input type="text" class="form-control" id="cashflow_taxes_id" name="taxes" value="0">
                                             </div>
                                         </div>
                                     </div>
@@ -332,6 +333,47 @@
                                     </div>
 
                                 </div>
+
+
+                                <div class="form-row">
+
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>Annual Appreciation </label>
+                                            <div class="input-group mb-3">
+                                                <input type="text" class="form-control" id="appreciation" name="appreciation" value="3">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text">%</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                     <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>Annual Income Growth</label>
+                                            <div class="input-group mb-3">
+                                                <input type="text" class="form-control" id="annual_income_growth" name="Annual Income Growth" value="2">
+                                                <div class="input-group-append">
+                                                <span class="input-group-text">%</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                     <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>Annual Expense Growth</label>
+                                            <div class="input-group mb-3">
+                                                <input type="text" class="form-control" id="annual_expense_growth" name="Annual Expense Growth" value="2">
+                                                <div class="input-group-append">
+                                                <span class="input-group-text">%</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
                             </div>
                             <ul class="list-inline text-md-center">
                                  <li>

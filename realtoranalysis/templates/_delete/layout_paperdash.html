@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en" class="perfect-scrollbar-off gr__127_0_0_1">
+
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <title>REinvest</title>
+    <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport' />
+    <!--     Fonts and icons     -->
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,200" rel="stylesheet" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet">
+    <!-- CSS Files -->
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet" />
+    <link href="{{ url_for('static', filename='css/paper-dashboard.css') }}" rel="stylesheet" />
+  </head>
+
+  <body>
+
+    <div class="wrapper ">
+
+      <div class="sidebar" data-color="black" data-active-color="danger">
+        <div class="logo">
+          <a href=# class="simple-text logo-mini"></a>
+          <a href="{{ url_for('home') }}" class="simple-text logo-normal">REInvest</a>
+        </div>
+
+        <div class="sidebar-wrapper">
+          <ul class="nav">
+
+            <li class="{{ 'active' if active_page == 'dashboard' else '' }}">
+                <a href="{{ url_for('home') }}">
+                <i class="fas fa-home"></i>
+                <p>Home</p>
+              </a>
+            </li>
+
+            <li class="{{ 'active' if active_page == 'analyze' else '' }}">
+              <a href="{{ url_for('analyze') }}">
+                <i class="fas fa-search-dollar"></i>
+                <p>Analyze</p>
+              </a>
+            </li>
+
+            <li class="{{ 'active' if active_page == 'calculator' else '' }}">
+              <a href="{{ url_for('calculator') }}">
+                <i class="fas fa-calculator"></i>
+                <p>Calculator</p>
+              </a>
+            </li>
+
+            <li class="{{ 'active' if active_page == 'about' else '' }}">
+              <a href="{{ url_for('analyze2') }}">
+                <i class="fas fa-info"></i>
+                <p>About</p>
+              </a>
+            </li>
+
+          </ul>
+        </div>
+      </div>
+
+
+      <div class="main-panel">
+        <!-- Navbar -->
+        <nav class="navbar navbar-expand-lg navbar-absolute fixed-top navbar-transparent">
+          <div class="container-fluid">
+            <div class="navbar-wrapper">
+              <div class="navbar-toggle">
+                <button type="button" class="navbar-toggler">
+                  <span class="navbar-toggler-bar bar1"></span>
+                  <span class="navbar-toggler-bar bar2"></span>
+                  <span class="navbar-toggler-bar bar3"></span>
+                </button>
+              </div>
+                <a class="navbar-brand" href="#pablo">Real Estate Investing Portal</a>
+            </div>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navigation" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-bar navbar-kebab"></span>
+              <span class="navbar-toggler-bar navbar-kebab"></span>
+              <span class="navbar-toggler-bar navbar-kebab"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navigation">
+
+
+
+              {% if current_user.is_authenticated %}
+                <a class="nav-item nav-link" href="#">Account</a>
+                <a class="nav-item nav-link" href="{{ url_for('logout') }}">Logout</a>
+              {% else %}
+                <a class="nav-item nav-link" href="{{ url_for('login') }}">Login</a>
+                <a class="nav-item nav-link" href="{{ url_for('register') }}">Register</a>
+              {% endif %}
+
+
+            </div>
+          </div>
+        </nav>
+
+    <div class="content ">
+      <div class="row justify-content-center">
+        <div class="col-md-8">
+          {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+              {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">
+                  {{ message }}
+                </div>
+              {% endfor %}
+            {% endif %}
+          {% endwith %}
+        </div>
+    </div>
+
+          {% block content %}{% endblock %}
+    </div>
+
+        <hr>
+        <footer class="footer footer-black  footer-white ">
+          <div class="container-fluid">
+            <div class="row">
+              <nav class="footer-nav">
+                <ul>
+                  <li><a href="https://github.com/timpark0807" target="_blank">Github</a></li>
+                </ul>
+              </nav>
+              <div class="credits ml-auto">
+                <span class="copyright">©
+                  <script>
+                    document.write(new Date().getFullYear())
+                  </script>, made by Tim Park
+                </span>
+              </div>
+            </div>
+          </div>
+        </footer>
+        </div>
+      </div>
+    </div>
+
+    <!--   Core JS Files   -->
+
+    <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/popper.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/perfect-scrollbar.jquery.min.js') }}"></script>
+      <!-- Chart JS -->
+    <script src="{{ url_for('static', filename='js/chartjs.min.js') }}"></script>
+
+    <!--  Notifications Plugin    -->
+    <script src="{{ url_for('static', filename='js/bootstrap-notify.js') }}"></script>
+
+    <!-- Control Center for Now Ui Dashboard: parallax effects, scripts for the example pages etc -->
+    <script src="{{ url_for('static', filename='js/paper-dashboard.js') }}"></script>
+
+
+    <!--<script src="{{ (url_for('static', filename='form.js')) }}"></script>-->
+
+
+
+  </body>
+
+</html>

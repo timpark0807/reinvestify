@@ -1,22 +1,26 @@
-{% extends "layout_paperdash.html" %}
+{% extends "base.html" %}
 {% set active_page = "calculator" %}
 {% block content %}
 
 <head>
+
     <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.3.0/Chart.min.js"> </script>
+    <script src="{{ url_for('static', filename='js/script1.js') }}"></script>
     <script id="baseScript" src="{{ url_for('static', filename='js/calculator.js') }}"
     data-path="{{ request.path }}"></script>
+
 </head>
 <!--BEGIN ROW-->
 
     <div class="content">
+          <div class="container mt-3">
+        <div class="row justify-content-center">
 
-        <div class="row">
 
         <!--BEGIN MORTGAGE INPUT CARD-->
 
-            <div class="col-md-4">
+            <div class="col-auto mb-3">
                 <div class="card ">
 
 
@@ -36,21 +40,33 @@
 
                         <div class="row">
                             <div class="col-md-12">
-                                <div class="form-group ">
-                                    <label>Purchase Price ($)</label>
-                                    <input type="text" class="form-control" id="price_id" name="price" value="100000">
+
+                            <label>Purchase Price ($)</label>
+                              <div class="input-group">
+                                <div class="input-group-prepend">
+
+                                  <span class="input-group-text" id="inputGroupPrepend">$</span>
+                                </div>
+                                <input type="text" class="form-control" id="price_id" name="price" value="100000" aria-describedby="inputGroupPrepend" required>
+                              </div>
+
+                            </div>
+                        </div>
+
+
+                        <div class="row">
+                            <div class="col-md-12">
+                            <label>Downpayment</label>
+
+                                <div class="input-group mb-3">
+                                  <input type="text" class="form-control" id="down_payment_id" value="20" aria-label="Amount">
+                                  <div class="input-group-append">
+                                    <span class="input-group-text">%</span>
+                                  </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <label>Downpayment (%)</label>
-                                    <input type="text" class="form-control" id="down_payment_id" name="down_payment" value="20">
-                                </div>
-                            </div>
-                        </div>
 
                         <div class="row">
                             <div class="col-md-12">
@@ -61,13 +77,12 @@
                                         <option value="30">30 year fixed</option>
                                         <option value="15">15 year fixed</option>
                                     </select>
-
                 <script type="text/javascript">
-                    $('form-control').on('change', function() {
+                    $('selectpicker').on('change', function() {
                         alert( $(this).find(":selected").val() );
                     });
                 </script>
-                                    <!--<input type="text" class="form-control" id="term_id" name="input_term" placeholder="30">-->
+
                                 </div>
                             </div>
                         </div>
@@ -75,9 +90,13 @@
 
                         <div class="row">
                             <div class="col-md-12">
-                                <div class="form-group">
-                                    <label>Interest Rate (%)</label>
-                                    <input type="text" class="form-control" id="interest_rate_id" name="input_interest_rate" value="5.0">
+                            <label>Interest Rate</label>
+
+                                <div class="input-group mb-3">
+                                  <input type="text" class="form-control" id="interest_rate_id" name="input_interest_rate" value="5.0" aria-label="Amount (to the nearest dollar)">
+                                  <div class="input-group-append">
+                                    <span class="input-group-text">%</span>
+                                  </div>
                                 </div>
                             </div>
                         </div>
@@ -88,12 +107,56 @@
                             </div>
                         </div>
 
+           <!--Begin drop down property tax and insurance-->
+              <p data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                 <i class="fas fa-angle-double-down"></i>
+                 <u><i>  Property Tax & Insurance</i> </u>
+              </p>
+
+            <div class="collapse" id="collapseExample">
+
+                       <div class="row">
+                            <div class="col-md-12">
+
+                            <label>Property Tax</label>
+                              <div class="input-group">
+                                <div class="input-group-prepend">
+
+                                  <span class="input-group-text">$</span>
+                                </div>
+                                <input type="text" class="form-control" id="property_tax_id" name="property_tax" value="90" aria-describedby="inputGroupPrepend" >
+                              </div>
+
+                            </div>
+                        </div>
+
+                       <div class="row">
+                            <div class="col-md-12">
+
+                            <label>Insurance</label>
+                              <div class="input-group">
+                                <div class="input-group-prepend">
+
+                                  <span class="input-group-text">$</span>
+                                </div>
+                                <input type="text" class="form-control" id="insurance_id" name="input_insurance" value="80" aria-describedby="inputGroupPrepend" >
+                              </div>
+
+                            </div>
+                       </div>
+
+            </div>
+
+           <!--End drop down property tax and insurance-->
+
+
+
+
                     </form>
                     </div>
 
             <!--END MORTGAGE INPUT FORM-->
 
-                     <hr>
                 </div>
             </div>
 
@@ -107,27 +170,32 @@
                 <div class="card">
 
                     <div class="card-header">
-                        <h4 class="card-title" >Down Payment:</h4>
-                        <h5 class="card-title" id="down_payment_output">$</h5>
-
-                        <h4 class="card-title" >Mortgage Payment:</h4>
-                        <h5 class="card-title" id="mortgage_payment_output">$</h5>
-
-
+                        <h5 class="card-title">Payment Breakdown:</h5>
                     </div>
 
                     <div class="card-body ">
 
-                    <hr/>
+                        <canvas id="bar-chart" ></canvas>
+
+                        <label>Down Payment</label>
+                        <p id="down_payment_output"></p>
+
+                        <label>Monthly Mortgage Payment</label>
+                        <p id="mortgage_payment_output"></p>
+
+                    </div>
 
                 </div>
             </div>
 
         <!--END MORTGAGE OUTPUT CARD -->
+
         </div>
     </div>
+</div>
 <!--END ROW-->
-    </div>
+
+
 
 
 {% endblock content %}
