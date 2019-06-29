@@ -7,6 +7,30 @@ from realtoranalysis.models import User, Post
 from realtoranalysis.scripts.refactor_calculator import Calculate, comma_dollar
 from flask_login import login_user, current_user, logout_user, login_required
 
+######################################################################################################
+# Error Handler
+######################################################################################################
+
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
+
+
+@app.errorhandler(500)
+def internal_error(e):
+    return render_template('500.html'), 500
+
+
+@app.errorhandler(403)
+def app_forbidden(e):
+    return render_template('403.html'), 403
+
+
+######################################################################################################
+# Sidebar Nav
+######################################################################################################
+
 
 @app.route("/")
 @app.route("/home")
@@ -18,8 +42,8 @@ def home():
 @app.route("/account")
 @login_required
 def account():
-
     return render_template('account.html' )
+
 
 @app.route("/properties")
 @login_required
@@ -27,10 +51,15 @@ def properties():
     posts = Post.query.filter_by(id=5).first()
     return render_template('properties.html', post=posts)
 
-@app.route("/logout")
-def logout():
-    logout_user()
-    return redirect(url_for('home'))
+
+@app.route("/about")
+def about():
+    return render_template('home.html', methods=['POST'])
+
+
+######################################################################################################
+# Login / Logout / Register
+######################################################################################################
 
 
 @app.route("/login", methods=['GET', 'POST'])
@@ -50,6 +79,12 @@ def login():
                 flash('Login Unsuccessful. Please check email and password', 'danger')
 
     return render_template('login.html', title='Login', form=form)
+
+
+@app.route("/logout")
+def logout():
+    logout_user()
+    return redirect(url_for('home'))
 
 
 @app.route("/register", methods=['GET', 'POST'])
@@ -72,34 +107,32 @@ def register():
     return render_template('register.html', title='Register', form=form)
 
 
-@app.errorhandler(404)
-def page_not_found(e):
-    return render_template('404.html'), 404
-
-
-@app.errorhandler(500)
-def internal_error(e):
-    return render_template('500.html'), 500
-
-@app.errorhandler(403)
-def app_forbidden(e):
-    return render_template('403.html'), 403
-
-
-@app.route("/about")
-def about():
-    return render_template('home.html', methods=['POST'])
+######################################################################################################
+# Analyze
+######################################################################################################
 
 
 @app.route("/analyze", methods=['GET', 'POST'])
 def analyze():
+
+    """
+        This route is used when a user wants to analyze a new property
+        When the form is submitted, the form inputs are passed to variables (eg: title = form['title'])
+        We initialize a house object where we pass in variables as parameters to make calculations
+
+        If user is logged in, we insert these variables and calculations to a SQL database
+        The user is redirected to a route /analyze/<post.id> that requeries this information and displays it
+
+        Else: user is anonymous so we pass the variables and calculations as a dictionary to the jinja2 webpage
+    """
+
     form = Analyze_Form()
     if form.is_submitted():
 
         # Pass form inputs as variables
 
         title = request.form['title']
-        url = request.form['title']
+        url = request.form['url']
         street = request.form['street']
         city = request.form['city']
         state = request.form['state']
@@ -126,10 +159,8 @@ def analyze():
         income_growth = request.form['income_growth']
         expense_growth = request.form['expense_growth']
 
-
         # call Calculate class and pass in form inputs as parameters
         house = Calculate(price, down, interest, term, rent, expenses, vacancy, closing)
-
 
         # call methods of the Calculate class to make calculations , comma_dollar add $ and , to integer
         clean_price = price
@@ -254,14 +285,29 @@ def analyze():
         #     db.session.commit()
         #     return redirect("/analyze/anon", post=post)
 
-    return render_template('analyze_2.html', form=form)
+    return render_template('analyze.html', form=form)
 
 
 # when user is logged in,
 @app.route("/analyze/<int:post_id>")
 def post(post_id):
+    """ The user is redirected to this route after submitting the form on the /analyze/ route
+        As recap, the /analyze/ route submission inserts form inputs into a database
+        The database automatically assigns a primary key "post id" to the data
+
+        This route queries the database using the post id as the SQL WHERE clause
+        By querying this, we now have access to the variables input on the form and inserted by the /analyze/ route
+        We can get price by calling post.price
+
+        This route passes the calculations in as a parameter in render_template()
+        Now we can access the calculations in the jinja2 template
+    """
+
 
     post = Post.query.get_or_404(post_id)
+
+    if post.author != current_user:
+        abort(403)
 
     house = Calculate(post.price, post.down, post.interest, post.term, post.rent, post.expenses, post.vacancy, post.closing)
 
@@ -291,8 +337,7 @@ def post(post_id):
 
     # TODO: Customize a 403 page
     # can't view report unless you are the user who created it
-    if post.author != current_user:
-        abort(403)
+
     return render_template("analyze_output_2.html",
                            title=post.title,
                            post=post,
@@ -301,16 +346,91 @@ def post(post_id):
                            data=data)
 
 
+# when user is logged in,
+@app.route("/analyze/<int:post_id>/update", methods=['GET','POST'])
+def update_post(post_id):
+    """ This route allows a user to update the form inputs
+
+        This route renders the analyze form template
+
+        Using a GET request
+            On load, it first queries the database for information associated with the post_id
+            It sets the form inputs as the variables we query from the database
+
+        When we POST this form,
+            We insert the form inputs back into the database
+            Since when we load the update page, the original information is prefilled into the form,
+                Only changes we make will be change data inserted into the database
+    """
+    post = Post.query.get_or_404(post_id)
+
+    if post.author != current_user:
+        abort(403)
+
+    form = Analyze_Form()
+
+    if form.is_submitted():
+        post.title = form.title.data
+        post.street = form.street.data
+        post.city = form.city.data
+        post.state = form.state.data
+        post.zipcode = form.zipcode.data
+
+        post.type = form.type.data
+        post.year = form.year.data
+        post.bed = form.bed.data
+        post.bath = form.bath.data
+        post.sqft = form.sqft.data
+
+        post.price = form.price.data
+        post.down = form.down.data
+        post.interest = form.interest.data
+        post.closing = form.closing.data
+
+        db.session.commit()
+
+        flash('Your post has been updated!', 'success')
+        return redirect(url_for('post', post_id=post.id))
+
+    elif request.method == 'GET':
+        form.title.data = post.title
+        form.street.data = post.street
+        form.city.data = post.city
+        form.state.data = post.state
+        form.zipcode.data = post.zipcode
+
+        form.type.data = post.type
+        form.year.data = post.year
+        form.bed.data = post.bed
+        form.bath.data = post.bath
+        form.sqft.data = post.sqft
+
+        form.price.data = post.price
+        form.down.data = post.down
+        form.interest.data = post.interest
+        form.closing.data = post.closing
+
+    return render_template('analyze_update.html', form=form)
+
+
 # /analyze2 redirects to this route when current_user is not authenticated bc user is not logged in
 @app.route("/analyze/anon")
 def post_anon():
     return render_template("analyze_output_2.html", post=post)
 
 
+######################################################################################################
+######################################################################################################
+######################################################################################################
+# Not in use
+######################################################################################################
+######################################################################################################
+######################################################################################################
+
 @app.route("/analyze2", methods=['GET','POST'])
 def analyze2():
     form = Analyze_Form()
-    return render_template('analyze.html', form=form)
+    return render_template('analyze_update.html', form=form)
 
 
 @app.route("/handle_analyze", methods=['POST'])
