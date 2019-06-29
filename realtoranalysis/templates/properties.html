@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="content">
+  <div class="container mt-3">
+        <div class="row justify-content-center">
+             <div class="col-8">
+                    <div class="card spur-card">
+                        <div class="card-header">
+                                <h3>  <a href= "{{ url_for('post', post_id=post.id) }}"> {{post.title }} </a>    </h3>
+                                <h6>{{ post.date_posted}}</h6>
+                        </div>
+
+
+             <div class="card-body ">
+                      <div class="content-section">
+                       <h6>Address:</h6>
+
+                          <p> {{ post.street }} {{ post.city }}, {{ post.state }} {{ post.zipcode }}</p>
+                          <p> {{post.type}} | {{post.beds}} Bed | {{post.bath}} bath | {{post.sqft}} sqft </p>
+                          <p> {{post.price}} {{post.cash_flow}}/mo Cash Flow {{post.cap_rate}} Cap Rate</p>
+                      </div>
+                         </div>
+                                </div>
+             </div>
+        </div>
+ </div>
+
+ <body onload="redirect()">
+
+
+
+ </body>
+</div>
+{% endblock content %}
