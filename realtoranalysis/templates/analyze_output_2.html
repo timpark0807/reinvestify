@@ -7,16 +7,21 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.3.0/Chart.min.js"> </script>
   <script src="{{url_for('static', filename='js/dashboardpie.js')}}"></script>
   <script src="{{url_for('static', filename='js/house.js')}}"></script>
+     <script type="text/javascript">
+      var year = {{ data.model_year }}
+      var appreciation = {{ data.model_appreciation }}
+      var loan = {{ data.model_loan }}
+      var equity = {{ data.model_equity }}
 
-
+  </script>
 </head>
 <div class="content">
   <div class="container mt-3">
 
     <div class="row">
         <div class="col-md-12">
-              <h5 class="address" style="line-height:15px;">{{ post.street }}, {{city}}, {{state}} {{post.zipcode}}</h5>
-              <p class="bed" style="line-height:20px;">{{bed}} bd | {{bath}} ba | {{sqft}} sqft | {{type}} | Built in {{year}}</p>
+              <h5 class="address" style="line-height:15px;">{{ post.street }}, {{post.city}}, {{post.state}} {{post.zipcode}}</h5>
+              <p class="bed" style="line-height:20px;">{{post.bed}} bd | {{post.bath}} ba | {{post.sqft}} sqft | {{post.type}} | Built in {{post.year}}</p>
         </div>
     </div>
         <hr style="margin-top:-2px; ">
@@ -35,7 +40,7 @@
                   <div class="col-12 col-md-12">
                     <div class="numbers">
                       <p class="card-category">Purchase Price</p>
-                      <p class="card-title">{{post.price}}<p>
+                      <p class="card-title">{{clean.price}}<p>
                     </div>
                   </div>
                 </div>
@@ -53,7 +58,7 @@
                   <div class="col-12 col-md-12">
                     <div class="numbers">
                       <p class="card-category">Out of Pocket</p>
-                      <p class="card-title">{{outofpocket}}</p>
+                      <p class="card-title">{{clean.outofpocket}}</p>
 
                     </div>
                   </div>
@@ -72,7 +77,7 @@
                   <div class="col-12 col-md-12">
                     <div class="numbers">
                       <p class="card-category">Cap Rate</p>
-                      <p class="card-title">{{cap_rate}}
+                      <p class="card-title">{{clean.cap_rate}}
                         <p>
                     </div>
                   </div>
@@ -89,7 +94,7 @@
                   <div class="col-12 col-md-12">
                     <div class="numbers">
                       <p class="card-category">Cash on Cash</p>
-                      <p class="card-title">{{cashoncash}}<p>
+                      <p class="card-title">{{clean.coc}}<p>
                     </div>
                   </div>
                 </div>
@@ -113,7 +118,7 @@
                   <div class="col-12 col-md-12">
                     <div class="numbers">
                       <p class="card-category">Operating Income</p>
-                      <p class="card-title">{{operating_income}}<p>
+                      <p class="card-title">{{clean.operating_income}}<p>
                     </div>
                   </div>
                 </div>
@@ -131,7 +136,7 @@
                   <div class="col-12 col-md-12">
                     <div class="numbers">
                       <p class="card-category">Operating Expenses</p>
-                      <p class="card-title">({{monthly_expense}})</p>
+                      <p class="card-title">({{clean.operating_expense}})</p>
 
                     </div>
                   </div>
@@ -150,7 +155,7 @@
                   <div class="col-12 col-md-12">
                     <div class="numbers">
                       <p class="card-category">Mortgage</p>
-                      <p class="card-title">({{post.mortgage}})
+                      <p class="card-title">({{clean.mortgage}})
                         <p>
                     </div>
                   </div>
@@ -167,7 +172,7 @@
                   <div class="col-12 col-md-12">
                     <div class="numbers">
                       <p class="card-category">Cash Flow</p>
-                      <p class="card-title">{{ cashflow }}<p>
+                      <p class="card-title">{{ clean.cash_flow }}<p>
                     </div>
                   </div>
                 </div>
@@ -184,14 +189,14 @@
           <div class="card-body">
                           <h6 class="card-title text-center">30 Year Model</h6>
 
-                                    <canvas id="line-chart" height="200"></canvas>
+                                    <canvas id="line-chart" height="175"></canvas>
           </div>
         </div>
         <div class="card">
           <div class="card-body">
                           <h6 class="card-title text-center">Payment Breakdown</h6>
 
-                                <canvas id="bar-chart"height="200"></canvas>
+                                <canvas id="bar-chart"height="175"></canvas>
 
 
           </div>
@@ -218,57 +223,57 @@
                         <tr>
                           <td> Gross Rent</td>
                           <td> </td>
-                          <td style="text-align: right; padding-right: 15px;"> {{grossrent}}</td>
-                          <td style="text-align: right;"> {{annual_grossrent}}</td>
+                          <td style="text-align: right; padding-right: 15px;"> {{ cashflow_data.grossrent }}</td>
+                          <td style="text-align: right;"> {{ cashflow_data.annual_grossrent }}</td>
                         </tr>
 
                         <tr>
-                          <td> Vacancy (10%)</td>
+                          <td> Vacancy ({{post.vacancy}}%)</td>
                           <td> - </td>
-                          <td style="text-align: right; padding-right: 15px;"> {{ vacancy }}</td>
-                          <td style="text-align: right;"> {{annual_vacancy}}</td>
+                          <td style="text-align: right; padding-right: 15px;"> {{ cashflow_data.vacancy }}</td>
+                          <td style="text-align: right;"> {{ cashflow_data.annual_vacancy }}</td>
                         </tr>
 
                         <tr>
                           <td style="border-bottom:1pt solid black;"> Other Income</td>
                           <td style="border-bottom:1pt solid black;"> + </td>
-                          <td style="text-align: right; padding-right: 15px; border-bottom:1pt solid black;"> {{other_income}}</td>
-                          <td style="text-align: right; border-bottom:1pt solid black;"> {{annual_other_income}}</td>
+                          <td style="text-align: right; padding-right: 15px; border-bottom:1pt solid black;"> {{ cashflow_data.other_income }}</td>
+                          <td style="text-align: right; border-bottom:1pt solid black;"> {{ cashflow_data.annual_other_income }}</td>
                         </tr>
 
                         <tr>
                           <td> Operating Income</td>
                           <td> = </td>
-                          <td style="text-align: right; padding-right: 15px;"> {{operating_income}}</td>
-                          <td style="text-align: right;"> {{annual_operating_income}}</td>
+                          <td style="text-align: right; padding-right: 15px;"> {{cashflow_data.operating_income}}</td>
+                          <td style="text-align: right;"> {{cashflow_data.annual_operating_income}}</td>
                         </tr>
 
                         <tr>
-                          <td style="border-bottom:1pt solid black;"> Operating Expenses ({{expenses}}%)</td>
+                          <td style="border-bottom:1pt solid black;"> Operating Expenses ({{post.expenses}}%)</td>
                           <td style="border-bottom:1pt solid black;"> - </td>
-                          <td style="text-align: right; padding-right: 15px;border-bottom:1pt solid black;"> {{operating_expenses}}</td>
-                          <td style="text-align: right;border-bottom:1pt solid black;"> {{annual_operating_expenses}}</td>
+                          <td style="text-align: right; padding-right: 15px;border-bottom:1pt solid black;"> {{cashflow_data.operating_expenses}}</td>
+                          <td style="text-align: right;border-bottom:1pt solid black;"> {{cashflow_data.annual_operating_expenses}}</td>
                         </tr>
 
                         <tr>
                           <td> Net Operating Income</td>
                           <td> = </td>
-                          <td style="text-align: right; padding-right: 15px;"> {{ noi }} </td>
-                          <td style="text-align: right;"> {{ annual_noi }} </td>
+                          <td style="text-align: right; padding-right: 15px;"> {{ cashflow_data.noi }} </td>
+                          <td style="text-align: right;"> {{ cashflow_data.annual_noi }} </td>
                         </tr>
 
                         <tr>
                           <td> Loan Payment</td>
                           <td> - </td>
-                          <td style="text-align: right; padding-right: 15px;"> {{ loan_payment }} </td>
-                          <td style="text-align: right;"> {{ annual_loan_payment }}</td>
+                          <td style="text-align: right; padding-right: 15px;"> {{ cashflow_data.loan_payment }} </td>
+                          <td style="text-align: right;"> {{ cashflow_data.annual_loan_payment }}</td>
                         </tr>
 
                         <tr style="border-bottom:2pt solid black;">
                           <td ><b>Cash Flow</b></td>
                           <td> = </td>
-                          <td style="text-align: right; padding-right: 15px;"><b> {{ cashflow }} </b></td>
-                          <td style="text-align: right;"><b> {{ annual_cashflow }}</b></td>
+                          <td style="text-align: right; padding-right: 15px;"><b> {{ cashflow_data.cashflow }} </b></td>
+                          <td style="text-align: right;"><b> {{ cashflow_data.annual_cashflow }}</b></td>
                         </tr>
                     </tbody>
 

@@ -4,7 +4,7 @@ import numpy
 class Calculations:
 
     def __init__(self, price, downpayment, interest, term, rent, expenses,vacancy):
-        self.price = float(price)
+        self.price = float(price.replace(',',''))
         self.downpayment = float(downpayment)
         self.interest = float(interest)
         self.term = float(term)
@@ -12,7 +12,50 @@ class Calculations:
         self.expenses = float(expenses)
         self.vacancy = float(vacancy)
 
+    def income_statement(self, other_income):
+        """ Returns a dictionary with all necessary values"""
+        grossrent = self.rent
+        annual_grossrent = grossrent * 12
 
+        vacancy = self.rent * (float(self.vacancy)/100)
+        annual_vacancy = vacancy * 12
+
+        other_income = other_income
+        annual_other_income = other_income * 12
+
+        operating_income = self.operating_income()
+        annual_operating_income = operating_income * 12
+
+        operating_expenses = self.monthly_expenses()
+        annual_operating_expenses = operating_expenses * 12
+
+        noi = self.noi(operating_income)
+        annual_noi = noi * 12
+
+        loan_payment = self.mortgage_calc()
+        annual_loan_payment = loan_payment * 12
+
+        cashflow = self.cashflow(noi, loan_payment)
+        annual_cashflow = cashflow * 12
+
+        cf_dict = {'grossrent': comma_dollar(grossrent),
+                   'annual_grossrent': comma_dollar(annual_grossrent),
+                   'vacancy': comma_dollar(vacancy),
+                   'annual_vacancy': comma_dollar(annual_vacancy),
+                   'other_income': comma_dollar(other_income),
+                   'annual_other_income': comma_dollar(annual_other_income),
+                   'operating_income': comma_dollar(operating_income),
+                   'annual_operating_income': comma_dollar(annual_operating_income),
+                   'operating_expenses': comma_dollar(operating_expenses),
+                   'annual_operating_expenses': comma_dollar(annual_operating_expenses),
+                   'noi': comma_dollar(noi),
+                   'annual_noi': comma_dollar(annual_noi),
+                   'loan_payment': comma_dollar(loan_payment),
+                   'annual_loan_payment': comma_dollar(annual_loan_payment),
+                   'cashflow': comma_dollar(cashflow),
+                   'annual_cashflow': comma_dollar(annual_cashflow)}
+
+        return cf_dict
 
     def downpayment_calc(self):
 
@@ -47,7 +90,7 @@ class Calculations:
         # monthly payment
         mortgage_payment = loan_amount/discountfactor
 
-        return round(mortgage_payment)
+        return round(mortgage_payment,2)
 
     def operating_income(self):
         # vacancy in terms of percent
@@ -168,6 +211,7 @@ class Calculations:
 
 
 def comma_dollar(number):
+    number = int(number)
     if number < 0:
         payment_1 = format(round(number * -1), ',d')
         str_payment = "($" + str(payment_1) + ")"

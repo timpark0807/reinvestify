@@ -33,7 +33,6 @@ loan_balance = initial_loan
 for i in range(1, 31):
     appreciated_value = round(appreciated_value * appreciation)
     income = round(income * rent_increase)
-    # loan_balance = loan_balance - annual_amortization
 
     loan_balance = round(numpy.pv((.05 / 12), 360-(12 * i), monthly_mortgage)*-1)
 

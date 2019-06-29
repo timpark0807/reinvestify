@@ -1,25 +1,31 @@
 from realtoranalysis import app, db, bcrypt
 import json
-from flask import render_template, jsonify, request, redirect, url_for, flash, abort
+from flask import render_template, jsonify, request, redirect, url_for, flash, abort, session
 from realtoranalysis.forms import Analyze_Form, LoginForm, RegistrationForm
-from realtoranalysis.scripts.calculator import Calculations, comma_dollar
+from realtoranalysis.scripts.calculator import Calculations
 from realtoranalysis.models import User, Post
+from realtoranalysis.scripts.refactor_calculator import Calculate, comma_dollar
 from flask_login import login_user, current_user, logout_user, login_required
 
 
 @app.route("/")
 @app.route("/home")
 def home():
-    posts = Post.query.filter_by(title='title').first()
-    print(posts)
+    posts = Post.query.filter_by().first()
     return render_template('home.html', post=posts)
 
 
 @app.route("/account")
 @login_required
 def account():
-    return render_template('home.html', methods=['POST'])
 
+    return render_template('account.html' )
+
+@app.route("/properties")
+@login_required
+def properties():
+    posts = Post.query.filter_by(id=5).first()
+    return render_template('properties.html', post=posts)
 
 @app.route("/logout")
 def logout():
@@ -70,102 +76,235 @@ def register():
 def page_not_found(e):
     return render_template('404.html')
 
+
 @app.errorhandler(500)
 def internal_error(e):
     return render_template('500.html'), 500
+
 
 @app.route("/about")
 def about():
     return render_template('home.html', methods=['POST'])
 
-@app.route("/data")
-def test():
-    values = [12, 19, 3]
-    labels = ['Red', 'Blue', 'Yellow']
-    colors = ['#ff0000','#0000ff','#008000']
-    return render_template('calculator.html', values=values, labels=labels, colors=colors)
 
-
-@app.route("/get_data")
-def handle_test():
-    labels = ["Africa", "Asia", "Europe", "Latin America", "North America"]
-    data = [5578,5267,734,784,433]
-    return jsonify({'payload':json.dumps({'data':data, 'labels':labels})})
-
-@app.route("/analyze2", methods=['GET','POST'])
-def analyze2():
+@app.route("/analyze", methods=['GET', 'POST'])
+def analyze():
     form = Analyze_Form()
     if form.is_submitted():
+
+        # Pass form inputs as variables
+
         title = request.form['title']
+        url = request.form['title']
         street = request.form['street']
         city = request.form['city']
         state = request.form['state']
         zipcode = request.form['zipcode']
+
         type = request.form['type']
         year = request.form['year']
         bed = request.form['bed']
         bath = request.form['bath']
         sqft = request.form['sqft']
+
         price = request.form['price']
         term = request.form['term']
         down = request.form['down']
         interest = request.form['interest']
         closing = request.form['closing']
+
         rent = request.form['rent']
-        vacancy = request.form['vacancy']
-        taxes = request.form['taxes']
+        other = request.form['other']
         expenses = request.form['expenses']
+        vacancy = request.form['vacancy']
         appreciation = request.form['appreciation']
 
-        house = Calculations(price, down, interest, term, rent, expenses, vacancy)
+        income_growth = request.form['income_growth']
+        expense_growth = request.form['expense_growth']
 
-        cashflow_data = house.income_statement(10)
 
-        monthly_income = comma_dollar(rent)
-        monthly_expense = comma_dollar(house.monthly_expenses())
-        mortgage_payment = house.mortgage_calc()
-        down_payment = house.downpayment_calc()
-        oop = house.outofpocket(closing)
-        oi = house.operating_income()
-        monthly_noi = house.noi(oi)
+        # call Calculate class and pass in form inputs as parameters
+        house = Calculate(price, down, interest, term, rent, expenses, vacancy, closing)
+
+
+        # call methods of the Calculate class to make calculations , comma_dollar add $ and , to integer
+        clean_price = price
+        down_payment = house.down_payment()
+        mortgage_payment = house.mortgage_payment()
+        out_of_pocket = house.outofpocket()
+        vacancy_loss = house.vacancy_loss()
+        operating_income = house.operating_income()
+        operating_expense = house.operating_expense()
+        noi = house.noi()
+        cash_flow = house.cashflow()
         cap_rate = house.cap_rate()
+        coc = house.cashoncash()
 
-        cash_flow = house.cashflow(monthly_noi, mortgage_payment)
-        coc = house.cashoncash(cash_flow, oop)
+        model_year, model_appreciation, model_loan, model_equity = house.year30model(appreciation)
 
-        clean_oi = comma_dollar(oi)
-        clean_down_payment = comma_dollar(down_payment)
-        clean_price = comma_dollar(price.replace(',', ''))
-        clean_mortgage_payment = comma_dollar(mortgage_payment)
-        clean_outofpocket = comma_dollar(oop)
-        clean_cash_flow = comma_dollar(cash_flow)
+        data = {'model_year': model_year,
+                'model_appreciation': model_appreciation,
+                'model_loan': model_loan,
+                'model_equity': model_equity,
+                }
+
+        # when user is logged in, current_user is authenticated and redirects to /analyze/<post.id>
+        # /analyze/<post.id> queries data from the Post table into variable post 
+        # THEN renders analyze_output_2.html while passing in variable post to the .HTML template
+        # the .HTML template uses {{ post.title }} to display the database results on the dashboard
+        if current_user.is_authenticated:
+            user = current_user
+            post = Post(title=title,
+                        url=url,
+                        street=street,
+                        city=city,
+                        state=state,
+                        zipcode=zipcode,
+
+                        type=type,
+                        year=year,
+                        bed=bed,
+                        bath=bath,
+                        sqft=sqft,
+
+                        price=clean_price,
+                        term=term,
+                        down=down,
+                        interest=interest,
+                        closing=closing,
+
+                        rent=rent,
+                        other=other,
+                        expenses=expenses,
+                        vacancy=vacancy,
+                        appreciation=appreciation,
+
+                        mortgage=mortgage_payment,
+                        outofpocket=out_of_pocket,
+                        cap_rate=cap_rate,
+                        coc=coc,
+                        operating_income=operating_income,
+                        operating_expense=operating_expense,
+                        cash_flow=cash_flow,
+
+                        author=user)
+
+            db.session.add(post)
+            db.session.commit()
+            return redirect(url_for('post', post_id=post.id))
+
+        # below calls current_user.get_id() which returns 'None' when user is NOT logged in
+        # redirects to /post_anon route which does not incorporate the <post.id> in route like above
+        # /post_anon does NOT query data from the database ... just render templates the dashboard and passes in values
+        else:
+            post = {'title': title,
+                    'street': street,
+                    'city': city,
+                    'state': state,
+                    'zipcode': zipcode,
+
+                    'type': type,
+                    'year': year,
+                    'bed': bed,
+                    'bath': bath,
+                    'sqft': sqft,
+
+                    'price': clean_price,
+                    'term': term,
+                    'down': down,
+                    'interest': interest,
+                    'closing': closing,
+
+                    'rent': rent,
+                    'expenses': expenses,
+                    'vacancy': vacancy,
 
 
-        post = Post(title=title,
-                    street=street,
-                    zipcode=zipcode,
-                    price=clean_price,
-                    mortgage=clean_mortgage_payment,
-                    author=current_user)
-        db.session.add(post)
-        db.session.commit()
-        return redirect(url_for('post', post_id=post.id))
+                    'mortgage': mortgage_payment,
+                    'outofpocket': out_of_pocket,
+                    'cap_rate': cap_rate,
+                    'coc': coc,
+                    'operating_income': operating_income,
+                    'operating_expense': operating_expense,
+                    'cash_flow': cash_flow,
+
+                    'data': data
+                    }
+
+            return render_template("analyze_output_2.html", post=post)
+
+        # if you want to store anon data
+        # below calls current_user.get_id() which returns 'None' when user is NOT logged in
+        # saves to sqlite with None as usertype
+        # redirects to /analyze/anon which doesn't require a post id to view
+        # else:
+        #     user = current_user.get_id()
+        #     post = Post(title=title,
+        #                 street=street,
+        #                 zipcode=zipcode,
+        #                 price=clean_price,
+        #                 mortgage=clean_mortgage_payment,
+        #                 author=user)
+        #
+        #     db.session.add(post)
+        #     db.session.commit()
+        #     return redirect("/analyze/anon", post=post)
+
     return render_template('analyze_2.html', form=form)
 
 
+# when user is logged in,
 @app.route("/analyze/<int:post_id>")
 def post(post_id):
+
     post = Post.query.get_or_404(post_id)
+
+    house = Calculate(post.price, post.down, post.interest, post.term, post.rent, post.expenses, post.vacancy, post.closing)
+
+    # 30 year model
+    model_year, model_appreciation, model_loan, model_equity = house.year30model(post.appreciation)
+
+    data = {'model_year': model_year,
+            'model_appreciation': model_appreciation,
+            'model_loan': model_loan,
+            'model_equity': model_equity,
+            }
+
+    # cash flow table
+    cashflow_data = house.income_statement(post.other)
+
+    # Pulls data from query, puts it in a dictionary, and runs a function that adds commas and dollars
+
+    clean = {'price': comma_dollar(post.price),
+             'mortgage': comma_dollar(post.mortgage),
+             'outofpocket': comma_dollar(post.outofpocket),
+             'cap_rate': post.cap_rate,
+             'coc': post.coc,
+             'operating_income': comma_dollar(post.operating_income),
+             'operating_expense': comma_dollar(post.operating_expense),
+             'cash_flow': comma_dollar(post.cash_flow)
+            }
 
     # TODO: Customize a 403 page
     # can't view report unless you are the user who created it
     if post.author != current_user:
         abort(403)
-    return render_template("analyze_output_2.html", title=post.title, post=post)
+    return render_template("analyze_output_2.html",
+                           title=post.title,
+                           post=post,
+                           clean=clean,
+                           cashflow_data=cashflow_data,
+                           data=data)
 
 
-@app.route("/analyze", methods=['GET','POST'])
-def analyze():
+# /analyze2 redirects to this route when current_user is not authenticated bc user is not logged in
+@app.route("/analyze/anon")
+def post_anon():
+    return render_template("analyze_output_2.html", post=post)
+
+
+@app.route("/analyze2", methods=['GET','POST'])
+def analyze2():
     form = Analyze_Form()
     return render_template('analyze.html', form=form)
 
@@ -178,21 +317,48 @@ def handle_analyze():
         city = request.form['city']
         state = request.form['state']
         zipcode = request.form['zipcode']
+
         type = request.form['type']
         year = request.form['year']
         bed = request.form['bed']
         bath = request.form['bath']
         sqft = request.form['sqft']
+
         price = request.form['price']
         term = request.form['term']
         down = request.form['down']
         interest = request.form['interest']
         closing = request.form['closing']
+
         rent = request.form['rent']
-        vacancy = request.form['vacancy']
-        taxes = request.form['taxes']
+        other = request.form['other']
         expenses = request.form['expenses']
+        vacancy = request.form['vacancy']
+
         appreciation = request.form['appreciation']
+        income_growth = request.form['income_growth']
+        expense_growth = request.form['expense_growth']
+
+        # title = request.form['title']
+        # street = request.form['street']
+        # city = request.form['city']
+        # state = request.form['state']
+        # zipcode = request.form['zipcode']
+        # type = request.form['type']
+        # year = request.form['year']
+        # bed = request.form['bed']
+        # bath = request.form['bath']
+        # sqft = request.form['sqft']
+        # price = request.form['price']
+        # term = request.form['term']
+        # down = request.form['down']
+        # interest = request.form['interest']
+        # closing = request.form['closing']
+        # rent = request.form['rent']
+        # vacancy = request.form['vacancy']
+        # taxes = request.form['taxes']
+        # expenses = request.form['expenses']
+        # appreciation = request.form['appreciation']
 
         house = Calculations(price, down, interest, term, rent, expenses, vacancy)
 
@@ -261,7 +427,7 @@ def process():
     input_property_tax = request.form['property_tax']
     input_insurance = request.form['insurance']
 
-    calc = Calculations(input_price, input_down_payment, input_interest_rate, input_term, 0,0,0)
+    calc = Calculations(input_price, input_down_payment, input_interest_rate, input_term, 0, 0, 0)
     down_payment = calc.downpayment_calc()
     mortgage_payment = calc.mortgage_calc()
 
