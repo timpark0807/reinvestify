@@ -175,7 +175,7 @@ def analyze():
         cap_rate = house.cap_rate()
         coc = house.cashoncash()
 
-        model_year, model_appreciation, model_loan, model_equity = house.year30model(appreciation)
+        model_year, model_appreciation, model_loan, model_equity = house.year30model(float(appreciation))
 
         data = {'model_year': model_year,
                 'model_appreciation': model_appreciation,
@@ -262,11 +262,9 @@ def analyze():
                     'operating_income': operating_income,
                     'operating_expense': operating_expense,
                     'cash_flow': cash_flow,
-
-                    'data': data
                     }
 
-            return render_template("analyze_output_2.html", post=post)
+            return render_template("analyze_output_2.html", post=post, data=data)
 
         # if you want to store anon data
         # below calls current_user.get_id() which returns 'None' when user is NOT logged in
@@ -309,10 +307,18 @@ def post(post_id):
     if post.author != current_user:
         abort(403)
 
-    house = Calculate(post.price, post.down, post.interest, post.term, post.rent, post.expenses, post.vacancy, post.closing)
+    house = Calculate(float(post.price),
+                      float(post.down),
+                      float(post.interest),
+                      float(post.term),
+                      float(post.rent),
+                      float(post.expenses),
+                      float(post.vacancy),
+                      float(post.closing)
+                      )
 
     # 30 year model
-    model_year, model_appreciation, model_loan, model_equity = house.year30model(post.appreciation)
+    model_year, model_appreciation, model_loan, model_equity = house.year30model(float(post.appreciation))
 
     data = {'model_year': model_year,
             'model_appreciation': model_appreciation,
@@ -321,11 +327,10 @@ def post(post_id):
             }
 
     # cash flow table
-    cashflow_data = house.income_statement(post.other)
+    cashflow_data = house.income_statement(float(post.other))
 
     # Pulls data from query, puts it in a dictionary, and runs a function that adds commas and dollars
-
-    clean = {'price': comma_dollar(post.price),
+    clean = {'price': comma_dollar(float(post.price)),
              'mortgage': comma_dollar(post.mortgage),
              'outofpocket': comma_dollar(post.outofpocket),
              'cap_rate': post.cap_rate,
@@ -346,16 +351,16 @@ def post(post_id):
                            data=data)
 
 
-# when user is logged in,
+# when user is logged in and authenticated
 @app.route("/analyze/<int:post_id>/update", methods=['GET','POST'])
 def update_post(post_id):
     """ This route allows a user to update the form inputs
 
-        This route renders the analyze form template
-
-        Using a GET request
-            On load, it first queries the database for information associated with the post_id
-            It sets the form inputs as the variables we query from the database
+        This route renders the analyze_update.html template
+        This update template differs in that the form inputs preload database information
+            Using a GET request
+                On load, it first queries the database for information associated with the post_id
+                It sets the form inputs as the variables we query from the database
 
         When we POST this form,
             We insert the form inputs back into the database
@@ -368,7 +373,6 @@ def update_post(post_id):
         abort(403)
 
     form = Analyze_Form()
-
     if form.is_submitted():
         post.title = form.title.data
         post.street = form.street.data
@@ -386,6 +390,12 @@ def update_post(post_id):
         post.down = form.down.data
         post.interest = form.interest.data
         post.closing = form.closing.data
+
+        post.rent = form.grossrent.data
+        post.other = form.other.data
+        post.expenses = form.expenses.data
+        post.vacancy = form.vacancy.data
+        post.appreciation = form.appreciation.data
 
         db.session.commit()
 
@@ -410,6 +420,12 @@ def update_post(post_id):
         form.interest.data = post.interest
         form.closing.data = post.closing
 
+        form.grossrent.data = post.rent
+        form.other.data = post.other
+        form.expenses.data = post.expenses
+        form.vacancy.data = post.vacancy
+        form.appreciation.data = post.appreciation
+
     return render_template('analyze_update.html', form=form)
 
 
@@ -417,6 +433,10 @@ def update_post(post_id):
 @app.route("/analyze/anon")
 def post_anon():
     return render_template("analyze_output_2.html", post=post)
+
+
+
+
 
 
 ######################################################################################################

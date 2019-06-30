@@ -4,7 +4,7 @@ import numpy
 class Calculate:
 
     def __init__(self, price, downpayment, interest, term, rent, expense, vacancy, closing):
-        self.price = float(price.replace(',',''))
+        self.price = float(str(price).replace(',',''))
         self.downpayment = float(downpayment)/100     # convert down payment to percent
         self.interest = float(interest)/100         # convert interest to percent
         self.term = float(term)
@@ -174,13 +174,13 @@ class Calculate:
         return cf_dict
 
 def comma_dollar(number):
-    number = int(number)
-    if number < 0:
-        payment_1 = format(round(number * -1), ',d')
+    num = int(number)
+    if num < 0:
+        payment_1 = format(round(num * -1), ',d')
         str_payment = "($" + str(payment_1) + ")"
         return str_payment
     else:
-        payment_1 = format(round(number,2), ',d')
+        payment_1 = format(round(num,2), ',d')
         str_payment = "$" + str(payment_1)
         return str_payment
 

@@ -19,7 +19,7 @@
 
     <div class="wrapper ">
 
-      <div class="sidebar" data-color="black" data-active-color="danger">
+      <div class="sidebar" data-color="black" data-active-color="primary">
         <div class="logo">
           <a href=# class="simple-text logo-mini"></a>
           <a href="{{ url_for('home') }}" class="simple-text logo-normal">REInvest</a>
@@ -99,7 +99,8 @@
 
     <div class="content ">
       <div class="row justify-content-center">
-        <div class="col-md-8">
+        <div class="col-md-9">
+          <div id="msg">
           {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
               {% for category, message in messages %}
@@ -109,8 +110,17 @@
               {% endfor %}
             {% endif %}
           {% endwith %}
+            </div>
         </div>
     </div>
+
+      <script>
+
+      setTimeout(function() {
+          $('#msg').fadeOut('slow');
+      }, 5000); // <-- time in milliseconds
+
+      </script>
 
           {% block content %}{% endblock %}
     </div>

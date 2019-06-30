@@ -1,29 +1,39 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField,  SubmitField, PasswordField, IntegerField
+from wtforms import StringField,  SubmitField, PasswordField, IntegerField, FloatField
 from wtforms.validators import InputRequired, DataRequired, Email, Length, EqualTo, ValidationError
 from realtoranalysis.models import User
 
 
 class Analyze_Form(FlaskForm):
-    street = StringField('Street', validators=[InputRequired()])
+    title = StringField('Title')
+    url = StringField('URL')
+    street = StringField('Street')
     city = StringField('City')
     state = StringField('State')
     zipcode = IntegerField('ZipCode')
+
     type = StringField('Type')
     year = IntegerField('Year')
-    bed = IntegerField('Bed')
-    bath = IntegerField('Bath')
-    sqft = IntegerField('SqFt')
-    price = IntegerField('Price')
+    bed = FloatField('Bed')
+    bath = FloatField('Bath')
+    sqft = FloatField('SqFt')
+
+    price = FloatField('Price')
     term = IntegerField('Term')
-    down = IntegerField('Down')
-    closing = IntegerField('Closing')
-    interest = IntegerField('Interest')
-    grossrent = IntegerField('GrossRent')
-    vacancy = IntegerField('Vacancy')
-    taxes = IntegerField('Taxes')
-    expenses = IntegerField('Expenses', validators=[InputRequired()])
-    appreciation = IntegerField('Appreciation')
+    down = FloatField('Down')
+    interest = FloatField('Interest')
+    closing = FloatField('Closing')
+
+    grossrent = FloatField('GrossRent')
+    other = FloatField('Other Income')
+    vacancy = FloatField('Vacancy')
+    taxes = FloatField('Taxes')
+    expenses = FloatField('Expenses')
+
+    appreciation = FloatField('Appreciation')
+    income_growth = FloatField('Income Growth')
+    expense_growth = FloatField('Expense Growth')
+
     submit = SubmitField('Allocate')
 
 
@@ -32,6 +42,7 @@ class LoginForm(FlaskForm):
                         validators=[DataRequired(), Email()])
     password = PasswordField('Password', validators=[DataRequired()])
     submit = SubmitField('Login')
+
 
 class RegistrationForm(FlaskForm):
     username = StringField('Username',

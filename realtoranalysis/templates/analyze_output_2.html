@@ -19,9 +19,16 @@
   <div class="container mt-3">
 
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-8">
               <h5 class="address" style="line-height:15px;">{{ post.street }}, {{post.city}}, {{post.state}} {{post.zipcode}}</h5>
               <p class="bed" style="line-height:20px;">{{post.bed}} bd | {{post.bath}} ba | {{post.sqft}} sqft | {{post.type}} | Built in {{post.year}}</p>
+                         </div>
+
+          <div class="col-md-4">
+          <button type="button" class="btn btn-success btn-sm m-1" data-toggle="modal" data-target="#deleteModal" style="float: right;">Share</button>
+          <button type="button" class="btn btn-danger btn-sm m-1" data-toggle="modal" data-target="#deleteModal" style="float: right;">Delete</button>
+
+          <a class="btn btn-secondary btn-sm m-1" href="{{url_for('update_post', post_id=post.id)}}" style="float: right;">Edit</a>
         </div>
     </div>
         <hr style="margin-top:-2px; ">
@@ -184,24 +191,24 @@
 
         </div>
 
-    <div class="card-deck">
-        <div class="card">
-          <div class="card-body">
-                          <h6 class="card-title text-center">30 Year Model</h6>
+      <div class="card-deck">
+          <div class="card">
+            <div class="card-body">
+                            <h6 class="card-title text-center">30 Year Model</h6>
 
-                                    <canvas id="line-chart" height="175"></canvas>
+                                      <canvas id="line-chart" height="175"></canvas>
+            </div>
           </div>
-        </div>
-        <div class="card">
-          <div class="card-body">
-                          <h6 class="card-title text-center">Payment Breakdown</h6>
+          <div class="card">
+            <div class="card-body">
+                            <h6 class="card-title text-center">Payment Breakdown</h6>
 
-                                <canvas id="bar-chart"height="175"></canvas>
+                                  <canvas id="bar-chart"height="175"></canvas>
 
 
+            </div>
           </div>
-        </div>
-    </div>
+      </div>
 
 <br>
         <div class="row">
@@ -291,6 +298,24 @@
         </div>
 
       </div>
+  <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteModalLabel">Delete Post?</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <form action="{{ url_for('update_post', post_id=post.id) }}" method="POST">
+            <input class="btn btn-danger" type="submit" value="Delete">
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
 
 </div>
 {% endblock content %}
