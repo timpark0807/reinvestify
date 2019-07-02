@@ -57,6 +57,18 @@ def about():
     return render_template('home.html', methods=['POST'])
 
 
+@app.route("/analyze/<int:post_id>/delete", methods=['POST'])
+def delete_post(post_id):
+    post = Post.query.get_or_404(post_id)
+    if post.author != current_user:
+        abort(403)
+    db.session.delete(post)
+    db.session.commit()
+    flash('Your post has been deleted!', 'success')
+
+    return redirect(url_for('home'))
+
+
 ######################################################################################################
 # Login / Logout / Register
 ######################################################################################################
@@ -231,57 +243,88 @@ def analyze():
         # below calls current_user.get_id() which returns 'None' when user is NOT logged in
         # redirects to /post_anon route which does not incorporate the <post.id> in route like above
         # /post_anon does NOT query data from the database ... just render templates the dashboard and passes in values
-        else:
-            post = {'title': title,
-                    'street': street,
-                    'city': city,
-                    'state': state,
-                    'zipcode': zipcode,
-
-                    'type': type,
-                    'year': year,
-                    'bed': bed,
-                    'bath': bath,
-                    'sqft': sqft,
-
-                    'price': clean_price,
-                    'term': term,
-                    'down': down,
-                    'interest': interest,
-                    'closing': closing,
-
-                    'rent': rent,
-                    'expenses': expenses,
-                    'vacancy': vacancy,
-
-
-                    'mortgage': mortgage_payment,
-                    'outofpocket': out_of_pocket,
-                    'cap_rate': cap_rate,
-                    'coc': coc,
-                    'operating_income': operating_income,
-                    'operating_expense': operating_expense,
-                    'cash_flow': cash_flow,
-                    }
-
-            return render_template("analyze_output_2.html", post=post, data=data)
+        # else:
+        #     post = {'id':0,
+        #             'title': title,
+        #             'street': street,
+        #             'city': city,
+        #             'state': state,
+        #             'zipcode': zipcode,
+        #
+        #             'type': type,
+        #             'year': year,
+        #             'bed': bed,
+        #             'bath': bath,
+        #             'sqft': sqft,
+        #
+        #             'price': clean_price,
+        #             'term': term,
+        #             'down': down,
+        #             'interest': interest,
+        #             'closing': closing,
+        #
+        #             'rent': rent,
+        #             'other': other,
+        #             'expenses': expenses,
+        #             'vacancy': vacancy,
+        #
+        #
+        #             'mortgage': mortgage_payment,
+        #             'outofpocket': out_of_pocket,
+        #             'cap_rate': cap_rate,
+        #             'coc': coc,
+        #             'operating_income': operating_income,
+        #             'operating_expense': operating_expense,
+        #             'cash_flow': cash_flow,
+        #             'appreciation': appreciation
+        #             }
+        #
+        #     # 30 year model
+        #     model_year, model_appreciation, model_loan, model_equity = house.year30model(float(post['appreciation']))
+        #
+        #     data = {'model_year': model_year,
+        #             'model_appreciation': model_appreciation,
+        #             'model_loan': model_loan,
+        #             'model_equity': model_equity,
+        #             }
+        #
+        #     # cash flow table
+        #     cashflow_data = house.income_statement(float(post['other']))
+        #
+        #     # Pulls data from query, puts it in a dictionary, and runs a function that adds commas and dollars
+        #     clean = {'price': comma_dollar(float(post['price'])),
+        #              'mortgage': comma_dollar(post['mortgage']),
+        #              'outofpocket': comma_dollar(post['outofpocket']),
+        #              'cap_rate': post['cap_rate'],
+        #              'coc': post['coc'],
+        #              'operating_income': comma_dollar(post['operating_income']),
+        #              'operating_expense': comma_dollar(post['operating_expense']),
+        #              'cash_flow': comma_dollar(post['cash_flow'])
+        #              }
+        #
+        #     return render_template("analyze_output_2.html",
+        #                            title=post['title'],
+        #                            post=post,
+        #                            clean=clean,
+        #                            cashflow_data=cashflow_data,
+        #                            data=data)
 
         # if you want to store anon data
         # below calls current_user.get_id() which returns 'None' when user is NOT logged in
         # saves to sqlite with None as usertype
         # redirects to /analyze/anon which doesn't require a post id to view
-        # else:
-        #     user = current_user.get_id()
-        #     post = Post(title=title,
-        #                 street=street,
-        #                 zipcode=zipcode,
-        #                 price=clean_price,
-        #                 mortgage=clean_mortgage_payment,
-        #                 author=user)
-        #
-        #     db.session.add(post)
-        #     db.session.commit()
-        #     return redirect("/analyze/anon", post=post)
+        else:
+            user = current_user.get_id()
+            post = Post(title=title,
+                        street=street,
+                        zipcode=zipcode,
+                        price=clean_price,
+                        mortgage=mortgage_payment,
+                        author=user)
+
+            db.session.add(post)
+            db.session.commit()
+            return redirect("/analyze/anon")
 
     return render_template('analyze.html', form=form)
 
@@ -338,9 +381,8 @@ def post(post_id):
              'operating_income': comma_dollar(post.operating_income),
              'operating_expense': comma_dollar(post.operating_expense),
              'cash_flow': comma_dollar(post.cash_flow)
-            }
+             }
 
-    # TODO: Customize a 403 page
     # can't view report unless you are the user who created it
 
     return render_template("analyze_output_2.html",
@@ -435,10 +477,6 @@ def post_anon():
     return render_template("analyze_output_2.html", post=post)
 
 
-
-
-
-
 ######################################################################################################
 ######################################################################################################
 ######################################################################################################
@@ -446,6 +484,7 @@ def post_anon():
 ######################################################################################################
 ######################################################################################################
 ######################################################################################################
+
 
 @app.route("/analyze2", methods=['GET','POST'])
 def analyze2():
@@ -482,27 +521,6 @@ def handle_analyze():
         appreciation = request.form['appreciation']
         income_growth = request.form['income_growth']
         expense_growth = request.form['expense_growth']
-
-        # title = request.form['title']
-        # street = request.form['street']
-        # city = request.form['city']
-        # state = request.form['state']
-        # zipcode = request.form['zipcode']
-        # type = request.form['type']
-        # year = request.form['year']
-        # bed = request.form['bed']
-        # bath = request.form['bath']
-        # sqft = request.form['sqft']
-        # price = request.form['price']
-        # term = request.form['term']
-        # down = request.form['down']
-        # interest = request.form['interest']
-        # closing = request.form['closing']
-        # rent = request.form['rent']
-        # vacancy = request.form['vacancy']
-        # taxes = request.form['taxes']
-        # expenses = request.form['expenses']
-        # appreciation = request.form['appreciation']
 
         house = Calculations(price, down, interest, term, rent, expenses, vacancy)
 
