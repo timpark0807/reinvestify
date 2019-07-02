@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField,  SubmitField, PasswordField, IntegerField, FloatField
+from wtforms import StringField, SelectField, SubmitField, PasswordField, IntegerField, FloatField
 from wtforms.validators import InputRequired, DataRequired, Email, Length, EqualTo, ValidationError
 from realtoranalysis.models import User
 
@@ -19,7 +19,10 @@ class Analyze_Form(FlaskForm):
     sqft = FloatField('SqFt')
 
     price = FloatField('Price')
-    term = IntegerField('Term')
+    term = SelectField(label='Term',
+                       choices=[
+                                ('30', '30 Year Fixed'),
+                                ('15', '15 Year Fixed')])
     down = FloatField('Down')
     interest = FloatField('Interest')
     closing = FloatField('Closing')
