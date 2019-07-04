@@ -23,7 +23,7 @@ class UserTestCase(unittest.TestCase):
 
     # executed after each test
     def tearDown(self):
-        # db.drop_all()
+        db.drop_all()
         pass
 
     ################################################################################################

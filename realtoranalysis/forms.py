@@ -5,6 +5,7 @@ from realtoranalysis.models import User
 
 
 class Analyze_Form(FlaskForm):
+    # Form 1
     title = StringField('Title')
     url = StringField('URL')
     street = StringField('Street')
@@ -12,27 +13,34 @@ class Analyze_Form(FlaskForm):
     state = StringField('State')
     zipcode = IntegerField('ZipCode')
 
-    type = StringField('Type')
+    # Form 2
+    type = SelectField(label='Type',
+                       choices=[('Single Family', 'Single Family'),
+                                ('Multi Family', 'Multi Family'),
+                                ('Apartment', 'Apartment Unit'),
+                                ('Condo', 'Condo'),])
     year = IntegerField('Year')
     bed = FloatField('Bed')
     bath = FloatField('Bath')
     sqft = FloatField('SqFt')
 
+    # Form 3
     price = FloatField('Price')
     term = SelectField(label='Term',
                        choices=[
                                 ('30', '30 Year Fixed'),
                                 ('15', '15 Year Fixed')])
+
     down = FloatField('Down')
     interest = FloatField('Interest')
     closing = FloatField('Closing')
 
+    # Form 4
     grossrent = FloatField('GrossRent')
     other = FloatField('Other Income')
     vacancy = FloatField('Vacancy')
     taxes = FloatField('Taxes')
     expenses = FloatField('Expenses')
-
     appreciation = FloatField('Appreciation')
     income_growth = FloatField('Income Growth')
     expense_growth = FloatField('Expense Growth')

@@ -16,7 +16,6 @@
         <div class="col-md-8">
             <div class="card ">
             <section>
-            <!--<form method="POST" action="{{ url_for('handle_analyze') }}">-->
                 <form method="POST">
                 <div class="wizard">
                     <div class="wizard-inner">
@@ -137,19 +136,9 @@
                                     <div class="col-md-8">
                                         <div class="form-group">
                                         <label>Type</label>
-                                        <br>
-                                        <select class="form-control" id="detail_type_id" name="type">
-                                            <option value="Single Family">Single Family</option>
-                                            <option value="Multi Family">Multi Family</option>
-                                            <option value="Apartment">Apartment Unit</option>
-                                            <option value="Condo">Condo</option>
-                                            <option value="Townhouse">Townhouse</option>
-                                        </select>
-                                                    <script type="text/javascript">
-                                                        $('form-control').on('change', function() {
-                                                            alert( $(this).find(":selected").val() );
-                                                        });
-                                                    </script>
+                                                <label>Type </label>
+                                                 {{form.type(class="form-control")}}
+
                                         </div>
                                     </div>
                                     <div class="col-md-4">

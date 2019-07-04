@@ -5,29 +5,29 @@
 <head>
   <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.3.0/Chart.min.js"> </script>
-   <script type="text/javascript">
+  <script src="{{url_for('static', filename='js/dashboardpie.js')}}"></script>
+  <script src="{{url_for('static', filename='js/house.js')}}"></script>
+     <script type="text/javascript">
       var year = {{ data.model_year }}
       var appreciation = {{ data.model_appreciation }}
       var loan = {{ data.model_loan }}
       var equity = {{ data.model_equity }}
-      var pie_mortgage = {{ data.pie_mortgage }}
-      var pie_expenses = {{ data.pie_expense}}
-      var pie_cashflow = {{ data.pie_cashflow }}
 
   </script>
-
-  <script src="{{url_for('static', filename='js/dashboardpie.js')}}"></script>
-  <script src="{{url_for('static', filename='js/house.js')}}"></script>
-
-
 </head>
 <div class="content">
   <div class="container mt-3">
 
     <div class="row">
-        <div class="col-md-12">
-              <h5 class="address" style="line-height:15px;">{{street}}, {{city}}, {{state}} {{zipcode}}</h5>
-              <p class="bed" style="line-height:20px;">{{bed}} bd | {{bath}} ba | {{sqft}} sqft | {{type}} | Built in {{year}}</p>
+        <div class="col-md-8">
+              <h5 class="address" style="line-height:15px;">{{ post.street }}, {{post.city}}, {{post.state}} {{post.zipcode}}</h5>
+              <p class="bed" style="line-height:20px;">{{post.bed}} bd | {{post.bath}} ba | {{post.sqft}} sqft | {{post.type}} | Built in {{post.year}}</p>
+                         </div>
+
+          <div class="col-md-4">
+          <button type="button" class="btn btn-success btn-sm m-1" data-toggle="modal" data-target="#deleteModal" style="float: right;">Share</button>
+          <button type="button" class="btn btn-danger btn-sm m-1" data-toggle="modal" data-target="#deleteModal" style="float: right;">Delete</button>
+          <a class="btn btn-secondary btn-sm m-1" href="{{url_for('update_post', post_id=post.id)}}" style="float: right;">Edit</a>
         </div>
     </div>
         <hr style="margin-top:-2px; ">
@@ -38,15 +38,10 @@
             <div class="card card-stats">
               <div class="card-body ">
                 <div class="row">
-                  <!--<div class="col-5 col-md-4">-->
-                    <!--<div class="icon-big text-center icon-warning">-->
-                      <!--<i class="nc-icon nc-globe text-warning"></i>-->
-                    <!--</div>-->
-                  <!--</div>-->
                   <div class="col-12 col-md-12">
                     <div class="numbers">
                       <p class="card-category">Purchase Price</p>
-                      <p class="card-title">{{price}}<p>
+                      <p class="card-title">{{data.price}}<p>
                     </div>
                   </div>
                 </div>
@@ -64,7 +59,7 @@
                   <div class="col-12 col-md-12">
                     <div class="numbers">
                       <p class="card-category">Out of Pocket</p>
-                      <p class="card-title">{{outofpocket}}</p>
+                      <p class="card-title">{{data.outofpocket}}</p>
 
                     </div>
                   </div>
@@ -83,7 +78,7 @@
                   <div class="col-12 col-md-12">
                     <div class="numbers">
                       <p class="card-category">Cap Rate</p>
-                      <p class="card-title">{{cap_rate}}
+                      <p class="card-title">{{data.cap_rate}}
                         <p>
                     </div>
                   </div>
@@ -100,7 +95,7 @@
                   <div class="col-12 col-md-12">
                     <div class="numbers">
                       <p class="card-category">Cash on Cash</p>
-                      <p class="card-title">{{cashoncash}}<p>
+                      <p class="card-title">{{data.coc}}<p>
                     </div>
                   </div>
                 </div>
@@ -124,7 +119,7 @@
                   <div class="col-12 col-md-12">
                     <div class="numbers">
                       <p class="card-category">Operating Income</p>
-                      <p class="card-title">{{operating_income}}<p>
+                      <p class="card-title">{{data.operating_income}}<p>
                     </div>
                   </div>
                 </div>
@@ -142,7 +137,7 @@
                   <div class="col-12 col-md-12">
                     <div class="numbers">
                       <p class="card-category">Operating Expenses</p>
-                      <p class="card-title">({{monthly_expense}})</p>
+                      <p class="card-title">({{data.operating_expense}})</p>
 
                     </div>
                   </div>
@@ -161,7 +156,7 @@
                   <div class="col-12 col-md-12">
                     <div class="numbers">
                       <p class="card-category">Mortgage</p>
-                      <p class="card-title">({{mortgage_payment}})
+                      <p class="card-title">({{data.mortgage}})
                         <p>
                     </div>
                   </div>
@@ -178,7 +173,7 @@
                   <div class="col-12 col-md-12">
                     <div class="numbers">
                       <p class="card-category">Cash Flow</p>
-                      <p class="card-title">{{ cashflow }}<p>
+                      <p class="card-title">{{ data.cash_flow }}<p>
                     </div>
                   </div>
                 </div>
@@ -190,24 +185,24 @@
 
         </div>
 
-    <div class="card-deck">
-        <div class="card">
-          <div class="card-body">
-                          <h6 class="card-title text-center">30 Year Model</h6>
+      <div class="card-deck">
+          <div class="card">
+            <div class="card-body">
+                            <h6 class="card-title text-center">30 Year Model</h6>
 
-                                    <canvas id="line-chart" height="200"></canvas>
+                                      <canvas id="line-chart" height="175"></canvas>
+            </div>
           </div>
-        </div>
-        <div class="card">
-          <div class="card-body">
-                          <h6 class="card-title text-center">Payment Breakdown</h6>
+          <div class="card">
+            <div class="card-body">
+                            <h6 class="card-title text-center">Payment Breakdown</h6>
 
-                                <canvas id="bar-chart"height="200"></canvas>
+                                  <canvas id="bar-chart" height="175"></canvas>
 
 
+            </div>
           </div>
-        </div>
-    </div>
+      </div>
 
 <br>
         <div class="row">
@@ -229,22 +224,22 @@
                         <tr>
                           <td> Gross Rent</td>
                           <td> </td>
-                          <td style="text-align: right; padding-right: 15px;"> {{cashflow_data.grossrent}}</td>
-                          <td style="text-align: right;"> {{cashflow_data.annual_grossrent}}</td>
+                          <td style="text-align: right; padding-right: 15px;"> {{ cashflow_data.grossrent }}</td>
+                          <td style="text-align: right;"> {{ cashflow_data.annual_grossrent }}</td>
                         </tr>
 
                         <tr>
-                          <td> Vacancy (10%)</td>
+                          <td> Vacancy ({{post.vacancy}}%)</td>
                           <td> - </td>
                           <td style="text-align: right; padding-right: 15px;"> {{ cashflow_data.vacancy }}</td>
-                          <td style="text-align: right;"> {{cashflow_data.annual_vacancy}}</td>
+                          <td style="text-align: right;"> {{ cashflow_data.annual_vacancy }}</td>
                         </tr>
 
                         <tr>
                           <td style="border-bottom:1pt solid black;"> Other Income</td>
                           <td style="border-bottom:1pt solid black;"> + </td>
-                          <td style="text-align: right; padding-right: 15px; border-bottom:1pt solid black;"> {{cashflow_data.other_income}}</td>
-                          <td style="text-align: right; border-bottom:1pt solid black;"> {{cashflow_data.annual_other_income}}</td>
+                          <td style="text-align: right; padding-right: 15px; border-bottom:1pt solid black;"> {{ cashflow_data.other_income }}</td>
+                          <td style="text-align: right; border-bottom:1pt solid black;"> {{ cashflow_data.annual_other_income }}</td>
                         </tr>
 
                         <tr>
@@ -255,7 +250,7 @@
                         </tr>
 
                         <tr>
-                          <td style="border-bottom:1pt solid black;"> Operating Expenses ({{expenses}}%)</td>
+                          <td style="border-bottom:1pt solid black;"> Operating Expenses ({{post.expenses}}%)</td>
                           <td style="border-bottom:1pt solid black;"> - </td>
                           <td style="text-align: right; padding-right: 15px;border-bottom:1pt solid black;"> {{cashflow_data.operating_expenses}}</td>
                           <td style="text-align: right;border-bottom:1pt solid black;"> {{cashflow_data.annual_operating_expenses}}</td>
@@ -297,6 +292,24 @@
         </div>
 
       </div>
+  <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteModalLabel">Delete Post?</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <form action="{{ url_for('delete_post', post_id=post.id) }}" method="POST">
+            <input class="btn btn-danger" type="submit" value="Delete">
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
 
 </div>
 {% endblock content %}

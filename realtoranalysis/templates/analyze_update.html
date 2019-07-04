@@ -16,7 +16,6 @@
         <div class="col-md-8">
             <div class="card ">
             <section>
-            <!--<form method="POST" action="{{ url_for('handle_analyze') }}">-->
                 <form method="POST">
                 <div class="wizard">
                     <div class="wizard-inner">
@@ -137,18 +136,7 @@
                                         <div class="form-group">
                                         <label>Type</label>
                                         <br>
-                                        <select class="form-control" id="detail_type_id" name="type" value="test">
-                                            <option value="Single Family">Single Family</option>
-                                            <option value="Multi Family">Multi Family</option>
-                                            <option value="Apartment">Apartment Unit</option>
-                                            <option value="Condo">Condo</option>
-                                            <option value="Townhouse">Townhouse</option>
-                                        </select>
-                                                    <script type="text/javascript">
-                                                        $('form-control').on('change', function() {
-                                                            alert( $(this).find(":selected").val() );
-                                                        });
-                                                    </script>
+                                            {{form.type(class="form-control")}}
                                         </div>
                                     </div>
                                     <div class="col-md-4">
@@ -215,11 +203,7 @@
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label>Term </label>
-
-                                                <select class="form-control form-control-lg" id="purchase_term_id" name="term">
-                                                        <option value="30">30 Year Fixed</option>
-                                                        <option value="15">15 Year Fixed</option>
-                                                </select>
+                                            {{form.term(class="form-control")}}
                                             </div>
                                         </div>
                                     </div>

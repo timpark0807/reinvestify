@@ -1,5 +1,5 @@
 import unittest
-from realtoranalysis.scripts.refactor_calculator import Calculate
+from realtoranalysis.scripts.property_calculations import Calculate
 
 
 class TestCalculator(unittest.TestCase):

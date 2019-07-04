@@ -2,9 +2,8 @@ from realtoranalysis import app, db, bcrypt
 import json
 from flask import render_template, jsonify, request, redirect, url_for, flash, abort, session
 from realtoranalysis.forms import Analyze_Form, LoginForm, RegistrationForm
-from realtoranalysis.scripts.calculator import Calculations
 from realtoranalysis.models import User, Post
-from realtoranalysis.scripts.refactor_calculator import Calculate, comma_dollar
+from realtoranalysis.scripts.property_calculations import Calculate, comma_dollar
 from flask_login import login_user, current_user, logout_user, login_required
 
 ######################################################################################################
@@ -167,37 +166,12 @@ def analyze():
         expenses = request.form['expenses']
         vacancy = request.form['vacancy']
         appreciation = request.form['appreciation']
-
         income_growth = request.form['income_growth']
         expense_growth = request.form['expense_growth']
 
-        # call Calculate class and pass in form inputs as parameters
-        house = Calculate(price, down, interest, term, rent, expenses, vacancy, closing)
-
-        # call methods of the Calculate class to make calculations , comma_dollar add $ and , to integer
-        clean_price = price
-        down_payment = house.down_payment()
-        mortgage_payment = house.mortgage_payment()
-        out_of_pocket = house.outofpocket()
-        vacancy_loss = house.vacancy_loss()
-        operating_income = house.operating_income()
-        operating_expense = house.operating_expense()
-        noi = house.noi()
-        cash_flow = house.cashflow()
-        cap_rate = house.cap_rate()
-        coc = house.cashoncash()
-
-        model_year, model_appreciation, model_loan, model_equity = house.year30model(float(appreciation))
-
-        data = {'model_year': model_year,
-                'model_appreciation': model_appreciation,
-                'model_loan': model_loan,
-                'model_equity': model_equity,
-                }
-
         # when user is logged in, current_user is authenticated and redirects to /analyze/<post.id>
         # /analyze/<post.id> queries data from the Post table into variable post 
-        # THEN renders analyze_output_2.html while passing in variable post to the .HTML template
+        # THEN renders analyze_output.html while passing in variable post to the .HTML template
         # the .HTML template uses {{ post.title }} to display the database results on the dashboard
         if current_user.is_authenticated:
             user = current_user
@@ -214,7 +188,7 @@ def analyze():
                         bath=bath,
                         sqft=sqft,
 
-                        price=clean_price,
+                        price=price,
                         term=term,
                         down=down,
                         interest=interest,
@@ -225,14 +199,8 @@ def analyze():
                         expenses=expenses,
                         vacancy=vacancy,
                         appreciation=appreciation,
-
-                        mortgage=mortgage_payment,
-                        outofpocket=out_of_pocket,
-                        cap_rate=cap_rate,
-                        coc=coc,
-                        operating_income=operating_income,
-                        operating_expense=operating_expense,
-                        cash_flow=cash_flow,
+                        income_growth=income_growth,
+                        expense_growth=expense_growth,
 
                         author=user)
 
@@ -243,71 +211,6 @@ def analyze():
         # below calls current_user.get_id() which returns 'None' when user is NOT logged in
         # redirects to /post_anon route which does not incorporate the <post.id> in route like above
         # /post_anon does NOT query data from the database ... just render templates the dashboard and passes in values
-        # else:
-        #     post = {'id':0,
-        #             'title': title,
-        #             'street': street,
-        #             'city': city,
-        #             'state': state,
-        #             'zipcode': zipcode,
-        #
-        #             'type': type,
-        #             'year': year,
-        #             'bed': bed,
-        #             'bath': bath,
-        #             'sqft': sqft,
-        #
-        #             'price': clean_price,
-        #             'term': term,
-        #             'down': down,
-        #             'interest': interest,
-        #             'closing': closing,
-        #
-        #             'rent': rent,
-        #             'other': other,
-        #             'expenses': expenses,
-        #             'vacancy': vacancy,
-        #
-        #
-        #             'mortgage': mortgage_payment,
-        #             'outofpocket': out_of_pocket,
-        #             'cap_rate': cap_rate,
-        #             'coc': coc,
-        #             'operating_income': operating_income,
-        #             'operating_expense': operating_expense,
-        #             'cash_flow': cash_flow,
-        #             'appreciation': appreciation
-        #             }
-        #
-        #     # 30 year model
-        #     model_year, model_appreciation, model_loan, model_equity = house.year30model(float(post['appreciation']))
-        #
-        #     data = {'model_year': model_year,
-        #             'model_appreciation': model_appreciation,
-        #             'model_loan': model_loan,
-        #             'model_equity': model_equity,
-        #             }
-        #
-        #     # cash flow table
-        #     cashflow_data = house.income_statement(float(post['other']))
-        #
-        #     # Pulls data from query, puts it in a dictionary, and runs a function that adds commas and dollars
-        #     clean = {'price': comma_dollar(float(post['price'])),
-        #              'mortgage': comma_dollar(post['mortgage']),
-        #              'outofpocket': comma_dollar(post['outofpocket']),
-        #              'cap_rate': post['cap_rate'],
-        #              'coc': post['coc'],
-        #              'operating_income': comma_dollar(post['operating_income']),
-        #              'operating_expense': comma_dollar(post['operating_expense']),
-        #              'cash_flow': comma_dollar(post['cash_flow'])
-        #              }
-        #
-        #     return render_template("analyze_output_2.html",
-        #                            title=post['title'],
-        #                            post=post,
-        #                            clean=clean,
-        #                            cashflow_data=cashflow_data,
-        #                            data=data)
 
         # if you want to store anon data
         # below calls current_user.get_id() which returns 'None' when user is NOT logged in
@@ -316,20 +219,41 @@ def analyze():
         else:
             user = current_user.get_id()
             post = Post(title=title,
+                        url=url,
                         street=street,
+                        city=city,
+                        state=state,
                         zipcode=zipcode,
-                        price=clean_price,
-                        mortgage=mortgage_payment,
+
+                        type=type,
+                        year=year,
+                        bed=bed,
+                        bath=bath,
+                        sqft=sqft,
+
+                        price=price,
+                        term=term,
+                        down=down,
+                        interest=interest,
+                        closing=closing,
+
+                        rent=rent,
+                        other=other,
+                        expenses=expenses,
+                        vacancy=vacancy,
+                        appreciation=appreciation,
+                        income_growth=income_growth,
+                        expense_growth=expense_growth,
+
                         author=user)
 
             db.session.add(post)
             db.session.commit()
-            return redirect("/analyze/anon")
+            return redirect(url_for('post_anon', post_id=post.id))
 
     return render_template('analyze.html', form=form)
 
 
-# when user is logged in,
 @app.route("/analyze/<int:post_id>")
 def post(post_id):
     """ The user is redirected to this route after submitting the form on the /analyze/ route
@@ -343,52 +267,60 @@ def post(post_id):
         This route passes the calculations in as a parameter in render_template()
         Now we can access the calculations in the jinja2 template
     """
-
-
     post = Post.query.get_or_404(post_id)
 
     if post.author != current_user:
         abort(403)
 
-    house = Calculate(float(post.price),
-                      float(post.down),
-                      float(post.interest),
-                      float(post.term),
-                      float(post.rent),
-                      float(post.expenses),
-                      float(post.vacancy),
-                      float(post.closing)
-                      )
+    property = Calculate(float(post.price),
+                         float(post.down),
+                         float(post.interest),
+                         float(post.term),
+                         float(post.rent),
+                         float(post.expenses),
+                         float(post.vacancy),
+                         float(post.closing)
+                         )
+
+    down_payment = property.down_payment()
+    mortgage_payment = property.mortgage_payment()
+    out_of_pocket = property.outofpocket()
+    vacancy_loss = property.vacancy_loss()
+    operating_income = property.operating_income()
+    operating_expense = property.operating_expense()
+    noi = property.noi()
+    cash_flow = property.cashflow()
+    cap_rate = property.cap_rate()
+    coc = property.cashoncash()
 
     # 30 year model
-    model_year, model_appreciation, model_loan, model_equity = house.year30model(float(post.appreciation))
+    model_year, model_appreciation, model_loan, model_equity = property.year30model(float(post.appreciation))
+
+    # cash flow table
+    cashflow_data = property.income_statement(float(post.other))
 
     data = {'model_year': model_year,
             'model_appreciation': model_appreciation,
             'model_loan': model_loan,
             'model_equity': model_equity,
+            'price': comma_dollar(float(post.price)),
+            'mortgage': comma_dollar(mortgage_payment),
+            'outofpocket': comma_dollar(out_of_pocket),
+            'cap_rate': cap_rate,
+            'coc': coc,
+            'operating_income': comma_dollar(operating_income),
+            'operating_expense': comma_dollar(operating_expense),
+            'cash_flow': comma_dollar(cash_flow),
+            'noi': comma_dollar(noi),
+            'vacancy': vacancy_loss
             }
-
-    # cash flow table
-    cashflow_data = house.income_statement(float(post.other))
-
-    # Pulls data from query, puts it in a dictionary, and runs a function that adds commas and dollars
-    clean = {'price': comma_dollar(float(post.price)),
-             'mortgage': comma_dollar(post.mortgage),
-             'outofpocket': comma_dollar(post.outofpocket),
-             'cap_rate': post.cap_rate,
-             'coc': post.coc,
-             'operating_income': comma_dollar(post.operating_income),
-             'operating_expense': comma_dollar(post.operating_expense),
-             'cash_flow': comma_dollar(post.cash_flow)
-             }
 
     # can't view report unless you are the user who created it
 
-    return render_template("analyze_output_2.html",
+    return render_template("analyze_output.html",
                            title=post.title,
                            post=post,
-                           clean=clean,
+
                            cashflow_data=cashflow_data,
                            data=data)
 
@@ -411,9 +343,6 @@ def update_post(post_id):
     """
     post = Post.query.get_or_404(post_id)
 
-    if post.author != current_user:
-        abort(403)
-
     form = Analyze_Form()
     if form.is_submitted():
         post.title = form.title.data
@@ -429,6 +358,7 @@ def update_post(post_id):
         post.sqft = form.sqft.data
 
         post.price = form.price.data
+        post.term = form.term.data
         post.down = form.down.data
         post.interest = form.interest.data
         post.closing = form.closing.data
@@ -438,6 +368,8 @@ def update_post(post_id):
         post.expenses = form.expenses.data
         post.vacancy = form.vacancy.data
         post.appreciation = form.appreciation.data
+        post.income_growth = form.income_growth.data
+        post.expense_growth = form.expense_growth.data
 
         db.session.commit()
 
@@ -472,107 +404,67 @@ def update_post(post_id):
 
 
 # /analyze2 redirects to this route when current_user is not authenticated bc user is not logged in
-@app.route("/analyze/anon")
-def post_anon():
-    return render_template("analyze_output_2.html", post=post)
+@app.route("/analyze/anon/<int:post_id>")
+def post_anon(post_id):
+
+    post = Post.query.get_or_404(post_id)
+
+    property = Calculate(float(post.price),
+                         float(post.down),
+                         float(post.interest),
+                         float(post.term),
+                         float(post.rent),
+                         float(post.expenses),
+                         float(post.vacancy),
+                         float(post.closing)
+                         )
+
+    down_payment = property.down_payment()
+    mortgage_payment = property.mortgage_payment()
+    out_of_pocket = property.outofpocket()
+    vacancy_loss = property.vacancy_loss()
+    operating_income = property.operating_income()
+    operating_expense = property.operating_expense()
+    noi = property.noi()
+    cash_flow = property.cashflow()
+    cap_rate = property.cap_rate()
+    coc = property.cashoncash()
+
+    # 30 year model
+    model_year, model_appreciation, model_loan, model_equity = property.year30model(float(post.appreciation))
+
+    # cash flow table
+    cashflow_data = property.income_statement(float(post.other))
+
+    data = {'model_year': model_year,
+            'model_appreciation': model_appreciation,
+            'model_loan': model_loan,
+            'model_equity': model_equity,
+            'price': comma_dollar(float(post.price)),
+            'mortgage': comma_dollar(mortgage_payment),
+            'outofpocket': comma_dollar(out_of_pocket),
+            'cap_rate': cap_rate,
+            'coc': coc,
+            'operating_income': comma_dollar(operating_income),
+            'operating_expense': comma_dollar(operating_expense),
+            'cash_flow': comma_dollar(cash_flow),
+            'noi': comma_dollar(noi),
+            'vacancy': vacancy_loss
+            }
+
+    # can't view report unless you are the user who created it
+
+    return render_template("analyze_output.html",
+                           title=post.title,
+                           post=post,
+
+                           cashflow_data=cashflow_data,
+                           data=data)
 
 
 ######################################################################################################
+# Calculator
 ######################################################################################################
-######################################################################################################
-# Not in use
-######################################################################################################
-######################################################################################################
-######################################################################################################
-
-
-@app.route("/analyze2", methods=['GET','POST'])
-def analyze2():
-    form = Analyze_Form()
-    return render_template('analyze_update.html', form=form)
-
-
-@app.route("/handle_analyze", methods=['POST'])
-def handle_analyze():
-    if request.method == 'POST':
-        title = request.form['title']
-        street = request.form['street']
-        city = request.form['city']
-        state = request.form['state']
-        zipcode = request.form['zipcode']
-
-        type = request.form['type']
-        year = request.form['year']
-        bed = request.form['bed']
-        bath = request.form['bath']
-        sqft = request.form['sqft']
-
-        price = request.form['price']
-        term = request.form['term']
-        down = request.form['down']
-        interest = request.form['interest']
-        closing = request.form['closing']
-
-        rent = request.form['rent']
-        other = request.form['other']
-        expenses = request.form['expenses']
-        vacancy = request.form['vacancy']
-
-        appreciation = request.form['appreciation']
-        income_growth = request.form['income_growth']
-        expense_growth = request.form['expense_growth']
-
-        house = Calculations(price, down, interest, term, rent, expenses, vacancy)
-
-        cashflow_data = house.income_statement(10)
-
-        monthly_income = comma_dollar(rent)
-        monthly_expense = comma_dollar(house.monthly_expenses())
-        mortgage_payment = house.mortgage_calc()
-        down_payment = house.downpayment_calc()
-        oop = house.outofpocket(closing)
-        oi = house.operating_income()
-        monthly_noi = house.noi(oi)
-        cap_rate = house.cap_rate()
-
-        cash_flow = house.cashflow(monthly_noi, mortgage_payment)
-        coc = house.cashoncash(cash_flow, oop)
-
-        clean_oi = comma_dollar(oi)
-        clean_down_payment = comma_dollar(down_payment)
-        clean_price = comma_dollar(price.replace(',',''))
-        clean_mortgage_payment = comma_dollar(mortgage_payment)
-        clean_outofpocket = comma_dollar(oop)
-        clean_cash_flow = comma_dollar(cash_flow)
-
-        # graph
-        model_year, model_appreciation, model_loan, model_equity = house.year30model(appreciation, 2)
-        data = {'model_year':model_year,
-                'model_appreciation': model_appreciation,
-                'model_loan': model_loan,
-                'model_equity': model_equity,
-                'pie_mortgage': mortgage_payment,
-                'pie_expense': house.monthly_expenses(),
-                'pie_cashflow': cash_flow,
-                'grossrent': comma_dollar(int(rent)),
-                'operating_income': clean_oi,
-                'operating_expenses': comma_dollar(int(rent) * (1-(int(expenses)/100))),
-                'loan_payment': clean_mortgage_payment,
-                'cashflow': clean_cash_flow
-                }
-
-    return render_template('analyze_output.html', title=title, street=street, city=city, state=state, zipcode=zipcode,
-                                                  price=clean_price, type=type, year=year, bed=bed, bath=bath,
-                                                  sqft=sqft,
-                                                  mortgage_payment=clean_mortgage_payment,
-                                                  cap_rate=cap_rate,
-                                                  operating_income=clean_oi, expenses=expenses,
-                                                  monthly_income=monthly_income, monthly_expense=monthly_expense,
-                                                  down_payment=clean_down_payment,
-                                                  outofpocket=clean_outofpocket,
-                                                  cashflow=clean_cash_flow,
-                                                  cashoncash=coc,
-                                                  data=data, cashflow_data=cashflow_data)
 
 
 @app.route("/calculator")
@@ -589,24 +481,13 @@ def process():
     input_property_tax = request.form['property_tax']
     input_insurance = request.form['insurance']
 
-    calc = Calculations(input_price, input_down_payment, input_interest_rate, input_term, 0, 0, 0)
-    down_payment = calc.downpayment_calc()
-    mortgage_payment = calc.mortgage_calc()
-
-
-    # Calculates the payment with input as float
-    # down_payment = downpayment_calc(float(input_price),
-    #                                 float(input_down_payment))
-    #
-    # mortgage_payment = mortgage_calc(float(input_price),
-    #                                  float(input_down_payment),
-    #                                  float(input_interest_rate),
-    #                                  input_term)
+    calc = Calculate(input_price, input_down_payment, input_interest_rate, input_term, 0, 0, 0, 0)
+    down_payment = calc.down_payment()
+    mortgage_payment = calc.mortgage_payment()
 
     # Returns floats as a string with dollar sign and comma separators
     down_payment_clean = comma_dollar(down_payment)
     mortgage_payment_clean = comma_dollar(mortgage_payment)
-
 
     labels = ["Mortgage", "Taxes", "Insurance"]
     number = [int(mortgage_payment), int(input_property_tax), int(input_insurance)]
@@ -618,3 +499,101 @@ def process():
                     'labels': labels,
                     'total': total
                 })
+
+######################################################################################################
+######################################################################################################
+######################################################################################################
+# Not in use
+######################################################################################################
+######################################################################################################
+######################################################################################################
+
+#
+# @app.route("/analyze2", methods=['GET','POST'])
+# def analyze2():
+#     form = Analyze_Form()
+#     return render_template('analyze_update.html', form=form)
+#
+#
+# @app.route("/handle_analyze", methods=['POST'])
+# def handle_analyze():
+#     if request.method == 'POST':
+#         title = request.form['title']
+#         street = request.form['street']
+#         city = request.form['city']
+#         state = request.form['state']
+#         zipcode = request.form['zipcode']
+#
+#         type = request.form['type']
+#         year = request.form['year']
+#         bed = request.form['bed']
+#         bath = request.form['bath']
+#         sqft = request.form['sqft']
+#
+#         price = request.form['price']
+#         term = request.form['term']
+#         down = request.form['down']
+#         interest = request.form['interest']
+#         closing = request.form['closing']
+#
+#         rent = request.form['rent']
+#         other = request.form['other']
+#         expenses = request.form['expenses']
+#         vacancy = request.form['vacancy']
+#
+#         appreciation = request.form['appreciation']
+#         income_growth = request.form['income_growth']
+#         expense_growth = request.form['expense_growth']
+#
+#         house = Calculations(price, down, interest, term, rent, expenses, vacancy)
+#
+#         cashflow_data = house.income_statement(10)
+#
+#         monthly_income = comma_dollar(rent)
+#         monthly_expense = comma_dollar(house.monthly_expenses())
+#         mortgage_payment = house.mortgage_calc()
+#         down_payment = house.downpayment_calc()
+#         oop = house.outofpocket(closing)
+#         oi = house.operating_income()
+#         monthly_noi = house.noi(oi)
+#         cap_rate = house.cap_rate()
+#
+#         cash_flow = house.cashflow(monthly_noi, mortgage_payment)
+#         coc = house.cashoncash(cash_flow, oop)
+#
+#         clean_oi = comma_dollar(oi)
+#         clean_down_payment = comma_dollar(down_payment)
+#         clean_price = comma_dollar(price.replace(',',''))
+#         clean_mortgage_payment = comma_dollar(mortgage_payment)
+#         clean_outofpocket = comma_dollar(oop)
+#         clean_cash_flow = comma_dollar(cash_flow)
+#
+#         # graph
+#         model_year, model_appreciation, model_loan, model_equity = house.year30model(appreciation, 2)
+#         data = {'model_year':model_year,
+#                 'model_appreciation': model_appreciation,
+#                 'model_loan': model_loan,
+#                 'model_equity': model_equity,
+#                 'pie_mortgage': mortgage_payment,
+#                 'pie_expense': house.monthly_expenses(),
+#                 'pie_cashflow': cash_flow,
+#                 'grossrent': comma_dollar(int(rent)),
+#                 'operating_income': clean_oi,
+#                 'operating_expenses': comma_dollar(int(rent) * (1-(int(expenses)/100))),
+#                 'loan_payment': clean_mortgage_payment,
+#                 'cashflow': clean_cash_flow
+#                 }
+#
+#     return render_template('analyze_output.html', title=title, street=street, city=city, state=state, zipcode=zipcode,
+#                                                   price=clean_price, type=type, year=year, bed=bed, bath=bath,
+#                                                   sqft=sqft,
+#                                                   mortgage_payment=clean_mortgage_payment,
+#                                                   cap_rate=cap_rate,
+#                                                   operating_income=clean_oi, expenses=expenses,
+#                                                   monthly_income=monthly_income, monthly_expense=monthly_expense,
+#                                                   down_payment=clean_down_payment,
+#                                                   outofpocket=clean_outofpocket,
+#                                                   cashflow=clean_cash_flow,
+#                                                   cashoncash=coc,
+#                                                   data=data, cashflow_data=cashflow_data)
+#
