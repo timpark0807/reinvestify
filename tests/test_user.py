@@ -6,6 +6,7 @@ from realtoranalysis.models import Post
 
 class UserTestCase(unittest.TestCase):
 
+
     ################################################################################################
     # Set up and Tear Down
     ################################################################################################
@@ -29,6 +30,9 @@ class UserTestCase(unittest.TestCase):
     ################################################################################################
     # Helper Functions
     ################################################################################################
+
+    def add_post(self):
+        pass
 
     def register(self, username, email, password, confirm):
         return self.app.post('/register',
@@ -117,19 +121,74 @@ class UserTestCase(unittest.TestCase):
                         expenses='50',
                         vacancy='10',
                         appreciation='3',
+                        income_growth='3',
+                        expense_growth='1',
 
                         author=user)
 
             db.session.add(post)
             db.session.commit()
 
-            # query the post we inserted
-            query = Post.query.filter_by(title='Test').first()
+        # query the post we inserted
+        query = Post.query.filter_by(title='Test').first()
 
-            # check that query results for a few columns are accurate
-            self.assertEqual(query.title, 'Test')
-            self.assertEqual(query.interest, '5')
-            self.assertEqual(query.rent, '1500')
+        # check that query results for a few columns are accurate
+        self.assertEqual(query.title, 'Test')
+        self.assertEqual(query.interest, '5')
+        self.assertEqual(query.rent, '1500')
+
+    def test_edit_update_delete_post(self):
+        # test that we can add, edit, update, and delete entries to the post table in our database
+        with self.app:
+            self.register('user', 'user@test.com', 'password', 'password')
+            self.login('user@test.com', 'password')
+            user = current_user
+            post = Post(title='Test',
+                        url='test.com',
+                        street='111 West Sesame Street',
+                        city='New York',
+                        state='NY',
+                        zipcode='99999',
+
+                        type='Single Family',
+                        year='1994',
+                        bed='4',
+                        bath='3',
+                        sqft='2300',
+
+                        price='100000',
+                        term='30',
+                        down='20',
+                        interest='5',
+                        closing='3',
+
+                        rent='1500',
+                        other='0',
+                        expenses='50',
+                        vacancy='10',
+                        appreciation='3',
+                        income_growth='3',
+                        expense_growth='1',
+
+                        author=user)
+
+            db.session.add(post)
+            db.session.commit()
+
+            # test that we can view the dashboard of property #1
+            response = self.app.get('analyze/1')
+            self.assertEqual(response.status_code, 200)
+
+            # test that we can access the update form
+            response = self.app.get('analyze/1/update')
+            self.assertEqual(response.status_code, 200)
+
+            # send a post request to delete property 1
+            self.app.post('analyze/1/delete')
+
+            # query all posts and check that the length returned is 0, an empty list
+            query = Post.query.all()
+            self.assertEqual(len(query), 0)
 
 
 if __name__ == '__main__':
