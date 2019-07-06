@@ -1,5 +1,11 @@
 import pandas as pd
 import numpy
+from realtoranalysis.property_calculations import Calculate
+
+prop = Calculate(100000, 20, 5, 30, 1500, 50, 10, 3)
+
+
+
 
 initial_value = 100000
 initial_rent = 1500

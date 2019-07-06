@@ -35,7 +35,7 @@ new Chart(document.getElementById("line-chart"), {
             {
                 ticks: {
                     callback: function(label, index, labels) {
-                        return label/1000+'k';
+                        return label/1000 +'k';
                     }
                 }
             }
@@ -43,4 +43,42 @@ new Chart(document.getElementById("line-chart"), {
     }
   }
   })
+
+
+
+new Chart(document.getElementById("bar-chart"), {
+  type: 'bar',
+  data: {
+    labels:     line_labels = bar_year,
+    datasets: [{
+            data: bar_rent,
+        label: "Cash Flow",
+        backgroundColor: "#1f497d",
+        fill: true
+      }
+    ]
+  },
+  options: {
+
+  legend: {position: 'bottom'},
+    title: {
+      display: false,
+      fontSize: 24
+          },
+    scales: {
+        yAxes: [
+            {
+                ticks: {
+                    min: 0,
+                    stepSize: 1000,
+                    callback: function(label, index, labels) {
+                        return label/1000 +'k';
+                    }
+                }
+            }
+        ]
+    }
+  }
+  })
+
 };

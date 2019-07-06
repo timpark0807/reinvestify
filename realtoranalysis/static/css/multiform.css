@@ -36,8 +36,8 @@
 }
 
 span.round-tab {
-    width: 50px;
-    height: 50px;
+    width: 60px;
+    height: 60px;
     line-height: 50px;
     display: inline-block;
     border-radius: 100px;
@@ -70,7 +70,7 @@ span.round-tab:hover {
 }
 
 .wizard .nav-tabs > li {
-    width: 19%;
+    width: 25%;
 }
 
 .wizard li a:after {
@@ -99,8 +99,8 @@ span.round-tab:hover {
 }
 
 .wizard .nav-tabs > li a {
-    width: 50px;
-    height: 50px;
+    width: 60px;
+    height: 60px;
     margin: 20px auto;
     border-radius: 100%;
     padding: 0;

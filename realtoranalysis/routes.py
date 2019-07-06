@@ -1,5 +1,4 @@
 from realtoranalysis import app, db, bcrypt
-import json
 from flask import render_template, jsonify, request, redirect, url_for, flash, abort, session
 from realtoranalysis.forms import Analyze_Form, LoginForm, RegistrationForm
 from realtoranalysis.models import User, Post
@@ -56,20 +55,8 @@ def about():
     return render_template('home.html', methods=['POST'])
 
 
-@app.route("/analyze/<int:post_id>/delete", methods=['POST'])
-def delete_post(post_id):
-    post = Post.query.get_or_404(post_id)
-    if post.author != current_user:
-        abort(403)
-    db.session.delete(post)
-    db.session.commit()
-    flash('Your post has been deleted!', 'success')
-
-    return redirect(url_for('home'))
-
-
 ######################################################################################################
-# Login / Logout / Register
+# Login | Logout | Register |
 ######################################################################################################
 
 
@@ -293,8 +280,11 @@ def post(post_id):
     cap_rate = property.cap_rate()
     coc = property.cashoncash()
 
-    # 30 year model
+    # 30 year appreciation, equity, loan
     model_year, model_appreciation, model_loan, model_equity = property.year30model(float(post.appreciation))
+
+    # 30 year cash flow
+    bar_year, bar_rent = property.cash_flow_30_year(post.income_growth, post.expense_growth)
 
     # cash flow table
     cashflow_data = property.income_statement(float(post.other))
@@ -303,6 +293,8 @@ def post(post_id):
             'model_appreciation': model_appreciation,
             'model_loan': model_loan,
             'model_equity': model_equity,
+            'bar_year': bar_year,
+            'bar_rent': bar_rent,
             'price': comma_dollar(float(post.price)),
             'mortgage': comma_dollar(mortgage_payment),
             'outofpocket': comma_dollar(out_of_pocket),
@@ -399,6 +391,8 @@ def update_post(post_id):
         form.expenses.data = post.expenses
         form.vacancy.data = post.vacancy
         form.appreciation.data = post.appreciation
+        form.income_growth.data = post.income_growth
+        form.expense_growth.data = post.expense_growth
 
     return render_template('analyze_update.html', form=form)
 
@@ -460,6 +454,18 @@ def post_anon(post_id):
 
                            cashflow_data=cashflow_data,
                            data=data)
+
+
+@app.route("/analyze/<int:post_id>/delete", methods=['POST'])
+def delete_post(post_id):
+    post = Post.query.get_or_404(post_id)
+    if post.author != current_user:
+        abort(403)
+    db.session.delete(post)
+    db.session.commit()
+    flash('Your post has been deleted!', 'success')
+
+    return redirect(url_for('home'))
 
 
 ######################################################################################################

@@ -1,6 +1,5 @@
 import numpy
 
-
 class Calculate:
 
     def __init__(self, price, downpayment, interest, term, rent, expense, vacancy, closing):
@@ -127,7 +126,6 @@ class Calculate:
 
         return year_list, new_values_list, loan_balance_list, equity_list
 
-
     def income_statement(self, other_income):
         """ Returns a dictionary with all necessary values"""
         grossrent = self.rent
@@ -173,6 +171,22 @@ class Calculate:
 
         return cf_dict
 
+    def cash_flow_30_year(self, income_growth, expense_growth):
+        cashflow = self.cashflow()
+        annual_cashflow = cashflow * 12
+        rent_increase = 1 + (float(income_growth)/100 - float(expense_growth)/100)
+        year_list = []
+        rent_list = []
+        cash_flow_new = annual_cashflow
+
+        for i in range(1, 31):
+            cash_flow_new = round(cash_flow_new * rent_increase)
+            year_list.append(i)
+            rent_list.append(cash_flow_new)
+
+        return year_list, rent_list
+
+
 def comma_dollar(number):
     num = int(number)
     if num < 0:
@@ -183,17 +197,3 @@ def comma_dollar(number):
         payment_1 = format(round(num,2), ',d')
         str_payment = "$" + str(payment_1)
         return str_payment
-
-
-# Used to test outputs of calculator
-# property = Calculate('100,000', '20', '5.0', '30', '1500', '50', '10','2')
-# print('downpayment:', property.down_payment())
-# print('mortgage payment:', property.mortgage_payment())
-# print('out of pocket', property.outofpocket())
-# print('vacancy loss:', property.vacancy_loss())
-# print('operating income:', property.operating_income())
-# print('operating_expense:', property.operating_expense())
-# print('noi:', property.noi())
-# print('cashflow:', property.cashflow())
-# print('caprate:', property.cap_rate())
-# print('cash on cash:', property.cashoncash())

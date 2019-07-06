@@ -12,7 +12,8 @@
       var appreciation = {{ data.model_appreciation }}
       var loan = {{ data.model_loan }}
       var equity = {{ data.model_equity }}
-
+      var bar_year = {{ data.bar_year }}
+      var bar_rent = {{ data.bar_rent }}
   </script>
 </head>
 <div class="content">
@@ -27,8 +28,10 @@
           <div class="col-md-4">
           <button type="button" class="btn btn-success btn-sm m-1" data-toggle="modal" data-target="#deleteModal" style="float: right;">Share</button>
           <button type="button" class="btn btn-danger btn-sm m-1" data-toggle="modal" data-target="#deleteModal" style="float: right;">Delete</button>
+          {% if current_user.is_authenticated %}
           <a class="btn btn-secondary btn-sm m-1" href="{{url_for('update_post', post_id=post.id)}}" style="float: right;">Edit</a>
-        </div>
+          {% endif %}
+          </div>
     </div>
         <hr style="margin-top:-2px; ">
   <!--BEGIN FIRST ROW OF CARD ICONS -->
@@ -195,7 +198,7 @@
           </div>
           <div class="card">
             <div class="card-body">
-                            <h6 class="card-title text-center">Payment Breakdown</h6>
+                            <h6 class="card-title text-center">Cash Flow Projection</h6>
 
                                   <canvas id="bar-chart" height="175"></canvas>
 
@@ -206,10 +209,10 @@
 
 <br>
         <div class="row">
-          <div class="col-md-12">
+          <div class="col-md-6">
             <div class="card ">
               <div class="card-body">
-                <h5 class="card-title">Cash Flow</h5>
+                <h5 class="card-title">Year 1: Cash Flow</h5>
                 <div class="content table-responsive table-full-width">
                   <table class="table ">
                     <thead>

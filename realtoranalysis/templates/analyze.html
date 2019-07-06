@@ -55,13 +55,6 @@
                                 </a>
                             </li>
 
-                            <li role="presentation" class="nav-item">
-                                <a href="#step5" data-toggle="tab" aria-controls="step5" role="tab" title="Step 5" class="nav-link disabled">
-                            <span class="round-tab">
-                                <i class="fa fa-check"></i>
-                            </span>
-                                </a>
-                            </li>
 
                         </ul>
                     </div>
@@ -344,7 +337,7 @@
                                         <div class="form-group">
                                             <label>Annual Income Growth</label>
                                             <div class="input-group mb-3">
-                                                <input type="text" class="form-control" id="annual_income_growth" name="income_growth" value="2">
+                                                <input type="text" class="form-control" id="annual_income_growth" name="income_growth" value="3">
                                                 <div class="input-group-append">
                                                 <span class="input-group-text">%</span>
                                                 </div>
@@ -356,7 +349,7 @@
                                         <div class="form-group">
                                             <label>Annual Expense Growth</label>
                                             <div class="input-group mb-3">
-                                                <input type="text" class="form-control" id="annual_expense_growth" name="expense_growth" value="2">
+                                                <input type="text" class="form-control" id="annual_expense_growth" name="expense_growth" value="1">
                                                 <div class="input-group-append">
                                                 <span class="input-group-text">%</span>
                                                 </div>
@@ -369,24 +362,9 @@
                             <ul class="list-inline text-md-center">
                                  <li>
                                     <button type="button" id="prev-4" class="btn btn-lg btn-common next-step next-button">Previous</button>
-                                    <button type="button" id="next-4" class="btn btn-lg btn-common next-step next-button">Next Step</button>
+                                    <button type="submit" class="btn btn-lg btn-common next-step next-button">Submit</button>
                                  </li>
                             </ul>
-                        </div>
-
-
-
-                        <div class="tab-pane" role="tabpanel" id="step5">
-                            <h1 class="text-md-center">Complete</h1>
-                            <div class="row justify-content-center">
-                                <div class="form-row ">
-                                    <div class="update ml-auto mr-auto">
-
-                                        <button type="submit" class="btn btn-lg btn-common next-step next-button">Submit</button>
-                                    </div>
-                                </div>
-
-                            </div>
                         </div>
 
                         <div class="clearfix"></div>
@@ -490,7 +468,6 @@
             $("#stepicon3").addClass('active');
 
         });
-
 
 
     });
