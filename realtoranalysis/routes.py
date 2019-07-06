@@ -30,27 +30,27 @@ def app_forbidden(e):
 ######################################################################################################
 
 
-@app.route("/")
-@app.route("/home")
+@app.route('/')
+@app.route('/home')
 def home():
     posts = Post.query.filter_by().first()
     return render_template('home.html', post=posts)
 
 
-@app.route("/account")
+@app.route('/account')
 @login_required
 def account():
     return render_template('account.html' )
 
 
-@app.route("/properties")
+@app.route('/properties')
 @login_required
 def properties():
     posts = Post.query.filter_by(id=5).first()
     return render_template('properties.html', post=posts)
 
 
-@app.route("/about")
+@app.route('/about')
 def about():
     return render_template('home.html', methods=['POST'])
 
@@ -60,7 +60,7 @@ def about():
 ######################################################################################################
 
 
-@app.route("/login", methods=['GET', 'POST'])
+@app.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
         return redirect(url_for('home'))
@@ -79,13 +79,13 @@ def login():
     return render_template('login.html', title='Login', form=form)
 
 
-@app.route("/logout")
+@app.route('/logout')
 def logout():
     logout_user()
     return redirect(url_for('home'))
 
 
-@app.route("/register", methods=['GET', 'POST'])
+@app.route('/register', methods=['GET', 'POST'])
 def register():
     if current_user.is_authenticated:
         return redirect(url_for('home'))
@@ -110,7 +110,7 @@ def register():
 ######################################################################################################
 
 
-@app.route("/analyze", methods=['GET', 'POST'])
+@app.route('/analyze', methods=['GET', 'POST'])
 def analyze():
 
     """
@@ -155,6 +155,17 @@ def analyze():
         appreciation = request.form['appreciation']
         income_growth = request.form['income_growth']
         expense_growth = request.form['expense_growth']
+
+        if len(title) == 0:
+            title = 'Untitled'
+        if len(sqft) == 0:
+            sqft = ''
+        if len(bed) == 0:
+            bed = '-'
+        if len(bath) == 0:
+            bath = '-'
+        if len(year) == 0:
+            year = '-'
 
         # when user is logged in, current_user is authenticated and redirects to /analyze/<post.id>
         # /analyze/<post.id> queries data from the Post table into variable post 
@@ -241,17 +252,21 @@ def analyze():
     return render_template('analyze.html', form=form)
 
 
-@app.route("/analyze/<int:post_id>")
+@app.route('/analyze/<int:post_id>')
 def post(post_id):
     """ The user is redirected to this route after submitting the form on the /analyze/ route
         As recap, the /analyze/ route submission inserts form inputs into a database
         The database automatically assigns a primary key "post id" to the data
 
-        This route queries the database using the post id as the SQL WHERE clause
-        By querying this, we now have access to the variables input on the form and inserted by the /analyze/ route
+        This route queries the database using the post id as SQL's WHERE clause (WHERE post_id = post_id)
+        By querying thru post_id, we have access to the variables input on the form and inserted by the /analyze/ route
         We can get price by calling post.price
 
-        This route passes the calculations in as a parameter in render_template()
+        We call the Calculate class defined in property_calculations.py and pass form inputs as parameters
+        We then call methods of the class to calculate metrics such as down payment, cap rates, etc.
+
+        We take the results of the calculations and insert them into the dictionary {data}
+        This route passes the dictionary as a parameter in render_template()
         Now we can access the calculations in the jinja2 template
     """
     post = Post.query.get_or_404(post_id)
@@ -309,7 +324,7 @@ def post(post_id):
 
     # can't view report unless you are the user who created it
 
-    return render_template("analyze_output.html",
+    return render_template('analyze_output.html',
                            title=post.title,
                            post=post,
 
@@ -318,7 +333,7 @@ def post(post_id):
 
 
 # when user is logged in and authenticated
-@app.route("/analyze/<int:post_id>/update", methods=['GET','POST'])
+@app.route('/analyze/<int:post_id>/update', methods=['GET','POST'])
 def update_post(post_id):
     """ This route allows a user to update the form inputs
 
@@ -334,6 +349,9 @@ def update_post(post_id):
                 Only changes we make will be change data inserted into the database
     """
     post = Post.query.get_or_404(post_id)
+
+    if post.author != current_user:
+        abort(403)
 
     form = Analyze_Form()
     if form.is_submitted():
@@ -398,7 +416,7 @@ def update_post(post_id):
 
 
 # /analyze2 redirects to this route when current_user is not authenticated bc user is not logged in
-@app.route("/analyze/anon/<int:post_id>")
+@app.route('/analyze/anon/<int:post_id>')
 def post_anon(post_id):
 
     post = Post.query.get_or_404(post_id)
@@ -448,7 +466,7 @@ def post_anon(post_id):
 
     # can't view report unless you are the user who created it
 
-    return render_template("analyze_output.html",
+    return render_template('analyze_output.html',
                            title=post.title,
                            post=post,
 
@@ -456,7 +474,7 @@ def post_anon(post_id):
                            data=data)
 
 
-@app.route("/analyze/<int:post_id>/delete", methods=['POST'])
+@app.route('/analyze/<int:post_id>/delete', methods=['POST'])
 def delete_post(post_id):
     post = Post.query.get_or_404(post_id)
     if post.author != current_user:
@@ -473,12 +491,12 @@ def delete_post(post_id):
 ######################################################################################################
 
 
-@app.route("/calculator")
+@app.route('/calculator')
 def calculator():
     return render_template('calculator.html')
 
 
-@app.route("/process", methods=['POST'])
+@app.route('/process', methods=['POST'])
 def process():
     input_price = request.form['price']
     input_down_payment = request.form['down_payment']
@@ -495,7 +513,7 @@ def process():
     down_payment_clean = comma_dollar(down_payment)
     mortgage_payment_clean = comma_dollar(mortgage_payment)
 
-    labels = ["Mortgage", "Taxes", "Insurance"]
+    labels = ['Mortgage', 'Taxes', 'Insurance']
     number = [int(mortgage_payment), int(input_property_tax), int(input_insurance)]
     total = int(mortgage_payment) + int(input_property_tax) + int(input_insurance)
 
