@@ -513,7 +513,7 @@ def process():
     down_payment_clean = comma_dollar(down_payment)
     mortgage_payment_clean = comma_dollar(mortgage_payment)
 
-    labels = ['Mortgage', 'Taxes', 'Insurance']
+    labels = ['Mortgage', 'Taxes' , 'Insurance']
     number = [int(mortgage_payment), int(input_property_tax), int(input_insurance)]
     total = int(mortgage_payment) + int(input_property_tax) + int(input_insurance)
 

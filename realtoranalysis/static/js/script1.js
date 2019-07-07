@@ -2,7 +2,7 @@ $(document).ready(function(){
 
 
 // This loads a doughnut chart when you open the page
-         chartx = new Chart(document.getElementById("bar-chart"), {
+         var chartx = new Chart(document.getElementById("bar-chart"), {
                       type: 'doughnut',
                          data: {
                                labels: ["Mortgage", "Taxes", "Insurance"],
@@ -14,9 +14,16 @@ $(document).ready(function(){
                                ]
                                },
                          options: {
-                                legend: { display: true,
-                                          position: 'bottom',
-                                          }
+                                legend: {
+                                        responsive:true,
+                                        maintainAspectRatio: false,
+                                        display: true,
+
+                                      position: 'bottom',
+                                      align: 'middle',
+                                      padding:20,
+                                      labels:{fontSize: 15}
+                                      }
 
                                           ,
                                  title: {
@@ -52,7 +59,6 @@ $(document).ready(function(){
 
     $('form').on('submit', function(event) {
 
-
         $.ajax({
             data : {
                 price : $('#price_id').val(),
@@ -67,30 +73,39 @@ $(document).ready(function(){
         })
         .done(function(data) {
 
+        $("canvas#bar-chart").remove();
+        $("div.holder").append('<canvas id="bar-chart" ></canvas>');
+
          chartx = new Chart(document.getElementById("bar-chart"), {
-              type: 'doughnut',
-                 data: {
-                       labels: data.labels,
-                       datasets: [
-                       {
-                        label: "Population (millions)",
-                        backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f"],
-                        data: data.number
-                       }
-                       ]
-                       },
-                 options: {
-                        legend: { display: true,
-                                  position: 'bottom',
-                                  }
+                  type: 'doughnut',
+                     data: {
+                           labels: data.labels,
+                           datasets: [
+                           {
+                            label: "Population (millions)",
+                            backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f"],
+                            data: data.number
+                           }
+                           ]
+                           },
+                     options: {
+                            legend: { responsive:true,
+                                    maintainAspectRatio: false,
+                                    display: true,
+                                      position: 'bottom',
+                                      align: 'middle',
+                                      padding:20,
+                                      labels:{fontSize: 15}
+                                      }
+                                      ,
 
-                                  ,
-                         title: {
-                          display: false
-                                }
-                        },
+                             title: {
+                              display: false,
+                                    }
 
-                });
+                            },
+
+                    });
 
          Chart.pluginService.register({
               beforeDraw: function(chart) {
@@ -107,6 +122,7 @@ $(document).ready(function(){
                     textX = Math.round((width - ctx.measureText(text).width) / 2),
                     textY = (height / 2)-12;
 
+                ctx.clearRect(0, 0, chart.width, chart.height);
 
                 ctx.fillText(text, textX, textY);
                 ctx.save();
@@ -115,49 +131,12 @@ $(document).ready(function(){
 
             })
 
-
         });
 
    });
 
 });
 
-
-//    values = [12, 19, 3]
-//    labels = ['Red', 'Blue', 'Yellow']
-//    colors = ['#ff0000','#0000ff','#008000']
-//
-//    var ctx = $('#mycanvas').get(0).getContext("2d");
-//
-//    var data = [
-//        {
-//            value:270,
-//            color: "cornflowblue",
-//            highlight: "lightblue",
-//            label: "javascript"
-//        },
-//
-//        {
-//            value: 25,
-//            color: "lightgreen",
-//            highlight: "yellowgreen",
-//            label: "html"
-//        },
-//
-//        {
-//            value: 50,
-//            color: "orange",
-//            highlight: "darkorange",
-//            label: "python"
-//        }
-//
-//    ];
-//
-//    var chart = new Chart(ctx).Doughnut(data);
-//
-//
-//
-//  });
 
 //BELOW IS GOOD
 //           var _data;
