@@ -159,7 +159,7 @@ def analyze():
         if len(title) == 0:
             title = 'Untitled'
         if len(sqft) == 0:
-            sqft = ''
+            sqft = '-'
         if len(bed) == 0:
             bed = '-'
         if len(bath) == 0:
@@ -354,6 +354,8 @@ def update_post(post_id):
         abort(403)
 
     form = Analyze_Form()
+
+
     if form.is_submitted():
         post.title = form.title.data
         post.street = form.street.data
@@ -411,6 +413,8 @@ def update_post(post_id):
         form.appreciation.data = post.appreciation
         form.income_growth.data = post.income_growth
         form.expense_growth.data = post.expense_growth
+
+
 
     return render_template('analyze_update.html', form=form)
 

@@ -11,7 +11,7 @@ class Analyze_Form(FlaskForm):
     street = StringField('Street')
     city = StringField('City')
     state = StringField('State')
-    zipcode = IntegerField('ZipCode')
+    zipcode = StringField('ZipCode')
 
     # Form 2
     type = SelectField(label='Type',
@@ -19,10 +19,10 @@ class Analyze_Form(FlaskForm):
                                 ('Multi Family', 'Multi Family'),
                                 ('Apartment', 'Apartment Unit'),
                                 ('Condo', 'Condo'),])
-    year = IntegerField('Year')
-    bed = FloatField('Bed')
-    bath = FloatField('Bath')
-    sqft = FloatField('SqFt')
+    year = StringField('Year')
+    bed = StringField('Bed')
+    bath = StringField('Bath')
+    sqft = StringField('SqFt')
 
     # Form 3
     price = FloatField('Price')
