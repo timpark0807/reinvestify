@@ -2,7 +2,7 @@ from realtoranalysis import app, db, bcrypt
 from flask import render_template, jsonify, request, redirect, url_for, flash, abort, session
 from realtoranalysis.forms import Analyze_Form, LoginForm, RegistrationForm
 from realtoranalysis.models import User, Post
-from realtoranalysis.scripts.property_calculations import Calculate, comma_dollar
+from realtoranalysis.scripts.property_calculations import Calculate, comma_dollar, handle_comma
 from flask_login import login_user, current_user, logout_user, login_required
 
 ######################################################################################################
@@ -142,14 +142,14 @@ def analyze():
         bath = request.form['bath']
         sqft = request.form['sqft']
 
-        price = request.form['price']
+        price = handle_comma(request.form['price'])
         term = request.form['term']
         down = request.form['down']
         interest = request.form['interest']
         closing = request.form['closing']
 
-        rent = request.form['rent']
-        other = request.form['other']
+        rent = handle_comma(request.form['rent'])
+        other = handle_comma(request.form['other'])
         expenses = request.form['expenses']
         vacancy = request.form['vacancy']
         appreciation = request.form['appreciation']
@@ -369,14 +369,14 @@ def update_post(post_id):
         post.bath = form.bath.data
         post.sqft = form.sqft.data
 
-        post.price = form.price.data
+        post.price = handle_comma(form.price.data)
         post.term = form.term.data
         post.down = form.down.data
         post.interest = form.interest.data
         post.closing = form.closing.data
 
-        post.rent = form.grossrent.data
-        post.other = form.other.data
+        post.rent = handle_comma(form.grossrent.data)
+        post.other = handle_comma(form.other.data)
         post.expenses = form.expenses.data
         post.vacancy = form.vacancy.data
         post.appreciation = form.appreciation.data
@@ -413,8 +413,6 @@ def update_post(post_id):
         form.appreciation.data = post.appreciation
         form.income_growth.data = post.income_growth
         form.expense_growth.data = post.expense_growth
-
-
 
     return render_template('analyze_update.html', form=form)
 

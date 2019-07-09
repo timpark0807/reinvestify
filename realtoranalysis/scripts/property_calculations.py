@@ -3,7 +3,7 @@ import numpy
 class Calculate:
 
     def __init__(self, price, downpayment, interest, term, rent, expense, vacancy, closing):
-        self.price = float(str(price).replace(',',''))
+        self.price = float(price)
         self.downpayment = float(downpayment)/100     # convert down payment to percent
         self.interest = float(interest)/100         # convert interest to percent
         self.term = float(term)
@@ -185,6 +185,13 @@ class Calculate:
             rent_list.append(cash_flow_new)
 
         return year_list, rent_list
+
+
+def handle_comma(number):
+    if ',' in number:
+        return number.replace(',','')
+    else:
+        return str(number)
 
 
 def comma_dollar(number):

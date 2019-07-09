@@ -25,7 +25,7 @@ class Analyze_Form(FlaskForm):
     sqft = StringField('SqFt')
 
     # Form 3
-    price = FloatField('Price')
+    price = StringField('Price')
     term = SelectField(label='Term',
                        choices=[
                                 ('30', '30 Year Fixed'),
@@ -36,8 +36,8 @@ class Analyze_Form(FlaskForm):
     closing = FloatField('Closing')
 
     # Form 4
-    grossrent = FloatField('GrossRent')
-    other = FloatField('Other Income')
+    grossrent = StringField('GrossRent')
+    other = StringField('Other Income')
     vacancy = FloatField('Vacancy')
     taxes = FloatField('Taxes')
     expenses = FloatField('Expenses')
