@@ -1,3 +1,6 @@
+import secrets
+import os
+from PilLite import Image
 from realtoranalysis import app, db, bcrypt
 from flask import render_template, jsonify, request, redirect, url_for, flash, abort, session
 from realtoranalysis.forms import Analyze_Form, LoginForm, RegistrationForm
@@ -47,7 +50,8 @@ def account():
 @login_required
 def properties():
     posts = Post.query.filter_by(id=5).first()
-    return render_template('properties.html', post=posts)
+    image_file = url_for('static', filename='property_pics/' + posts.image_file)
+    return render_template('properties.html', post=posts, image_file=image_file)
 
 
 @app.route('/about')
@@ -110,6 +114,19 @@ def register():
 ######################################################################################################
 
 
+def save_picture(form_picture):
+    random_hex = secrets.token_hex(8)
+    _, f_ext = os.path.splitext(form_picture.filename)
+    picture_fn = random_hex + f_ext
+    picture_path = os.path.join(app.root_path, 'static/property_pics', picture_fn)
+
+    output_size = (125, 125)
+    i = Image.open(form_picture)
+    i.thumbnail(output_size)
+    i.save(picture_path)
+
+    return picture_fn
+
 @app.route('/analyze', methods=['GET', 'POST'])
 def analyze():
 
@@ -126,6 +143,10 @@ def analyze():
 
     form = Analyze_Form()
     if form.is_submitted():
+
+        if form.picture.data:
+            picture_file = save_picture(form.picture.data)
+            current_user.image_file = picture_file
 
         # Pass form inputs as variables
 
@@ -176,6 +197,7 @@ def analyze():
             post = Post(title=title,
                         url=url,
                         street=street,
+                        image_file=picture_file,
                         city=city,
                         state=state,
                         zipcode=zipcode,
@@ -218,6 +240,7 @@ def analyze():
             user = current_user.get_id()
             post = Post(title=title,
                         url=url,
+                        image_file=picture_file,
                         street=street,
                         city=city,
                         state=state,
@@ -281,7 +304,8 @@ def post(post_id):
                          float(post.rent),
                          float(post.expenses),
                          float(post.vacancy),
-                         float(post.closing)
+                         float(post.closing),
+                         float(post.other)
                          )
 
     down_payment = property.down_payment()
@@ -302,7 +326,7 @@ def post(post_id):
     bar_year, bar_rent = property.cash_flow_30_year(post.income_growth, post.expense_growth)
 
     # cash flow table
-    cashflow_data = property.income_statement(float(post.other))
+    cashflow_data = property.income_statement()
 
     data = {'model_year': model_year,
             'model_appreciation': model_appreciation,
@@ -322,14 +346,17 @@ def post(post_id):
             'vacancy': vacancy_loss
             }
 
+    image_file = url_for('static', filename='property_pics/' + post.image_file)
+
     # can't view report unless you are the user who created it
 
     return render_template('analyze_output.html',
                            title=post.title,
                            post=post,
-
                            cashflow_data=cashflow_data,
-                           data=data)
+                           data=data,
+                           image_file=image_file
+                           )
 
 
 # when user is logged in and authenticated
@@ -430,7 +457,8 @@ def post_anon(post_id):
                          float(post.rent),
                          float(post.expenses),
                          float(post.vacancy),
-                         float(post.closing)
+                         float(post.closing),
+                         float(post.other)
                          )
 
     down_payment = property.down_payment()
@@ -448,7 +476,7 @@ def post_anon(post_id):
     model_year, model_appreciation, model_loan, model_equity = property.year30model(float(post.appreciation))
 
     # cash flow table
-    cashflow_data = property.income_statement(float(post.other))
+    cashflow_data = property.income_statement()
 
     data = {'model_year': model_year,
             'model_appreciation': model_appreciation,
@@ -507,7 +535,7 @@ def process():
     input_property_tax = request.form['property_tax']
     input_insurance = request.form['insurance']
 
-    calc = Calculate(input_price, input_down_payment, input_interest_rate, input_term, 0, 0, 0, 0)
+    calc = Calculate(input_price, input_down_payment, input_interest_rate, input_term, 0, 0, 0, 0, 0)
     down_payment = calc.down_payment()
     mortgage_payment = calc.mortgage_payment()
 

@@ -2,7 +2,7 @@ import numpy
 
 class Calculate:
 
-    def __init__(self, price, downpayment, interest, term, rent, expense, vacancy, closing):
+    def __init__(self, price, downpayment, interest, term, rent, expense, vacancy, closing, other_income):
         self.price = float(price)
         self.downpayment = float(downpayment)/100     # convert down payment to percent
         self.interest = float(interest)/100         # convert interest to percent
@@ -11,6 +11,7 @@ class Calculate:
         self.expense = float(expense)/100
         self.vacancy = float(vacancy)/100
         self.closing = float(closing)/100
+        self.other_income = float(other_income)
 
     def down_payment(self):
 
@@ -52,7 +53,7 @@ class Calculate:
     def operating_income(self):
 
         # operating income is gross rent minus how much we project to lose
-        operating_income = self.rent - self.vacancy_loss()
+        operating_income = self.rent + self.other_income - self.vacancy_loss()
 
         return round(operating_income)
 
@@ -126,7 +127,7 @@ class Calculate:
 
         return year_list, new_values_list, loan_balance_list, equity_list
 
-    def income_statement(self, other_income):
+    def income_statement(self):
         """ Returns a dictionary with all necessary values"""
         grossrent = self.rent
         annual_grossrent = grossrent * 12
@@ -134,8 +135,7 @@ class Calculate:
         vacancy = self.rent * self.vacancy
         annual_vacancy = vacancy * 12
 
-        other_income = other_income
-        annual_other_income = other_income * 12
+        annual_other_income = self.other_income * 12
 
         operating_income = self.operating_income()
         annual_operating_income = operating_income * 12
@@ -156,7 +156,7 @@ class Calculate:
                    'annual_grossrent': comma_dollar(annual_grossrent),
                    'vacancy': comma_dollar(vacancy),
                    'annual_vacancy': comma_dollar(annual_vacancy),
-                   'other_income': comma_dollar(other_income),
+                   'other_income': comma_dollar(self.other_income),
                    'annual_other_income': comma_dollar(annual_other_income),
                    'operating_income': comma_dollar(operating_income),
                    'annual_operating_income': comma_dollar(annual_operating_income),

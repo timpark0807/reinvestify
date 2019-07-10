@@ -1,13 +1,15 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SelectField, SubmitField, PasswordField, IntegerField, FloatField
+from wtforms import StringField, SelectField, SubmitField, PasswordField, FloatField
 from wtforms.validators import InputRequired, DataRequired, Email, Length, EqualTo, ValidationError
 from realtoranalysis.models import User
-
+from flask_wtf.file import FileField, FileAllowed
 
 class Analyze_Form(FlaskForm):
     # Form 1
     title = StringField('Title')
     url = StringField('URL')
+    picture = FileField('Update Profile Picture', validators=[FileAllowed(['jpg', 'png'])])
+
     street = StringField('Street')
     city = StringField('City')
     state = StringField('State')

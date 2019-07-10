@@ -16,7 +16,7 @@
         <div class="col-md-8">
             <div class="card ">
             <section>
-                <form method="POST">
+                <form method="POST" enctype="multipart/form-data">
                 <div class="wizard">
                     <div class="wizard-inner">
                         <div class="connecting-line"></div>
@@ -83,10 +83,17 @@
                                     </div>
                                 </div>
                                 <div class="form-row">
-                                    <div class="col-md h-100">
+                                    <div class="col-md-10 h-100">
                                         <div class="form-group ">
                                             <label>Street</label>
                                             <input type="text" class="form-control" id="address_street_id" name="street" value="">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 h-100">
+                                        <div class="form-group ">
+                                            <label>Image</label>
+                                            {{form.picture(class="form-control-file")}}
+                                            <input type="button" class="form-control-file" id="picture" name="picture" value="Upload">
                                         </div>
                                     </div>
                                 </div>
@@ -189,7 +196,7 @@
                                                     <div class="input-group-prepend">
                                                       <span class="input-group-text" id="inputGroupPrepend">$</span>
                                                     </div>
-                                                    <input type="text" class="form-control number" id="price_id" name="price" value="100000" aria-describedby="inputGroupPrepend" required>
+                                                    <input type="text" class="form-control number" id="price_id" name="price" value="100,000" aria-describedby="inputGroupPrepend" required>
                                                 </div>
 
                                             </div>
@@ -267,7 +274,7 @@
                                                 <div class="input-group-prepend">
                                                   <span class="input-group-text">$</span>
                                                 </div>
-                                            <input type="text" class="form-control" id="cashflow_grossrent_id" name="rent" value="1500">
+                                            <input type="text" class="form-control" id="cashflow_grossrent_id" name="rent" value="1,500">
                                             </div>
                                         </div>
                                     </div>
@@ -293,7 +300,7 @@
                                         <div class="form-group">
                                             <label>Operating Expenses </label>
                                             <div class="input-group mb-3">
-                                                <input type="text" class="form-control" id="cashflow_expenses_id" name="expenses" value="50">
+                                                <input type="text" class="form-control" id="cashflow_expenses_id" name="expenses" value="50.0">
                                                 <div class="input-group-append">
                                                     <span class="input-group-text">%</span>
                                                 </div>
@@ -305,7 +312,7 @@
                                         <div class="form-group">
                                             <label>Vacancy</label>
                                             <div class="input-group mb-3">
-                                                <input type="text" class="form-control" id="cashflow_vacancy_id" name="vacancy" value="10">
+                                                <input type="text" class="form-control" id="cashflow_vacancy_id" name="vacancy" value="10.0">
                                                 <div class="input-group-append">
                                                 <span class="input-group-text">%</span>
                                                 </div>
@@ -322,7 +329,7 @@
                                         <div class="form-group">
                                             <label>Annual Appreciation </label>
                                             <div class="input-group mb-3">
-                                                <input type="text" class="form-control" id="appreciation" name="appreciation" value="3">
+                                                <input type="text" class="form-control" id="appreciation" name="appreciation" value="3.0">
                                                 <div class="input-group-append">
                                                     <span class="input-group-text">%</span>
                                                 </div>
@@ -334,7 +341,7 @@
                                         <div class="form-group">
                                             <label>Annual Income Growth</label>
                                             <div class="input-group mb-3">
-                                                <input type="text" class="form-control" id="annual_income_growth" name="income_growth" value="3">
+                                                <input type="text" class="form-control" id="annual_income_growth" name="income_growth" value="3.0">
                                                 <div class="input-group-append">
                                                 <span class="input-group-text">%</span>
                                                 </div>
@@ -346,7 +353,7 @@
                                         <div class="form-group">
                                             <label>Annual Expense Growth</label>
                                             <div class="input-group mb-3">
-                                                <input type="text" class="form-control" id="annual_expense_growth" name="expense_growth" value="1">
+                                                <input type="text" class="form-control" id="annual_expense_growth" name="expense_growth" value="1.0">
                                                 <div class="input-group-append">
                                                 <span class="input-group-text">%</span>
                                                 </div>
