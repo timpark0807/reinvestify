@@ -16,7 +16,7 @@ class User(db.Model, UserMixin):
     # property = db.relationship('Property', backref='author', lazy=True)
 
     def __repr__(self):
-        return f"User('{self.username}', '{self.email}')"
+        return f"User('{self.username}', '{self.email}', '{self.id}')"
 
 
 class AnonymousUser(AnonymousUserMixin):

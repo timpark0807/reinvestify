@@ -4,33 +4,33 @@
 <div class="content">
   <div class="container mt-3">
         <div class="row justify-content-center">
-             <div class="col-8">
-                    <div class="card spur-card">
 
-                        <div class="card-header">
-                            <div class="col-3">
-                              <img class="account-img" src="{{ image_file }}">
-                            </div>
+            <div class="card flex-row flex-wrap">
+                <div class="card-header border-0 mr-1">
+                  <img class="account-img" height=200 width=200 src="{{ image_file }}">
+                </div>
+                <div class="card-block px-2">
+                    <h4 class="card-title">  <a href= "{{ url_for('post', post_id=post.id) }}"> {{post.title }} </a></h4>
+                    <p class="card-text">{{ post.date_posted}}</p>
 
-                                <h3>  <a href= "{{ url_for('post', post_id=post.id) }}"> {{post.title }} </a>    </h3>
-                                <h6>{{ post.date_posted}}</h6>
-                        </div>
-
-
-
-             <div class="card-body ">
-                      <div class="content-section">
-
-                       <h6>Address:</h6>
-
+                        <h6>Address:</h6>
                           <p> {{ post.street }} {{ post.city }}, {{ post.state }} {{ post.zipcode }}</p>
-                          <p> {{post.type}} | {{post.beds}} Bed | {{post.bath}} bath | {{post.sqft}} sqft </p>
-                          <p> {{post.price}} {{post.cash_flow}}/mo Cash Flow {{post.cap_rate}} Cap Rate</p>
-                      </div>
-                         </div>
-                                </div>
-             </div>
+
+                        <h6>Property Detail:</h6>
+                          <p> {{post.type}} | {{post.bed}} bed | {{post.bath}} bath | {{post.sqft}} sqft </p>
+                          <p> {{post.price}} Purchase Price | {{post.cash_flow}}/mo Cash Flow | {{post.cap_rate}} Cap Rate</p>
+
+                </div>
+
+
+                <div class="w-100">
+                </div>
+
+                <div class="card-footer w-100 text-muted">
+                </div>
+
         </div>
+    </div>
  </div>
 
  <body onload="redirect()">

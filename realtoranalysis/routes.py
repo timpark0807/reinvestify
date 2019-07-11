@@ -49,7 +49,11 @@ def account():
 @app.route('/properties')
 @login_required
 def properties():
-    posts = Post.query.filter_by(id=5).first()
+    if current_user.is_authenticated:
+        user = current_user.id
+
+    posts = Post.query.filter_by(user_id=user).first()
+
     image_file = url_for('static', filename='property_pics/' + posts.image_file)
     return render_template('properties.html', post=posts, image_file=image_file)
 
@@ -120,7 +124,7 @@ def save_picture(form_picture):
     picture_fn = random_hex + f_ext
     picture_path = os.path.join(app.root_path, 'static/property_pics', picture_fn)
 
-    output_size = (125, 125)
+    output_size = (200, 200)
     i = Image.open(form_picture)
     i.thumbnail(output_size)
     i.save(picture_path)
@@ -140,6 +144,7 @@ def analyze():
 
         Else: user is anonymous so we pass the variables and calculations as a dictionary to the jinja2 webpage
     """
+    picture_file = 'default.png'
 
     form = Analyze_Form()
     if form.is_submitted():
@@ -354,8 +359,7 @@ def post(post_id):
                            title=post.title,
                            post=post,
                            cashflow_data=cashflow_data,
-                           data=data,
-                           image_file=image_file
+                           data=data
                            )
 
 
