@@ -532,7 +532,7 @@ def calculator():
 
 @app.route('/process', methods=['POST'])
 def process():
-    input_price = request.form['price']
+    input_price = handle_comma(request.form['price'])
     input_down_payment = request.form['down_payment']
     input_term = request.form['term']
     input_interest_rate = request.form['interest_rate']

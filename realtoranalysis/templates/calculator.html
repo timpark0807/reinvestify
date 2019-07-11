@@ -44,7 +44,7 @@
 
                                   <span class="input-group-text" id="inputGroupPrepend">$</span>
                                 </div>
-                                <input type="text" class="form-control" id="price_id" name="price" value="100000" aria-describedby="inputGroupPrepend" required>
+                                <input type="text" class="form-control" id="price_id" name="price" value="100,000" aria-describedby="inputGroupPrepend" required>
                               </div>
 
                             </div>
@@ -187,7 +187,21 @@
 </div>
 <!--END ROW-->
 
+<script>
+$('[name="price"]').keyup(function(event) {
 
+  // skip for arrow keys
+  if(event.which >= 37 && event.which <= 40) return;
+
+  // format number
+  $(this).val(function(index, value) {
+    return value
+    .replace(/\D/g, "")
+    .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+    ;
+  });
+});
+</script>
 
 
 {% endblock content %}
