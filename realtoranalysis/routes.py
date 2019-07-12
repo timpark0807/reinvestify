@@ -36,7 +36,8 @@ def app_forbidden(e):
 @app.route('/')
 @app.route('/home')
 def home():
-    posts = Post.query.filter_by().first()
+    page = request.args.get('page', 1, type=int)
+    posts = Post.query.paginate(per_page=5)
     return render_template('home.html', post=posts)
 
 
@@ -52,15 +53,12 @@ def properties():
     if current_user.is_authenticated:
         user = current_user.id
 
-    posts = Post.query.filter_by(user_id=user).first()
+    posts = Post.query.filter_by(user_id=user).all()
 
     if posts is None:
         return redirect(url_for('analyze'))
 
-    image_file = url_for('static', filename='property_pics/' + posts.image_file)
-
-
-    return render_template('properties.html', post=posts, image_file=image_file)
+    return render_template('properties.html', posts=posts)
 
 
 @app.route('/about')

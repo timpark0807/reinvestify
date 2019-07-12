@@ -28,7 +28,7 @@
         <div class="sidebar-wrapper">
           <ul class="nav">
 
-            <li class="{{ 'active' if active_page == 'dashboard' else '' }}">
+            <li class="{{ 'active' if active_page == 'properties' else '' }}">
                 <a href="{{ url_for('properties') }}">
                 <i class="fas fa-home"></i>
                 <p>My Properties</p>
@@ -99,7 +99,7 @@
 
     <div class="content ">
       <div class="row justify-content-center">
-        <div class="col-md-9">
+        <div class="col-md-10">
           <div id="msg">
           {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
@@ -112,7 +112,7 @@
           {% endwith %}
             </div>
         </div>
-    </div>
+      </div>
 
       <script>
 
@@ -122,7 +122,8 @@
 
       </script>
 
-          {% block content %}{% endblock %}
+      {% block content %}
+      {% endblock %}
     </div>
 
         <hr>
