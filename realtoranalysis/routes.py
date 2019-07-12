@@ -5,7 +5,7 @@ from realtoranalysis import app, db, bcrypt
 from flask import render_template, jsonify, request, redirect, url_for, flash, abort, session
 from realtoranalysis.forms import Analyze_Form, LoginForm, RegistrationForm
 from realtoranalysis.models import User, Post
-from realtoranalysis.scripts.property_calculations import Calculate, comma_dollar, handle_comma
+from realtoranalysis.scripts.property_calculations import Calculate, comma_dollar, handle_comma, remove_comma_dollar
 from flask_login import login_user, current_user, logout_user, login_required
 
 ######################################################################################################
@@ -54,7 +54,12 @@ def properties():
 
     posts = Post.query.filter_by(user_id=user).first()
 
+    if posts is None:
+        return redirect(url_for('analyze'))
+
     image_file = url_for('static', filename='property_pics/' + posts.image_file)
+
+
     return render_template('properties.html', post=posts, image_file=image_file)
 
 
@@ -330,8 +335,11 @@ def post(post_id):
     # 30 year cash flow
     bar_year, bar_rent = property.cash_flow_30_year(post.income_growth, post.expense_growth)
 
+    print(bar_year)
+    print(bar_rent)
     # cash flow table
     cashflow_data = property.income_statement()
+
 
     data = {'model_year': model_year,
             'model_appreciation': model_appreciation,
@@ -348,10 +356,13 @@ def post(post_id):
             'operating_expense': comma_dollar(operating_expense),
             'cash_flow': comma_dollar(cash_flow),
             'noi': comma_dollar(noi),
-            'vacancy': vacancy_loss
+            'vacancy': vacancy_loss,
+            'pie_ma': (int(mortgage_payment) * 12),
+            'pie_oe': remove_comma_dollar(cashflow_data['annual_operating_expenses']),
+            'pie_cf': remove_comma_dollar(cashflow_data['annual_cashflow']),
+
             }
 
-    image_file = url_for('static', filename='property_pics/' + post.image_file)
 
     # can't view report unless you are the user who created it
 

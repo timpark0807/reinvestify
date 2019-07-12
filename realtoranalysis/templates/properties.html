@@ -11,7 +11,7 @@
                 </div>
                 <div class="card-block px-2">
                     <h4 class="card-title">  <a href= "{{ url_for('post', post_id=post.id) }}"> {{post.title }} </a></h4>
-                    <p class="card-text">{{ post.date_posted}}</p>
+                    <p class="card-text">Date: {{ post.date_posted.strftime('%m-%d-%Y') }}</p>
 
                         <h6>Address:</h6>
                           <p> {{ post.street }} {{ post.city }}, {{ post.state }} {{ post.zipcode }}</p>

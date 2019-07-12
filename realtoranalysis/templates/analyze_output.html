@@ -7,6 +7,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.3.0/Chart.min.js"> </script>
   <script src="{{url_for('static', filename='js/dashboardpie.js')}}"></script>
   <script src="{{url_for('static', filename='js/house.js')}}"></script>
+
      <script type="text/javascript">
       var year = {{ data.model_year }}
       var appreciation = {{ data.model_appreciation }}
@@ -14,6 +15,9 @@
       var equity = {{ data.model_equity }}
       var bar_year = {{ data.bar_year }}
       var bar_rent = {{ data.bar_rent }}
+      var pie_ma = {{data.pie_ma}}
+      var pie_oe = {{data.pie_oe}}
+      var pie_cf = {{data.pie_cf}}
   </script>
 </head>
 <div class="content">
@@ -207,11 +211,10 @@
       </div>
 
 <br>
-        <div class="row">
-          <div class="col-md-6">
+        <div class="card-deck">
             <div class="card ">
               <div class="card-body">
-                <h5 class="card-title">Cash Flow: Year 1</h5>
+                <h6 class="card-title text-center">Cash Flow: Year 1</h6>
                 <div class="content table-responsive table-full-width">
                   <table class="table ">
                     <thead>
@@ -285,9 +288,15 @@
                 </div>
               </div>
             </div>
-        </div>
 
+            <div class="card">
+              <div class="card-body">
+                <h6 class="card-title text-center">Net Profit: Year 1</h6>
+<br><br>
+                <canvas id="pie-chart" height="175" ></canvas>
 
+              </div>
+            </div>
 
 
 

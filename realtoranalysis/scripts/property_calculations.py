@@ -204,3 +204,7 @@ def comma_dollar(number):
         payment_1 = format(round(num,2), ',d')
         str_payment = "$" + str(payment_1)
         return str_payment
+
+
+def remove_comma_dollar(number):
+    return number.replace(',', '').replace('$','')
