@@ -30,10 +30,10 @@
                          </div>
 
           <div class="col-md-4">
-          <button type="button" class="btn btn-success btn-sm m-1" data-toggle="modal" data-target="#deleteModal" style="float: right;">Share</button>
-          <button type="button" class="btn btn-danger btn-sm m-1" data-toggle="modal" data-target="#deleteModal" style="float: right;">Delete</button>
+          <button type="button" class="btn btn-success btn-sm m-1" id="share" data-toggle="modal" data-target="#deleteModal" style="float: right;">Share</button>
+          <button type="button" class="btn btn-danger btn-sm m-1" id="delete" data-toggle="modal" data-target="#deleteModal" style="float: right;">Delete</button>
           {% if current_user.is_authenticated %}
-          <a class="btn btn-secondary btn-sm m-1" href="{{url_for('update_post', post_id=post.id)}}" style="float: right;">Edit</a>
+          <a class="btn btn-secondary btn-sm m-1" id="edit" href="{{url_for('update_post', post_id=post.id)}}" style="float: right;">Edit</a>
           {% endif %}
           </div>
     </div>
@@ -313,9 +313,9 @@
           </button>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button"  class="btn btn-secondary" data-dismiss="modal">Close</button>
           <form action="{{ url_for('delete_post', post_id=post.id) }}" method="POST">
-            <input class="btn btn-danger" type="submit" value="Delete">
+            <input class="btn btn-danger" id="delete_confirm" type="submit" value="Delete">
           </form>
         </div>
       </div>

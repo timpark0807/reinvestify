@@ -29,28 +29,28 @@
           <ul class="nav">
 
             <li class="{{ 'active' if active_page == 'properties' else '' }}">
-                <a href="{{ url_for('properties') }}">
+                <a href="{{ url_for('properties') }}" id="properties">
                 <i class="fas fa-home"></i>
                 <p>My Properties</p>
               </a>
             </li>
 
             <li class="{{ 'active' if active_page == 'analyze' else '' }}">
-              <a href="{{ url_for('analyze') }}">
+              <a href="{{ url_for('analyze') }}" id="analyze">
                 <i class="fas fa-search-dollar"></i>
                 <p>Analyze</p>
               </a>
             </li>
 
             <li class="{{ 'active' if active_page == 'calculator' else '' }}">
-              <a href="{{ url_for('calculator') }}">
+              <a href="{{ url_for('calculator') }}" id="calculator">
                 <i class="fas fa-calculator"></i>
                 <p>Calculator</p>
               </a>
             </li>
 
             <li class="{{ 'active' if active_page == 'about' else '' }}">
-              <a href="{{ url_for('about') }}">
+              <a href="{{ url_for('about') }}" id="about">
                 <i class="fas fa-info"></i>
                 <p>About</p>
               </a>
@@ -88,8 +88,8 @@
                 <a class="nav-item nav-link" href="#">Account</a>
                 <a class="nav-item nav-link" href="{{ url_for('logout') }}">Logout</a>
               {% else %}
-                <a class="nav-item nav-link" href="{{ url_for('login') }}">Login</a>
-                <a class="nav-item nav-link" href="{{ url_for('register') }}">Register</a>
+                <a class="nav-item nav-link" id='login' href="{{ url_for('login') }}">Login</a>
+                <a class="nav-item nav-link" id='register' href="{{ url_for('register') }}">Register</a>
               {% endif %}
 
 
@@ -99,7 +99,7 @@
 
     <div class="content ">
       <div class="row justify-content-center">
-        <div class="col-md-10">
+        <div class="col-10">
           <div id="msg">
           {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}

@@ -179,6 +179,7 @@ class Calculate:
         rent_list = []
         cash_flow_new = annual_cashflow
 
+
         for i in range(1, 31):
             cash_flow_new = round(cash_flow_new * rent_increase)
             year_list.append(i)

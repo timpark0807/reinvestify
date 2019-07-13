@@ -8,13 +8,14 @@
   <div class="container mt-3">
         <div class="row justify-content-center">
 
+
     {% for post in posts %}
             <div class="card flex-row flex-wrap">
                 <div class="card-header border-0 mr-1">
-                  <img class="account-img" height=200 width=200 src="{{ image_file }}">
+                  <img class="account-img" height=200 width=200 src="{{ url_for('static', filename='property_pics/' + post.image_file) }}">
                 </div>
                 <div class="card-block px-2">
-                    <h4 class="card-title">  <a href= "{{ url_for('post', post_id=post.id) }}"> {{post.title }} </a></h4>
+                    <h4 class="card-title">  <a name="{{post.title}}" href="{{ url_for('post', post_id=post.id) }}"> {{post.title }} </a></h4>
                     <p class="card-text">Date: {{ post.date_posted.strftime('%m-%d-%Y') }}</p>
 
                         <h6>Address:</h6>
@@ -22,7 +23,7 @@
 
                         <h6>Property Detail:</h6>
                           <p> {{post.type}} | {{post.bed}} bed | {{post.bath}} bath | {{post.sqft}} sqft </p>
-                          <p> {{post.price}} Purchase Price | {{post.cash_flow}}/mo Cash Flow | {{post.cap_rate}} Cap Rate</p>
+                          <p> {{price}} Purchase Price | {{post.cash_flow}}/mo Cash Flow | {{post.cap_rate}} Cap Rate</p>
 
                 </div>
 
