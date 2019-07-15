@@ -25,14 +25,16 @@
 
     <div class="row">
         <div class="col-md-8">
-              <h5 class="address" style="line-height:15px;">{{ post.street }}, {{post.city}}, {{post.state}} {{post.zipcode}}</h5>
-              <p class="bed" style="line-height:20px;">{{post.bed}} bd | {{post.bath}} ba | {{post.sqft}} sqft | {{post.type}} | Built in {{post.year}}</p>
+              <h5 class="address" style="line-height:20px;">{{ post.street }}, {{post.city}}, {{post.state}} {{post.zipcode}}</h5>
+              <p class="bed" style="line-height:10px;">{{post.bed}} bd | {{post.bath}} ba | {{post.sqft}} sqft | {{post.type}} | Built in {{post.year}}</p>
                          </div>
 
           <div class="col-md-4">
+
+          {% if current_user.is_authenticated %}
+
           <button type="button" class="btn btn-success btn-sm m-1" id="share" data-toggle="modal" data-target="#shareModal" style="float: right;">Share</button>
           <button type="button" class="btn btn-danger btn-sm m-1" id="delete" data-toggle="modal" data-target="#deleteModal" style="float: right;">Delete</button>
-          {% if current_user.is_authenticated %}
           <a class="btn btn-secondary btn-sm m-1" id="edit" href="{{url_for('update_post', post_id=post.id)}}" style="float: right;">Edit</a>
           {% endif %}
           </div>
@@ -335,7 +337,8 @@
         </div>
 
       <div class="modal-body">
-    <input type="text" class="form-control" value="http://127.0.0.1:5000/analyze/6">
+        <p>A custom private url for sharing..</p>
+    <input type="text" class="form-control" value="{{ data.share_url }}">
       </div>
 
 

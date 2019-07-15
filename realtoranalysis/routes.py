@@ -381,6 +381,8 @@ def post(post_id):
     if post.author != current_user:
         abort(403)
 
+    share_url = "http://127.0.0.1:5000/analyze/" + str(post.id) + "/" + str(post.share)
+
     property = Calculate(float(post.price),
                          float(post.down),
                          float(post.interest),
@@ -431,6 +433,7 @@ def post(post_id):
             'pie_ma': (int(mortgage_payment) * 12),
             'pie_oe': remove_comma_dollar(cashflow_data['annual_operating_expenses']),
             'pie_cf': remove_comma_dollar(cashflow_data['annual_cashflow']),
+            'share_url': share_url
             }
 
     # can't view report unless you are the user who created it
