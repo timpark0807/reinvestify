@@ -30,6 +30,7 @@ class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False, default="Untitled")
     url = db.Column(db.String(250))
+    share = db.Column(db.String(100))
     image_file = db.Column(db.String(20), nullable=False, default='default.png')
     street = db.Column(db.String(100))
     city = db.Column(db.String(100))
