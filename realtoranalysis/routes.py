@@ -36,9 +36,7 @@ def app_forbidden(e):
 @app.route('/')
 @app.route('/home')
 def home():
-    page = request.args.get('page', 1, type=int)
-    posts = Post.query.paginate(per_page=5)
-    return render_template('home.html', post=posts)
+    return render_template('home.html')
 
 
 @app.route('/account')
@@ -55,7 +53,7 @@ def properties():
 
     posts = Post.query.filter_by(user_id=user).all()
 
-    if posts is None:
+    if posts == []:
         return redirect(url_for('analyze'))
 
     return render_template('properties.html', posts=posts)
@@ -74,7 +72,7 @@ def about():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
-        return redirect(url_for('home'))
+        return redirect(url_for('properties'))
     form = LoginForm()
     if form.validate_on_submit():
             # log in with email. Check database to see if email exists
@@ -83,7 +81,7 @@ def login():
             # if user exists, and password matches the hashed password that was created upon registration
             if user and bcrypt.check_password_hash(user.password, form.password.data):
                 login_user(user)
-                return redirect(url_for('home'))
+                return redirect(url_for('properties'))
             else:
                 flash('Login Unsuccessful. Please check email and password', 'danger')
 
@@ -99,7 +97,7 @@ def logout():
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if current_user.is_authenticated:
-        return redirect(url_for('home'))
+        return redirect(url_for('properties'))
     form = RegistrationForm()
     if form.validate_on_submit():
         # when form validates, hash the password entered on the form, as a string (utf-8)
@@ -333,8 +331,6 @@ def post(post_id):
     # 30 year cash flow
     bar_year, bar_rent = property.cash_flow_30_year(post.income_growth, post.expense_growth)
 
-    print(bar_year)
-    print(bar_rent)
     # cash flow table
     cashflow_data = property.income_statement()
 
@@ -488,6 +484,9 @@ def post_anon(post_id):
     # 30 year model
     model_year, model_appreciation, model_loan, model_equity = property.year30model(float(post.appreciation))
 
+    # 30 year cash flow
+    bar_year, bar_rent = property.cash_flow_30_year(post.income_growth, post.expense_growth)
+
     # cash flow table
     cashflow_data = property.income_statement()
 
@@ -495,6 +494,8 @@ def post_anon(post_id):
             'model_appreciation': model_appreciation,
             'model_loan': model_loan,
             'model_equity': model_equity,
+            'bar_year': bar_year,
+            'bar_rent': bar_rent,
             'price': comma_dollar(float(post.price)),
             'mortgage': comma_dollar(mortgage_payment),
             'outofpocket': comma_dollar(out_of_pocket),
@@ -504,29 +505,37 @@ def post_anon(post_id):
             'operating_expense': comma_dollar(operating_expense),
             'cash_flow': comma_dollar(cash_flow),
             'noi': comma_dollar(noi),
-            'vacancy': vacancy_loss
+            'vacancy': vacancy_loss,
+            'pie_ma': (int(mortgage_payment) * 12),
+            'pie_oe': remove_comma_dollar(cashflow_data['annual_operating_expenses']),
+            'pie_cf': remove_comma_dollar(cashflow_data['annual_cashflow']),
             }
-
-    # can't view report unless you are the user who created it
 
     return render_template('analyze_output.html',
                            title=post.title,
                            post=post,
-
                            cashflow_data=cashflow_data,
                            data=data)
 
 
 @app.route('/analyze/<int:post_id>/delete', methods=['POST'])
 def delete_post(post_id):
+
     post = Post.query.get_or_404(post_id)
+
     if post.author != current_user:
-        abort(403)
+        if post.author is None:
+            db.session.delete(post)
+            db.session.commit()
+            flash('Your post has been deleted!', 'success')
+            return redirect(url_for('analyze'))
+        else:
+            abort(403)
     db.session.delete(post)
     db.session.commit()
     flash('Your post has been deleted!', 'success')
 
-    return redirect(url_for('home'))
+    return redirect(url_for('properties'))
 
 
 ######################################################################################################
