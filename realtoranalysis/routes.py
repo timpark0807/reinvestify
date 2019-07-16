@@ -45,7 +45,7 @@ def account():
     return render_template('account.html' )
 
 
-@app.route('/properties')
+@app.route('/properties/')
 @login_required
 def properties():
     if current_user.is_authenticated:
@@ -59,7 +59,7 @@ def properties():
     return render_template('properties.html', posts=posts)
 
 
-@app.route('/about')
+@app.route('/about/')
 def about():
     return render_template('home.html', methods=['POST'])
 
@@ -189,6 +189,24 @@ def analyze():
         income_growth = request.form['income_growth']
         expense_growth = request.form['expense_growth']
 
+
+        # calculate main metrics for property
+        property = Calculate(float(price),
+                             float(down),
+                             float(interest),
+                             float(term),
+                             float(rent),
+                             float(expenses),
+                             float(vacancy),
+                             float(closing),
+                             float(other)
+                             )
+
+        cash_flow = comma_dollar(property.cashflow())
+        cap_rate = property.cap_rate()
+        coc = property.cashoncash()
+
+        # check if report details are empty
         if len(title) == 0:
             title = 'Untitled'
         if len(sqft) == 0:
@@ -234,6 +252,10 @@ def analyze():
                         appreciation=appreciation,
                         income_growth=income_growth,
                         expense_growth=expense_growth,
+
+                        cash_flow=cash_flow,
+                        cap_rate=cap_rate,
+                        coc=coc,
 
                         author=user)
 
