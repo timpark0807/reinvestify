@@ -10,7 +10,11 @@ app.config['SECRET_KEY'] = 'dev'
 
 bootstrap = Bootstrap(app)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///reinvest.db'
+
+SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://typark:Typ8795!@realestateflaskapp.cofwsnpwtydk.us-east-2.rds.amazonaws.com'
+
+
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///reinvest.db'
 
 db = SQLAlchemy(app)
 
