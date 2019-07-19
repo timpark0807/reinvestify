@@ -57,6 +57,11 @@ class Post(db.Model):
     income_growth = db.Column(db.String(100))
     expense_growth = db.Column(db.String(100))
 
+    report_price = db.Column(db.String(100))
+    cash_flow = db.Column(db.String(100))
+    cap_rate = db.Column(db.String(100))
+    coc = db.Column(db.String(100))
+
     date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 

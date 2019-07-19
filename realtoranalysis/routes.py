@@ -56,7 +56,7 @@ def properties():
     if posts == []:
         return redirect(url_for('analyze'))
 
-    return render_template('properties.html', posts=posts)
+    return render_template('my_properties.html', posts=posts)
 
 
 @app.route('/about/')
@@ -176,6 +176,7 @@ def analyze():
         sqft = request.form['sqft']
 
         price = handle_comma(request.form['price'])
+        report_price = comma_dollar(handle_comma(request.form['price']))
         term = request.form['term']
         down = request.form['down']
         interest = request.form['interest']
@@ -253,6 +254,7 @@ def analyze():
                         income_growth=income_growth,
                         expense_growth=expense_growth,
 
+                        report_price=report_price,
                         cash_flow=cash_flow,
                         cap_rate=cap_rate,
                         coc=coc,
@@ -369,8 +371,6 @@ def shared_post(post_id, share):
                 'pie_cf': remove_comma_dollar(cashflow_data['annual_cashflow']),
                 }
 
-        # can't view report unless you are the user who created it
-
         return render_template('analyze_output.html',
                                title=post.title,
                                post=post,
@@ -378,7 +378,7 @@ def shared_post(post_id, share):
                                data=data
                                )
     else:
-        return redirect(url_for('internal_error'))
+        return redirect(url_for('analyze'))
 
 
 @app.route('/analyze/<int:post_id>')

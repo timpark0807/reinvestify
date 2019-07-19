@@ -69,7 +69,7 @@ new Chart(document.getElementById("bar-chart"), {
         yAxes: [
             {
                 ticks: {
-                    min: 0,
+                beginAtZero:true,
                     stepSize: 1000,
                     callback: function(label, index, labels) {
                         return label/1000 +'k';

@@ -172,20 +172,23 @@ class Calculate:
         return cf_dict
 
     def cash_flow_30_year(self, income_growth, expense_growth):
-        cashflow = self.cashflow()
-        annual_cashflow = cashflow * 12
-        rent_increase = 1 + (float(income_growth)/100 - float(expense_growth)/100)
         year_list = []
-        rent_list = []
-        cash_flow_new = annual_cashflow
-
+        cash_flow_list = []
+        annual_income = (self.rent) * 12
+        annual_expense = (self.operating_expense() * 12)
+        annual_debt_service = self.mortgage_payment() * 12
+        float_income = 1 + (float(income_growth)/100)
+        float_expense = 1 + (float(expense_growth)/100)
 
         for i in range(1, 31):
-            cash_flow_new = round(cash_flow_new * rent_increase)
+            annual_income = annual_income * float_income
+            annual_vacancy = annual_income * self.vacancy
+            annual_gross_income = annual_income - annual_vacancy
+            annual_expense = annual_expense * float_expense
+            cash_flow = round(annual_gross_income - annual_expense - annual_debt_service)
             year_list.append(i)
-            rent_list.append(cash_flow_new)
-
-        return year_list, rent_list
+            cash_flow_list.append(cash_flow)
+        return year_list, cash_flow_list
 
 
 def handle_comma(number):

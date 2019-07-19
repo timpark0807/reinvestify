@@ -49,17 +49,6 @@ driver.find_element_by_id("next-3").click()
 # Tab 4
 driver.find_element_by_id("final_submit").click()
 
-##############################################################################
-# Delete
-##############################################################################
-
-time.sleep(3)
-
-# Delete the report
-driver.find_element_by_id("delete").click()
-time.sleep(3)
-driver.find_element_by_id("delete_confirm").click()
-
 
 ##############################################################################
 # Exit
