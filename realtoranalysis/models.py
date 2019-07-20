@@ -31,7 +31,6 @@ class Post(db.Model):
     title = db.Column(db.String(100), nullable=False, default="Untitled")
     url = db.Column(db.String(250))
     share = db.Column(db.String(100))
-    image_file = db.Column(db.String(20), nullable=False, default='default.png')
     street = db.Column(db.String(100))
     city = db.Column(db.String(100))
     state = db.Column(db.String(100))
@@ -68,6 +67,4 @@ class Post(db.Model):
     def __repr__(self):
         return f"Post('{self.title}', '{self.date_posted}')"
 
-# db.drop_all()
 # db.create_all()
-

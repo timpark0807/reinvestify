@@ -6,8 +6,7 @@ The goal of this project was to develop my programming skill set by building an 
 A user can calculate real estate metrics such as capitalization rates by entering assumptions such as purchase price, mortgage info, and monthly rent. 
 
 The backend was built using Python's Flask framework and a MYSQL database hosted on AWS Relational Database Service. 
-Pages are built in HTML with CSS styling and Javascript to improve responsiveness.
-
+Pages are built in HTML with CSS styling and Javascript to improve responsiveness. 
 The application was deployed on a Free Tier instance of Amazon Web Services Elastic Beanstalk. 
 
 ## Lessons Learned
@@ -18,6 +17,11 @@ Besides the Bootstrap CSS template, this entire application was built from scrat
 It was not a tutorial I followed from start to finish. 
 Instead, I was forced to break down large problems into smaller chunks, solve the smaller chunks and put it all back together.
 I learned how frustrating bugs can be, wanting to quit midway, but pushing through a successful feature implementation.
+I learned how to set deadlines so the project would not drag on indefinitely and use project management software such as Trello to remember everything.  
+
+The time spent on this project was nearly 2 months (52 days to be exact). 
+I spent a few hours everyday after work and 2-8 hours on the weekend. 
+Estimated total time spent was 160 hours and every single hour was worth it. 
 
 With this experience, I am confident that I can learn new technologies for any task.
 

@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block content %}
+
+<head>
+<title>Bad Request!</title>
+
+<script language="JavaScript" type="text/javascript">
+var seconds =11;
+// countdown timer. took 6 because page takes approx 1 sec to load
+var url="{{url_for('home')}}";
+// variable for home.html url
+function redirect(){
+ if (seconds <=0){
+ // redirect to new url after counter  down.
+  window.location = url;
+ } else {
+  seconds--;
+  document.getElementById("pageInfo").innerHTML="Redirecting to Home Page after ".italics()
++seconds+" seconds."
+  setTimeout("redirect()", 1000)
+ }
+}
+</script>
+</head>
+
+<div class="content">
+  <div class="container mt-3">
+        <div class="row justify-content-center">
+             <div class="col-8">
+                    <div class="card spur-card">
+                        <div class="card-header">
+
+
+
+                            <div class="spur-card-title"><h6> 400 Error </h6></div>
+                        </div>
+             <div class="card-body ">
+        <!--<div class="col-md-4">-->
+                      <div class="content-section">
+                       <h5>Oops! The browser sent a bad request.</h5>
+                          <br>
+                          <p>Use the left navigation bar to return to a specific page. Otherwise...</p>
+                          <p id="pageInfo"></p>
+                      </div>
+                         </div>
+                                </div>
+             </div>
+        </div>
+ </div>
+
+ <body onload="redirect()">
+
+
+
+ </body>
+</div>
+{% endblock content %}

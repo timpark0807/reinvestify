@@ -5,21 +5,20 @@ from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 
 
-app = Flask(__name__)
-app.config['SECRET_KEY'] = 'dev'
+application = Flask(__name__)
+application.config['SECRET_KEY'] = 'dev'
 
-bootstrap = Bootstrap(app)
+bootstrap = Bootstrap(application)
+
+application.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://typark:Typ8795!@realestateflaskapp.cofwsnpwtydk.us-east-2.rds.amazonaws.com/typark'
 
 
-SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://typark:Typ8795!@realestateflaskapp.cofwsnpwtydk.us-east-2.rds.amazonaws.com'
+# application.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///reinvest.db'
 
+db = SQLAlchemy(application)
 
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///reinvest.db'
-
-db = SQLAlchemy(app)
-
-bcrypt = Bcrypt(app)
-login_manager = LoginManager(app)
+bcrypt = Bcrypt(application)
+login_manager = LoginManager(application)
 login_manager.login_view = 'login'
 login_manager.login_message_category = 'info'
 

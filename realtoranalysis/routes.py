@@ -1,67 +1,35 @@
 import secrets
-import os
-from PilLite import Image
-from realtoranalysis import app, db, bcrypt
-from flask import render_template, jsonify, request, redirect, url_for, flash, abort, session
+from flask import render_template, jsonify, request, redirect, url_for, flash, abort
+from flask_login import login_user, current_user, logout_user, login_required
+from realtoranalysis import application, db, bcrypt
 from realtoranalysis.forms import Analyze_Form, LoginForm, RegistrationForm
 from realtoranalysis.models import User, Post
 from realtoranalysis.scripts.property_calculations import Calculate, comma_dollar, handle_comma, remove_comma_dollar
-from flask_login import login_user, current_user, logout_user, login_required
+
 
 ######################################################################################################
-# Error Handler
+# Error Handling
 ######################################################################################################
 
 
-@app.errorhandler(404)
-def page_not_found(e):
+@application.errorhandler(400)
+def handle_bad_request():
+    return render_template('400.html'), 400
+
+
+@application.errorhandler(404)
+def page_not_found():
     return render_template('404.html'), 404
 
 
-@app.errorhandler(500)
-def internal_error(e):
+@application.errorhandler(500)
+def internal_error():
     return render_template('500.html'), 500
 
 
-@app.errorhandler(403)
-def app_forbidden(e):
+@application.errorhandler(403)
+def application_forbidden():
     return render_template('403.html'), 403
-
-
-######################################################################################################
-# Sidebar Nav
-######################################################################################################
-
-
-@app.route('/')
-@app.route('/home')
-def home():
-    return render_template('home.html')
-
-
-@app.route('/account')
-@login_required
-def account():
-    return render_template('account.html' )
-
-
-@app.route('/properties/')
-@login_required
-def properties():
-    if current_user.is_authenticated:
-        user = current_user.id
-
-    posts = Post.query.filter_by(user_id=user).all()
-
-    if posts == []:
-        return redirect(url_for('analyze'))
-
-    return render_template('my_properties.html', posts=posts)
-
-
-@app.route('/about/')
-def about():
-    return render_template('home.html', methods=['POST'])
 
 
 ######################################################################################################
@@ -69,7 +37,7 @@ def about():
 ######################################################################################################
 
 
-@app.route('/login', methods=['GET', 'POST'])
+@application.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
         return redirect(url_for('properties'))
@@ -88,13 +56,14 @@ def login():
     return render_template('login.html', title='Login', form=form)
 
 
-@app.route('/logout')
+@application.route('/logout')
 def logout():
     logout_user()
-    return redirect(url_for('home'))
+    flash(f'You have been logged out.', 'success')
+    return redirect(url_for('login'))
 
 
-@app.route('/register', methods=['GET', 'POST'])
+@application.route('/register', methods=['GET', 'POST'])
 def register():
     if current_user.is_authenticated:
         return redirect(url_for('properties'))
@@ -115,50 +84,70 @@ def register():
 
 
 ######################################################################################################
+# Sidebar Nav
+######################################################################################################
+
+
+@application.route('/')
+@application.route('/home')
+def home():
+    return redirect(url_for('analyze'))
+
+
+@application.route('/account')
+@login_required
+def account():
+    return render_template('account.html')
+
+
+@application.route('/properties/')
+@login_required
+def properties():
+    if current_user.is_authenticated:
+        user = current_user.id
+
+    posts = Post.query.filter_by(user_id=user).all()
+
+    if posts == []:
+        return redirect(url_for('analyze'))
+
+    return render_template('my_properties.html', posts=posts)
+
+
+@application.route('/about/')
+def about():
+    return render_template('home.html', methods=['POST'])
+
+
+######################################################################################################
 # Analyze
 ######################################################################################################
 
-def share_url():
-    random_hex = secrets.token_hex(8)
-    url = "http://127.0.0.1:5000/analyze/" + random_hex
-    return url
 
-def save_picture(form_picture):
-    random_hex = secrets.token_hex(8)
-    _, f_ext = os.path.splitext(form_picture.filename)
-    picture_fn = random_hex + f_ext
-    picture_path = os.path.join(app.root_path, 'static/property_pics', picture_fn)
-
-    output_size = (200, 200)
-    i = Image.open(form_picture)
-    i.thumbnail(output_size)
-    i.save(picture_path)
-
-    return picture_fn
-
-@app.route('/analyze', methods=['GET', 'POST'])
+@application.route('/analyze', methods=['GET', 'POST'])
 def analyze():
 
     """
-        This route is used when a user wants to analyze a new property
-        When the form is submitted, the form inputs are passed to variables (eg: title = form['title'])
-        We initialize a house object where we pass in variables as parameters to make calculations
+    This route is accessed from the 'Analyze' option located on the side bar navigation menu.
+    The route renders a template containing a form for the user to input property details and assumptions.
 
-        If user is logged in, we insert these variables and calculations to a SQL database
-        The user is redirected to a route /analyze/<post.id> that requeries this information and displays it
+    When the form is submitted:
+        Values entered on the front end form are requested and assigned to variables (eg: title = request.form['title'])
+        We initialize the Calculate object, and pass in these variables as parameters to make calculations
+        These variables and calculations are inserted to a SQL database and linked to the user_id
 
-        Else: user is anonymous so we pass the variables and calculations as a dictionary to the jinja2 webpage
+        If the user is logged in:
+            The user is redirected to the route /analyze/<post.id> that displays the report
+
+        If the user is not logged in:
+            The user is redirected to the route /analyze/anon/<post.id> that displays the report
     """
-    picture_file = 'default.png'
 
     form = Analyze_Form()
     if form.is_submitted():
 
+        # generates a string that allows the user to share private reports
         share_hex = secrets.token_hex(8)
-
-        if form.picture.data:
-            picture_file = save_picture(form.picture.data)
-            current_user.image_file = picture_file
 
         # Pass form inputs as variables
 
@@ -190,7 +179,6 @@ def analyze():
         income_growth = request.form['income_growth']
         expense_growth = request.form['expense_growth']
 
-
         # calculate main metrics for property
         property = Calculate(float(price),
                              float(down),
@@ -219,17 +207,13 @@ def analyze():
         if len(year) == 0:
             year = '-'
 
-        # when user is logged in, current_user is authenticated and redirects to /analyze/<post.id>
-        # /analyze/<post.id> queries data from the Post table into variable post 
-        # THEN renders analyze_output.html while passing in variable post to the .HTML template
-        # the .HTML template uses {{ post.title }} to display the database results on the dashboard
+        # when user is logged in, current_user is authenticated
         if current_user.is_authenticated:
             user = current_user
             post = Post(title=title,
                         url=url,
                         share=share_hex,
                         street=street,
-                        image_file=picture_file,
                         city=city,
                         state=state,
                         zipcode=zipcode,
@@ -266,18 +250,10 @@ def analyze():
             return redirect(url_for('post', post_id=post.id))
 
         # below calls current_user.get_id() which returns 'None' when user is NOT logged in
-        # redirects to /post_anon route which does not incorporate the <post.id> in route like above
-        # /post_anon does NOT query data from the database ... just render templates the dashboard and passes in values
-
-        # if you want to store anon data
-        # below calls current_user.get_id() which returns 'None' when user is NOT logged in
-        # saves to sqlite with None as usertype
-        # redirects to /analyze/anon which doesn't require a post id to view
         else:
             user = current_user.get_id()
             post = Post(title=title,
                         url=url,
-                        image_file=picture_file,
                         street=street,
                         city=city,
                         state=state,
@@ -312,92 +288,26 @@ def analyze():
     return render_template('analyze.html', form=form)
 
 
-@app.route('/analyze/<int:post_id>/<share>')
-def shared_post(post_id, share):
-    post = Post.query.get_or_404(post_id)
-    share_id = post.share
-
-    if share == share_id:
-
-        property = Calculate(float(post.price),
-                             float(post.down),
-                             float(post.interest),
-                             float(post.term),
-                             float(post.rent),
-                             float(post.expenses),
-                             float(post.vacancy),
-                             float(post.closing),
-                             float(post.other)
-                             )
-
-        down_payment = property.down_payment()
-        mortgage_payment = property.mortgage_payment()
-        out_of_pocket = property.outofpocket()
-        vacancy_loss = property.vacancy_loss()
-        operating_income = property.operating_income()
-        operating_expense = property.operating_expense()
-        noi = property.noi()
-        cash_flow = property.cashflow()
-        cap_rate = property.cap_rate()
-        coc = property.cashoncash()
-
-        # 30 year appreciation, equity, loan
-        model_year, model_appreciation, model_loan, model_equity = property.year30model(float(post.appreciation))
-
-        # 30 year cash flow
-        bar_year, bar_rent = property.cash_flow_30_year(post.income_growth, post.expense_growth)
-
-        # cash flow table
-        cashflow_data = property.income_statement()
-
-        data = {'model_year': model_year,
-                'model_appreciation': model_appreciation,
-                'model_loan': model_loan,
-                'model_equity': model_equity,
-                'bar_year': bar_year,
-                'bar_rent': bar_rent,
-                'price': comma_dollar(float(post.price)),
-                'mortgage': comma_dollar(mortgage_payment),
-                'outofpocket': comma_dollar(out_of_pocket),
-                'cap_rate': cap_rate,
-                'coc': coc,
-                'operating_income': comma_dollar(operating_income),
-                'operating_expense': comma_dollar(operating_expense),
-                'cash_flow': comma_dollar(cash_flow),
-                'noi': comma_dollar(noi),
-                'vacancy': vacancy_loss,
-                'pie_ma': (int(mortgage_payment) * 12),
-                'pie_oe': remove_comma_dollar(cashflow_data['annual_operating_expenses']),
-                'pie_cf': remove_comma_dollar(cashflow_data['annual_cashflow']),
-                }
-
-        return render_template('analyze_output.html',
-                               title=post.title,
-                               post=post,
-                               cashflow_data=cashflow_data,
-                               data=data
-                               )
-    else:
-        return redirect(url_for('analyze'))
-
-
-@app.route('/analyze/<int:post_id>')
+@application.route('/analyze/<int:post_id>', methods=['POST', 'GET'])
 def post(post_id):
-    """ The user is redirected to this route after submitting the form on the /analyze/ route
-        As recap, the /analyze/ route submission inserts form inputs into a database
-        The database automatically assigns a primary key "post id" to the data
 
-        This route queries the database using the post id as SQL's WHERE clause (WHERE post_id = post_id)
-        By querying thru post_id, we have access to the variables input on the form and inserted by the /analyze/ route
-        We can get price by calling post.price
-
-        We call the Calculate class defined in property_calculations.py and pass form inputs as parameters
-        We then call methods of the class to calculate metrics such as down payment, cap rates, etc.
-
-        We take the results of the calculations and insert them into the dictionary {data}
-        This route passes the dictionary as a parameter in render_template()
-        Now we can access the calculations in the jinja2 template
     """
+    The user is redirected to this route after submitting the form on the /analyze/ route
+    As recap, the /analyze/ route submission inserts form inputs and calculations into a database
+    The database automatically assigns a primary key "post_id" to the row data
+
+    This route queries the database using the post id as the SQL WHERE operator (WHERE post_id = post_id)
+    We now have access to the variables input on the analyze form and inserted by the /analyze/ route
+    For example, we can get price by calling post.price
+
+    We call the Calculate class defined in property_calculations.py and pass form inputs as parameters.
+    We then use class methods to calculate metrics such as down payment, cap rates, etc.
+    We take the results of the calculations and insert them into the dictionary {data}
+
+    The return statement passes query results and the dictionary as a parameter in render_template()
+    Now we can access the query results and calculations in the jinja2 template
+    """
+
     post = Post.query.get_or_404(post_id)
 
     if post.author != current_user:
@@ -416,7 +326,6 @@ def post(post_id):
                          float(post.other)
                          )
 
-    down_payment = property.down_payment()
     mortgage_payment = property.mortgage_payment()
     out_of_pocket = property.outofpocket()
     vacancy_loss = property.vacancy_loss()
@@ -458,8 +367,6 @@ def post(post_id):
             'share_url': share_url
             }
 
-    # can't view report unless you are the user who created it
-
     return render_template('analyze_output.html',
                            title=post.title,
                            post=post,
@@ -467,16 +374,89 @@ def post(post_id):
                            data=data
                            )
 
-# when user is logged in and authenticated
-@app.route('/analyze/<int:post_id>/update', methods=['GET','POST'])
-def update_post(post_id):
-    """ This route allows a user to update the form inputs
 
-        This route renders the analyze_update.html template
-        This update template differs in that the form inputs preload database information
-            Using a GET request
-                On load, it first queries the database for information associated with the post_id
-                It sets the form inputs as the variables we query from the database
+@application.route('/analyze/anon/<int:post_id>')
+def post_anon(post_id):
+
+    """
+    This route generates a property report for a user that is not registered and logged in.
+    The route does the same steps as /analyze/<int:post_id>
+    but does not check that current_user equals user that created the report.
+    """
+    post = Post.query.get_or_404(post_id)
+
+    property = Calculate(float(post.price),
+                         float(post.down),
+                         float(post.interest),
+                         float(post.term),
+                         float(post.rent),
+                         float(post.expenses),
+                         float(post.vacancy),
+                         float(post.closing),
+                         float(post.other)
+                         )
+
+    mortgage_payment = property.mortgage_payment()
+    out_of_pocket = property.outofpocket()
+    vacancy_loss = property.vacancy_loss()
+    operating_income = property.operating_income()
+    operating_expense = property.operating_expense()
+    noi = property.noi()
+    cash_flow = property.cashflow()
+    cap_rate = property.cap_rate()
+    coc = property.cashoncash()
+
+    # 30 year model
+    model_year, model_appreciation, model_loan, model_equity = property.year30model(float(post.appreciation))
+
+    # 30 year cash flow
+    bar_year, bar_rent = property.cash_flow_30_year(post.income_growth, post.expense_growth)
+
+    # cash flow table
+    cashflow_data = property.income_statement()
+
+    data = {'model_year': model_year,
+            'model_appreciation': model_appreciation,
+            'model_loan': model_loan,
+            'model_equity': model_equity,
+            'bar_year': bar_year,
+            'bar_rent': bar_rent,
+            'price': comma_dollar(float(post.price)),
+            'mortgage': comma_dollar(mortgage_payment),
+            'outofpocket': comma_dollar(out_of_pocket),
+            'cap_rate': cap_rate,
+            'coc': coc,
+            'operating_income': comma_dollar(operating_income),
+            'operating_expense': comma_dollar(operating_expense),
+            'cash_flow': comma_dollar(cash_flow),
+            'noi': comma_dollar(noi),
+            'vacancy': vacancy_loss,
+            'pie_ma': (int(mortgage_payment) * 12),
+            'pie_oe': remove_comma_dollar(cashflow_data['annual_operating_expenses']),
+            'pie_cf': remove_comma_dollar(cashflow_data['annual_cashflow']),
+            }
+
+    return render_template('analyze_output.html',
+                           title=post.title,
+                           post=post,
+                           cashflow_data=cashflow_data,
+                           data=data)
+
+
+######################################################################################################
+# Edit | Share | Delete |
+######################################################################################################
+
+
+@application.route('/analyze/<int:post_id>/update', methods=['GET', 'POST'])
+def update_post(post_id):
+    """
+    This route renders the analyze_update.html template and allows a user to update the form inputs.
+
+    This update template differs in that the form preloads query results as values
+        Using a GET request:
+            On load, it first queries the database for information associated with the post_id
+            It sets the form inputs as the variables we query from the database
 
         When we POST this form,
             We insert the form inputs back into the database
@@ -551,72 +531,86 @@ def update_post(post_id):
     return render_template('analyze_update.html', form=form)
 
 
-# /analyze2 redirects to this route when current_user is not authenticated bc user is not logged in
-@app.route('/analyze/anon/<int:post_id>')
-def post_anon(post_id):
+@application.route('/analyze/<int:post_id>/<share>')
+def shared_post(post_id, share):
+    """
+    This route allows a user to share a report.
+    Reports are private, with access only being granted if the current_user is authenticated.
 
+    However, in the /analyze/ route, we generated a string of random characters and inserted it into the database.
+
+    This route will first query the data using <int:post_id>.
+    Then it will check the <share> string in the uRL against the share string in the database
+
+    IF the share string in the url is equal to the share string in the database, the report will be generated
+    """
     post = Post.query.get_or_404(post_id)
+    share_id = post.share
 
-    property = Calculate(float(post.price),
-                         float(post.down),
-                         float(post.interest),
-                         float(post.term),
-                         float(post.rent),
-                         float(post.expenses),
-                         float(post.vacancy),
-                         float(post.closing),
-                         float(post.other)
-                         )
+    if share == share_id:
 
-    down_payment = property.down_payment()
-    mortgage_payment = property.mortgage_payment()
-    out_of_pocket = property.outofpocket()
-    vacancy_loss = property.vacancy_loss()
-    operating_income = property.operating_income()
-    operating_expense = property.operating_expense()
-    noi = property.noi()
-    cash_flow = property.cashflow()
-    cap_rate = property.cap_rate()
-    coc = property.cashoncash()
+        property = Calculate(float(post.price),
+                             float(post.down),
+                             float(post.interest),
+                             float(post.term),
+                             float(post.rent),
+                             float(post.expenses),
+                             float(post.vacancy),
+                             float(post.closing),
+                             float(post.other)
+                             )
 
-    # 30 year model
-    model_year, model_appreciation, model_loan, model_equity = property.year30model(float(post.appreciation))
+        mortgage_payment = property.mortgage_payment()
+        out_of_pocket = property.outofpocket()
+        vacancy_loss = property.vacancy_loss()
+        operating_income = property.operating_income()
+        operating_expense = property.operating_expense()
+        noi = property.noi()
+        cash_flow = property.cashflow()
+        cap_rate = property.cap_rate()
+        coc = property.cashoncash()
 
-    # 30 year cash flow
-    bar_year, bar_rent = property.cash_flow_30_year(post.income_growth, post.expense_growth)
+        # 30 year appreciation, equity, loan
+        model_year, model_appreciation, model_loan, model_equity = property.year30model(float(post.appreciation))
 
-    # cash flow table
-    cashflow_data = property.income_statement()
+        # 30 year cash flow
+        bar_year, bar_rent = property.cash_flow_30_year(post.income_growth, post.expense_growth)
 
-    data = {'model_year': model_year,
-            'model_appreciation': model_appreciation,
-            'model_loan': model_loan,
-            'model_equity': model_equity,
-            'bar_year': bar_year,
-            'bar_rent': bar_rent,
-            'price': comma_dollar(float(post.price)),
-            'mortgage': comma_dollar(mortgage_payment),
-            'outofpocket': comma_dollar(out_of_pocket),
-            'cap_rate': cap_rate,
-            'coc': coc,
-            'operating_income': comma_dollar(operating_income),
-            'operating_expense': comma_dollar(operating_expense),
-            'cash_flow': comma_dollar(cash_flow),
-            'noi': comma_dollar(noi),
-            'vacancy': vacancy_loss,
-            'pie_ma': (int(mortgage_payment) * 12),
-            'pie_oe': remove_comma_dollar(cashflow_data['annual_operating_expenses']),
-            'pie_cf': remove_comma_dollar(cashflow_data['annual_cashflow']),
-            }
+        # cash flow table
+        cashflow_data = property.income_statement()
 
-    return render_template('analyze_output.html',
-                           title=post.title,
-                           post=post,
-                           cashflow_data=cashflow_data,
-                           data=data)
+        data = {'model_year': model_year,
+                'model_appreciation': model_appreciation,
+                'model_loan': model_loan,
+                'model_equity': model_equity,
+                'bar_year': bar_year,
+                'bar_rent': bar_rent,
+                'price': comma_dollar(float(post.price)),
+                'mortgage': comma_dollar(mortgage_payment),
+                'outofpocket': comma_dollar(out_of_pocket),
+                'cap_rate': cap_rate,
+                'coc': coc,
+                'operating_income': comma_dollar(operating_income),
+                'operating_expense': comma_dollar(operating_expense),
+                'cash_flow': comma_dollar(cash_flow),
+                'noi': comma_dollar(noi),
+                'vacancy': vacancy_loss,
+                'pie_ma': (int(mortgage_payment) * 12),
+                'pie_oe': remove_comma_dollar(cashflow_data['annual_operating_expenses']),
+                'pie_cf': remove_comma_dollar(cashflow_data['annual_cashflow']),
+                }
+
+        return render_template('analyze_output.html',
+                               title=post.title,
+                               post=post,
+                               cashflow_data=cashflow_data,
+                               data=data
+                               )
+    else:
+        return redirect(url_for('analyze'))
 
 
-@app.route('/analyze/<int:post_id>/delete', methods=['POST'])
+@application.route('/analyze/<int:post_id>/delete', methods=['POST'])
 def delete_post(post_id):
 
     post = Post.query.get_or_404(post_id)
@@ -641,12 +635,12 @@ def delete_post(post_id):
 ######################################################################################################
 
 
-@app.route('/calculator')
+@application.route('/calculator')
 def calculator():
     return render_template('calculator.html')
 
 
-@app.route('/process', methods=['POST'])
+@application.route('/process', methods=['POST'])
 def process():
     input_price = handle_comma(request.form['price'])
     input_down_payment = request.form['down_payment']
@@ -663,7 +657,7 @@ def process():
     down_payment_clean = comma_dollar(down_payment)
     mortgage_payment_clean = comma_dollar(mortgage_payment)
 
-    labels = ['Mortgage', 'Taxes' , 'Insurance']
+    labels = ['Mortgage', 'Taxes', 'Insurance']
     number = [int(mortgage_payment), int(input_property_tax), int(input_insurance)]
     total = int(mortgage_payment) + int(input_property_tax) + int(input_insurance)
 
@@ -672,4 +666,4 @@ def process():
                     'number': number,
                     'labels': labels,
                     'total': total
-                })
+                    })

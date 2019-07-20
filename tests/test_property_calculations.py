@@ -4,6 +4,8 @@ from realtoranalysis.scripts.property_calculations import Calculate
 
 class TestCalculator(unittest.TestCase):
 
+    """ Test integers in the Calculate object"""
+
     def setUp(self):
         self.property = Calculate('100000', '20', '5', '30', '1500', '50', '10', '2', '0')
 
@@ -46,6 +48,8 @@ class TestCalculator(unittest.TestCase):
 
 
 class TestCalculatorFloats(unittest.TestCase):
+
+    """ Tests floats in the Calculate object """
 
     def setUp(self):
         self.property = Calculate('100000.00', '20.0', '5.0', '30.0', '1500.0', '50.0', '10.0', '2.0', '0')

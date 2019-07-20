@@ -8,8 +8,6 @@ class Analyze_Form(FlaskForm):
     # Form 1
     title = StringField('Title')
     url = StringField('URL')
-    picture = FileField('Update Profile Picture', validators=[FileAllowed(['jpg', 'png'])])
-
     street = StringField('Street')
     city = StringField('City')
     state = StringField('State')

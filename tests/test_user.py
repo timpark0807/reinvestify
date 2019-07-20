@@ -1,6 +1,6 @@
 import unittest
 from flask_login import current_user
-from realtoranalysis import app, db
+from realtoranalysis import application, db
 from realtoranalysis.models import Post
 
 
@@ -13,12 +13,12 @@ class UserTestCase(unittest.TestCase):
 
     # Executed prior to each test
     def setUp(self):
-        app.config['TESTING'] = True
-        app.config['WTF_CSRF_ENABLED'] = False
-        app.config['DEBUG'] = False
-        app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
+        application.config['TESTING'] = True
+        application.config['WTF_CSRF_ENABLED'] = False
+        application.config['DEBUG'] = False
+        application.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
 
-        self.app = app.test_client()
+        self.application = application.test_client()
         db.drop_all()
         db.create_all()
 
@@ -36,17 +36,17 @@ class UserTestCase(unittest.TestCase):
         pass
 
     def register(self, username, email, password, confirm):
-        return self.app.post('/register',
+        return self.application.post('/register',
                              data={'username': username,
                                     'email': email,
                                     'password': password,
                                     'confirm_password': confirm})
 
     def login(self, email, password):
-        return self.app.post('/login', data=dict(email=email, password=password))
+        return self.application.post('/login', data=dict(email=email, password=password))
 
     def logout(self):
-        return self.app.get('/logout', follow_redirects=True)
+        return self.application.get('/logout', follow_redirects=True)
 
     ################################################################################################
     # Tests
@@ -54,7 +54,7 @@ class UserTestCase(unittest.TestCase):
 
     def test_user_registration(self):
         # test that the register route returns a successful response
-        response = self.app.get('/register')
+        response = self.application.get('/register')
         self.assertEqual(response.status_code, 200)
 
         # send a post request to register with following inputs
@@ -83,7 +83,7 @@ class UserTestCase(unittest.TestCase):
         self.register('user', 'user@test.com', 'password', 'password')
 
         # Login page loads
-        response = self.app.get('/login')
+        response = self.application.get('/login')
         self.assertEqual(response.status_code, 200)
 
         # send a post request to login with registered user info
@@ -94,7 +94,7 @@ class UserTestCase(unittest.TestCase):
 
     def test_database_table_post(self):
         # test that we can add entries to the post table in our database
-        with self.app:
+        with self.application:
             self.register('user', 'user@test.com', 'password', 'password')
             self.login('user@test.com', 'password')
             user = current_user
@@ -140,7 +140,7 @@ class UserTestCase(unittest.TestCase):
 
     def test_database_table_post_floats(self):
         # test that we can add entries to the post table in our database
-        with self.app:
+        with self.application:
             self.register('user', 'user@test.com', 'password', 'password')
             self.login('user@test.com', 'password')
             user = current_user
@@ -186,7 +186,7 @@ class UserTestCase(unittest.TestCase):
 
     def test_edit_update_delete_post(self):
         # test that we can add, edit, update, and delete entries to the post table in our database
-        with self.app:
+        with self.application:
             self.register('user', 'user@test.com', 'password', 'password')
             self.login('user@test.com', 'password')
             user = current_user
@@ -223,15 +223,15 @@ class UserTestCase(unittest.TestCase):
             db.session.commit()
 
             # test that we can view the dashboard of property #1
-            response = self.app.get('analyze/1')
+            response = self.application.get('analyze/1')
             self.assertEqual(response.status_code, 200)
 
             # test that we can access the update form
-            response = self.app.get('analyze/1/update')
+            response = self.application.get('analyze/1/update')
             self.assertEqual(response.status_code, 200)
 
             # send a post request to delete property 1
-            self.app.post('analyze/1/delete')
+            self.application.post('analyze/1/delete')
 
             # query all posts and check that the length returned is 0, an empty list
             query = Post.query.all()
@@ -239,7 +239,7 @@ class UserTestCase(unittest.TestCase):
 
     def test_edit_update_delete_post_float(self):
         # test that we can add, edit, update, and delete entries to the post table in our database
-        with self.app:
+        with self.application:
             self.register('user', 'user@test.com', 'password', 'password')
             self.login('user@test.com', 'password')
             user = current_user
@@ -276,15 +276,15 @@ class UserTestCase(unittest.TestCase):
             db.session.commit()
 
             # test that we can view the dashboard of property with floats
-            response = self.app.get('analyze/1')
+            response = self.application.get('analyze/1')
             self.assertEqual(response.status_code, 200)
 
             # test that we can access the update form
-            response = self.app.get('analyze/1/update')
+            response = self.application.get('analyze/1/update')
             self.assertEqual(response.status_code, 200)
 
             # send a post request to delete property 1
-            self.app.post('analyze/1/delete')
+            self.application.post('analyze/1/delete')
 
             # query all posts and check that the length returned is 0, an empty list
             query = Post.query.all()

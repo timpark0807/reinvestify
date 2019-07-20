@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% set active_page = "dashboard" %}
+{% set active_page = "about" %}
 {% block content %}
 
 <div class="content">
@@ -8,42 +8,32 @@
              <div class="col-6">
                     <div class="card spur-card">
                         <div class="card-header">
-                            <h5>About</h5>
+                            <h5>About Reinvest</h5>
                             <div class="spur-card-icon">
                             </div>
                         </div>
-             <div class="card-body ">
-        <!--<div class="col-md-4">-->
-          <div class="content-section">
-            <p>
+                        <div class="card-body ">
+                          <div class="content-section">
+                              <p>
+                                RE-Invest is a web based application for real estate investors.
+                              </p>
+                              <p>
+                                This application allows a user to calculate profitability metrics based on property detail and assumptions.
+                                The report will show capitalization rates, cash on cash returns, and monthly cash flow projections. I have also included a 30 year model for cash flow as well as equity.
+                                Please register to get full functionality in editing, deleting, and sharing the report.
+                              </p>
+                              <p>The backend was built using Python's Flask framework and a MYSQL database hosted on AWS Relational Database Service.
+                                Pages are built in HTML with CSS styling and Javascript to improve responsiveness.
+                                The application was deployed on a Free Tier instance of Amazon Web Services Elastic Beanstalk.
+                              </p>
 
-                RE-Invest is a Flask application built for real estate investors.
-                <br><br>
-                This application allows a user to calculate profitability metrics based on property detail and assumptions.
-                The report will show capitalization rates, cash on cash returns, and monthly cash flow projections. I have also included a 30 year model for cash flow as well as equity.
-                Please register to get full functionality in editing, deleting, and sharing the report.
-               <br>
-              <br>
+                              <p> Feel free to contact timpark0807@gmail.com with any suggestions.</p>
 
-              <p> Feel free to contact timpark0807@gmail.com with any suggestions.</p>
-                <!--<ul class="list-group">-->
-                <!--<li class="list-group-item list-group-item-light">-->
-                    <!--<a href="https://www.sco.ca.gov/ard_current_payments.html"">-->
-                                    <!--Current Apportionment Payments-->
-                    <!--<a/>-->
-                <!--</li>-->
-                <!--<li class="list-group-item list-group-item-light">-->
-                    <!--<a href="https://www.sco.ca.gov/Files-ARD-Payments/sched_2019.pdf"">-->
-                                    <!--2019 Payment Schedule-->
-                    <!--<a/>-->
-                <!--</li>-->
-
-                <!--<li class="list-group-item list-group-item-light">Announcements</li>-->
-                <!--<li class="list-group-item list-group-item-light">etc</li>-->
-              <!--</ul>-->
-            </p>
-          </div></div></div>
-</div>
+                          </div>
+                        </div>
                     </div>
-                    </div></div>
+             </div>
+        </div>
+    </div>
+</div>
 {% endblock content %}
