@@ -1,17 +1,55 @@
-# Real Estate Investing Portal 
-## RE-Invest 
+# RE-Invest 
+A web based application for real estate investors.
 
-RE-Invest is a web based application for real estate investors. My goal was to learn more about programming by creating an application that interested me. 
+## Introduction
+The goal of this project was to develop my programming skill set by building an application that interested me. 
+A user can calculate real estate metrics such as capitalization rates by entering assumptions such as purchase price, mortgage info, and monthly rent. 
 
-Features:
+The backend was built using Python's Flask framework and a MYSQL database hosted on AWS Relational Database Service. 
+Pages are built in HTML with CSS styling and Javascript to improve responsiveness.
+
+The application was deployed on a Free Tier instance of Amazon Web Services Elastic Beanstalk. 
+
+## Lessons Learned
+This project was crucial in my development as a software engineer. 
+
+I believe the biggest skill I gained from this project was resourcefulness, self sufficiency, and persistence. 
+Besides the Bootstrap CSS template, this entire application was built from scratch. 
+It was not a tutorial I followed from start to finish. 
+Instead, I was forced to break down large problems into smaller chunks, solve the smaller chunks and put it all back together.
+I learned how frustrating bugs can be, wanting to quit midway, but pushing through a successful feature implementation.
+
+With this experience, I am confident that I can learn new technologies for any task.
+
+A few lessons learned are below:
+- Flask framework 
+- Amazon Web Services  
+- Version control
+- Object Oriented Programming
+- MVC design pattern 
+- HTTPS
+- Database
+- HTML/CSS
+- Javascript
+- Testing/Debugging
+
+
+## Features 
 1. Property Analyzer
+    - Creates a report with metrics such as Net Operating Income, Cash on Cash Return, etc. 
+
 2. Mortgage Calculator
+    - Uses Javascript and AJAX to asynchronously submit data 
+   
+3. User Registration
+    - A registered user will be able to save their reports to a My Properties tab.
+    - They will be able to edit, delete, or share the report.
 
-Property Analyzer takes inputs from the users and creates a report with metrics such as Net Operating Income, Cash on Cash Return, etc. 
 
 
 
 
+###
 
 
 
