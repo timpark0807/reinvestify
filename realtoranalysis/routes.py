@@ -49,7 +49,7 @@ def login():
             # if user exists, and password matches the hashed password that was created upon registration
             if user and bcrypt.check_password_hash(user.password, form.password.data):
                 login_user(user)
-                return redirect(url_for('properties'))
+                return redirect(url_for('analyze'))
             else:
                 flash('Login Unsuccessful. Please check email and password', 'danger')
 
@@ -101,17 +101,18 @@ def account():
 
 
 @application.route('/properties/')
-@login_required
 def properties():
     if current_user.is_authenticated:
         user = current_user.id
 
-    posts = Post.query.filter_by(user_id=user).all()
+        posts = Post.query.filter_by(user_id=user).all()
 
-    if posts == []:
-        return redirect(url_for('analyze'))
+        if posts == []:
+            return render_template('no_properties.html')
 
-    return render_template('my_properties.html', posts=posts)
+        return render_template('my_properties.html', posts=posts)
+    else:
+        return render_template('login_properties.html')
 
 
 @application.route('/about/')

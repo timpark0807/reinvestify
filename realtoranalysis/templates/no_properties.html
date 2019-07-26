@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% set active_page = "properties" %}
+{% block content %}
+
+<div class="content">
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+             <div class="col-6">
+                    <div class="card spur-card">
+                        <div class="card-header">
+                            <h5>Oops!</h5>
+                            <div class="spur-card-icon">
+                            </div>
+                        </div>
+                        <div class="card-body ">
+                          <div class="content-section">
+                              <p>
+                                It looks like you currently have no saved reports.
+                              </p>
+
+                              <p>
+                                Please come back after analyzing your first property.
+                              </p>
+
+                              <p>
+                                Click <a href="{{ url_for('analyze') }}">here</a> to start.
+                              </p>
+
+                          </div>
+                        </div>
+                    </div>
+             </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

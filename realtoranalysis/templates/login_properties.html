@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% set active_page = "properties" %}
+{% block content %}
+
+<div class="content">
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+             <div class="col-6">
+                    <div class="card spur-card">
+                        <div class="card-header">
+                            <h5>Oops!</h5>
+                            <div class="spur-card-icon">
+                            </div>
+                        </div>
+                        <div class="card-body ">
+                          <div class="content-section">
+                              <p>
+                                You must have an account to save and access prior reports.
+
+                                Click <a href="{{ url_for('register') }}">here</a> to register.
+                              </p>
+
+                              <p>
+                                Already have an account?
+                                  Click <a href="{{ url_for('login') }}">here</a> to login.
+                              </p>
+
+                          </div>
+                        </div>
+                    </div>
+             </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
