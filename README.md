@@ -1,4 +1,4 @@
-# RE-Invest 
+# Reinvestify
 A web based application for real estate investors.
 
 ## Introduction
@@ -17,7 +17,7 @@ I learned more than just programming concepts. I developed my soft skills such a
 Besides the Bootstrap CSS template, this entire application was built from scratch. There was no tutorial to guide me from step A to Z.
 Instead, I was forced to break down large problems into smaller chunks, solve the smaller problems, and put it all back together.
 I learned how frustrating bugs can be, wanting to quit midway, but pushing through a successful feature implementation.
-I learned how to set deadlines, so the project would not drag on indefinitely and how to use project management software such as Trello to track all outstanding items.  
+I learned how to set deadlines so the project would not drag on indefinitely and how to use project management software such as Trello to track all outstanding items.  
 
 The time spent on this project was just under 2 months (52 days), which included a few hours everyday after work (Monday - Friday) and 4-8 hours on (Saturday/Sunday). 
 The estimated total time to completion was 160 hours and every single hour was worth it. 
@@ -47,35 +47,3 @@ Technical skills utilized below:
 3. User Registration
     - A registered user will be able to save their reports to a My Properties tab.
     - They will be able to edit, delete, or share the report.
-
-
-
-
-
-###
-
-
-
-You will need the following packages:
--BeautifulSoup
--Requests
-
-Download the latest version of ChromeDriver
-
-scrape.py looks for the json output found in the page source 
--this contains much more information than the method used in oldscrape.py
-
-oldscrape looks for the information through html tags
-
-Some locations will require json method while others require html tag method. Therefore, I built an if statement to check if "application/json" was found within the page source of the scraped file. If it was, json method would trigger. If it wasn't the html tag method would trigger.
-
-I wrote a test for listing_json. Will need to write a test for listing_meta.
-
-TODO:
-1. Create an Excel workbook where I can place list price and other relevant information on.
-2. Create cash flow calculations on the Excel workbook
-3. Create a Flask webform that will take the URL and rent price
-4. Host the app on AWS 
-5. 
-
-oldscrape.py attempted to look for each individual tag. the problem with this was that dynamically generated javascript pages would change the tags for variables for different cities. I'm not completely sure on the reasoning why, but it would create an error after i set up all the proper tags for price, bed, bath for santa barbara. Running a cincinati house would create an error as the tag for bed changed from 'property-meta-beds' to 'jxa1234314' (a random combination of variables and characters). 
