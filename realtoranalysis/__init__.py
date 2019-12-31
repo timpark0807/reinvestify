@@ -6,14 +6,11 @@ from flask_login import LoginManager
 
 
 application = Flask(__name__)
-application.config['SECRET_KEY'] = 'dev'
+application.config['SECRET_KEY'] = '#ENTERKEYHERE'
 
 bootstrap = Bootstrap(application)
 
-application.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://typark:Typ8795!@realestateflaskapp.cofwsnpwtydk.us-east-2.rds.amazonaws.com/typark'
-
-
-# application.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///reinvest.db'
+application.config['SQLALCHEMY_DATABASE_URI'] = '#ENTERCREDENTIALSHERE'
 
 db = SQLAlchemy(application)
 
