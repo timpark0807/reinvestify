@@ -1,13 +1,47 @@
-# Reinvestify
-A web based application for real estate investors.
+# reinvestify.com
+A web application that analyzes the profitability of real estate investments. 
 
 ## Introduction
-The goal of this project was to develop/showcase my programming skill set by building an application based on my interests. 
-A user can calculate real estate metrics by entering assumptions such as purchase price, mortgage info, and monthly rent. 
+The goal of this project was to develop and showcase my programming skill set. 
+I chose this niche due to my curiousity and interest in real estate investing. 
+The total time spent on this project was just under 2 months. 
 
-The backend was built using Python's Flask framework and a MYSQL database, hosted on AWS Relational Database Service. 
-Pages are built in HTML with CSS styling and Javascript to improve responsiveness. 
-The application was deployed on a Free Tier instance of AWS Elastic Beanstalk. 
+The main function of reinvestify is generating reports on real estate investments. 
+The application captures user inputs such as purchase price, mortgage rates, rental incomes, and operating expenses to calculate metrics such as capitalization rates, cash on cash return, and monthly cash flow. 
+An example of a report is below.
+
+[![Screen-Shot-2019-12-31-at-4-06-13-PM.png](https://i.postimg.cc/y6fmW40T/Screen-Shot-2019-12-31-at-4-06-13-PM.png)](https://postimg.cc/DmXJYNjW)
+
+The backend of reinvestify was built using Python and the Flask framework. 
+The framework is connected to a MYSQL database instance that is hosted on AWS Relational Database Service. 
+The front end pages were built in HTML with CSS styling and some Javascript to improve responsiveness. 
+The entire application was deployed on a Free Tier instance of AWS Elastic Beanstalk. 
+
+## Features 
+#### Property Analyzer
+The main feature of reinvestify is the property analyzer. 
+The user begins by entering property and purchase assumptions on a 4 step form. 
+Different sections of the form are loaded on the same page using Javascript.
+
+On form submission, numbers are preprocessed in a Calculate object that generates metrics such as cap rates, cash on cash, noi, etc.
+A POST request containing the preprocessed calculations and form text inputs (street address, property type, bed/bath/sqft, etc.) is sent to the MYSQL database where entry is created with a unique post ID key. 
+
+After the POST request is completed, the user is redirected to a view route that has the unique post id key at the end of the url. 
+This view route queries the database using the specified post_id key as the WHERE operator in a SQL statement. 
+The query results are packaged into a hashtable and returned to the front end HTML template. 
+Now the front end HTML template has access the preprocessed calculations and form text inputs previously submitted via POST request.
+
+
+#### Mortgage Calculator
+The mortgage calculator calculates the monthly mortgage payment based on a user's input of purchase price, down payment, loan term, and interest rate. 
+Utilizes Javascript and AJAX to asynchronously submit data.
+ 
+![Alt Text](https://media.giphy.com/media/dxIktx3Pd5rNFnezXG/source.gif )
+
+#### User Registration
+Users can choose to register in order to save generated reports to the "My Properties" tab.
+Registered users will also be able to edit, delete, or share saved reports.
+An unregistered user will only be able to create reports. 
 
 ## Lessons Learned
 This project was crucial in my development as a software engineer. 
@@ -24,7 +58,8 @@ The estimated total time to completion was 160 hours and every single hour was w
 
 With this experience, I am confident that I can learn new technologies for any task.
 
-Technical skills utilized below:
+Technical skills utilized during this project:
+- Python
 - Flask framework 
 - Amazon Web Services  
 - Version control
@@ -36,14 +71,3 @@ Technical skills utilized below:
 - Javascript
 - Testing/Debugging
 
-
-## Features 
-1. Property Analyzer
-    - Creates a report with metrics such as Net Operating Income, Cash on Cash Return, etc. 
-
-2. Mortgage Calculator
-    - Uses Javascript and AJAX to asynchronously submit data 
-   
-3. User Registration
-    - A registered user will be able to save their reports to a My Properties tab.
-    - They will be able to edit, delete, or share the report.
