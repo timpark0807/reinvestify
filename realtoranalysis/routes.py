@@ -466,6 +466,7 @@ def update_post(post_id):
     """
     post = Post.query.get_or_404(post_id)
 
+    # Raise Forbidden error if current user did not create the report
     if post.author != current_user:
         abort(403)
 
@@ -503,6 +504,7 @@ def update_post(post_id):
         flash('Your post has been updated!', 'success')
         return redirect(url_for('post', post_id=post.id))
 
+    # This block will pre-fill the form with database values
     elif request.method == 'GET':
         form.title.data = post.title
         form.street.data = post.street

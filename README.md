@@ -6,16 +6,17 @@ The goal of this project was to develop and showcase my programming skill set.
 I chose this niche due to my curiousity and interest in real estate investing. 
 The total time spent on this project was just under 2 months. 
 
-The main function of reinvestify is generating reports on real estate investments. 
-The application captures user inputs such as purchase price, mortgage rates, rental incomes, and operating expenses to calculate metrics such as capitalization rates, cash on cash return, and monthly cash flow. 
-An example of a report is below.
-
-[![Screen-Shot-2019-12-31-at-4-06-13-PM.png](https://i.postimg.cc/y6fmW40T/Screen-Shot-2019-12-31-at-4-06-13-PM.png)](https://postimg.cc/DmXJYNjW)
-
 The backend of reinvestify was built using Python and the Flask framework. 
 The framework is connected to a MYSQL database instance that is hosted on AWS Relational Database Service. 
 The front end pages were built in HTML with CSS styling and some Javascript to improve responsiveness. 
 The entire application was deployed on a Free Tier instance of AWS Elastic Beanstalk. 
+
+The main function of reinvestify is generating reports on real estate investments. 
+The application captures user inputs such as purchase price, mortgage rates, rental incomes, and operating expenses and calculates metrics such as capitalization rates, cash on cash return, and monthly cash flow. 
+
+An example of a report is below.
+
+[![Screen-Shot-2019-12-31-at-4-06-13-PM.png](https://i.postimg.cc/y6fmW40T/Screen-Shot-2019-12-31-at-4-06-13-PM.png)](https://postimg.cc/DmXJYNjW)
 
 ## Features 
 #### Property Analyzer
