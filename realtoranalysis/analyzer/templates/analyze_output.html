@@ -35,7 +35,7 @@
 
           <button type="button" class="btn btn-success btn-sm m-1" id="share" data-toggle="modal" data-target="#shareModal" style="float: right;">Share</button>
           <button type="button" class="btn btn-danger btn-sm m-1" id="delete" data-toggle="modal" data-target="#deleteModal" style="float: right;">Delete</button>
-          <a class="btn btn-secondary btn-sm m-1" id="edit" href="{{url_for('update_post', post_id=post.id)}}" style="float: right;">Edit</a>
+          <a class="btn btn-secondary btn-sm m-1" id="edit" href="{{url_for('analyzer.update_post', post_id=post.id)}}" style="float: right;">Edit</a>
           {% endif %}
           </div>
     </div>
@@ -317,7 +317,7 @@
         </div>
         <div class="modal-footer">
           <button type="button"  class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <form action="{{ url_for('delete_post', post_id=post.id) }}" method="POST">
+          <form action="{{ url_for('analyzer.delete_post', post_id=post.id) }}" method="POST">
             <input class="btn btn-danger" id="delete_confirm" type="submit" value="Delete">
           </form>
         </div>

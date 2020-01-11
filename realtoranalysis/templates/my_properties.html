@@ -45,11 +45,11 @@
                           <td> {{ post.coc }}</td>
 
                           <td>
-                              <a href="{{ url_for('update_post', post_id=post.id) }}"> Edit </a>
+                              <a href="{{ url_for('analyzer.update_post', post_id=post.id) }}"> Edit </a>
                           </td>
 
                           <td>
-                              <a name="{{post.title}}" href="{{ url_for('post', post_id=post.id) }}"> View </a>
+                              <a name="{{post.title}}" href="{{ url_for('analyzer.post', post_id=post.id) }}"> View </a>
                           </td>
                         </tr>
 
