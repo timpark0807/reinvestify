@@ -36,14 +36,14 @@
             </li>
 
             <li class="{{ 'active' if active_page == 'analyze' else '' }}">
-              <a href="{{ url_for('analyze') }}" id="analyze">
+              <a href="{{ url_for('analyzer.analyze') }}" id="analyze">
                 <i class="fas fa-search-dollar"></i>
                 <p>Analyze</p>
               </a>
             </li>
 
             <li class="{{ 'active' if active_page == 'calculator' else '' }}">
-              <a href="{{ url_for('calculator') }}" id="calculator">
+              <a href="{{ url_for('calculator.calculator') }}" id="calculator">
                 <i class="fas fa-calculator"></i>
                 <p>Calculator</p>
               </a>
