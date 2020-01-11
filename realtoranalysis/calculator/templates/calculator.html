@@ -1,0 +1,207 @@
+{% extends "base.html" %}
+{% set active_page = "calculator" %}
+{% block content %}
+
+<head>
+
+    <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.3.0/Chart.min.js"> </script>
+    <script src="{{ url_for('static', filename='js/script1.js') }}"></script>
+    <script id="baseScript" src="{{ url_for('static', filename='js/calculator.js') }}"
+    data-path="{{ request.path }}"></script>
+
+</head>
+<!--BEGIN ROW-->
+    <div class="content">
+      <div class="container mt-3">
+        <div class="row justify-content-center">
+        <!--BEGIN MORTGAGE INPUT CARD-->
+
+            <div class="col-3">
+                <div class="card">
+
+
+            <!--BEGIN MORTGAGE INPUT HEADER-->
+
+                    <div class="card-header ">
+                        <h6 class="card-title">Assumptions</h6>
+                    </div>
+
+            <!--END MORTGAGE INPUT HEADER-->
+
+
+            <!--BEGIN MORTGAGE INPUT FORM-->
+
+                    <div class="card-body">
+                    <form>
+
+                        <div class="row">
+                            <div class="col-md-12">
+
+                            <label>Purchase Price ($)</label>
+                              <div class="input-group">
+                                <div class="input-group-prepend">
+
+                                  <span class="input-group-text" id="inputGroupPrepend">$</span>
+                                </div>
+                                <input type="text" class="form-control" id="price_id" name="price" value="100,000" aria-describedby="inputGroupPrepend" required>
+                              </div>
+
+                            </div>
+                        </div>
+
+
+                        <div class="row">
+                            <div class="col-md-12">
+                            <label>Downpayment</label>
+
+                                <div class="input-group mb-3">
+                                  <input type="text" class="form-control" id="down_payment_id" value="20.0" aria-label="Amount">
+                                  <div class="input-group-append">
+                                    <span class="input-group-text">%</span>
+                                  </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label>Term</label>
+                                    <br>
+                                    <select class="form-control" name="term_id" id="term_id" >
+                                        <option value="30">30 year fixed</option>
+                                        <option value="15">15 year fixed</option>
+                                    </select>
+                <script type="text/javascript">
+                    $('selectpicker').on('change', function() {
+                        alert( $(this).find(":selected").val() );
+                    });
+                </script>
+
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="row">
+                            <div class="col-md-12">
+                            <label>Interest Rate</label>
+
+                                <div class="input-group mb-3">
+                                  <input type="text" class="form-control" id="interest_rate_id" name="input_interest_rate" value="5.0" aria-label="Amount (to the nearest dollar)">
+                                  <div class="input-group-append">
+                                    <span class="input-group-text">%</span>
+                                  </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="update ml-auto mr-auto">
+                                <button type="submit" class="btn btn-primary btn-round">Submit</button>
+                            </div>
+                        </div>
+
+           <!--Begin drop down property tax and insurance-->
+              <p data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                 <i class="fas fa-angle-double-down"></i>
+                 <u><i>  Property Tax & Insurance</i> </u>
+              </p>
+
+            <div class="collapse" id="collapseExample">
+
+                       <div class="row">
+                            <div class="col-md-12">
+
+                            <label>Property Tax</label>
+                              <div class="input-group">
+                                <div class="input-group-prepend">
+
+                                  <span class="input-group-text">$</span>
+                                </div>
+                                <input type="text" class="form-control" id="property_tax_id" name="property_tax" value="90" aria-describedby="inputGroupPrepend" >
+                              </div>
+
+                            </div>
+                        </div>
+
+                       <div class="row">
+                            <div class="col-md-12">
+
+                            <label>Insurance</label>
+                              <div class="input-group">
+                                <div class="input-group-prepend">
+
+                                  <span class="input-group-text">$</span>
+                                </div>
+                                <input type="text" class="form-control" id="insurance_id" name="input_insurance" value="80" aria-describedby="inputGroupPrepend" >
+                              </div>
+
+                            </div>
+                       </div>
+
+            </div>
+
+           <!--End drop down property tax and insurance-->
+
+
+
+
+                    </form>
+                    </div>
+
+            <!--END MORTGAGE INPUT FORM-->
+
+                </div>
+            </div>
+
+        <!--END MORTGAGE INPUT CARD-->
+
+
+
+        <!--BEGIN MORTGAGE OUTPUT CARD -->
+
+            <div class="col-md-7">
+                <div class="card">
+
+                    <div class="card-header">
+                        <h6 class="card-title">Monthly Payment</h6>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="holder">
+                        <canvas id="bar-chart"></canvas>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+        <!--END MORTGAGE OUTPUT CARD -->
+        </div>
+
+    </div>
+</div>
+<!--END ROW-->
+
+<script>
+$('[name="price"]').keyup(function(event) {
+
+  // skip for arrow keys
+  if(event.which >= 37 && event.which <= 40) return;
+
+  // format number
+  $(this).val(function(index, value) {
+    return value
+    .replace(/\D/g, "")
+    .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+    ;
+  });
+});
+</script>
+
+
+{% endblock content %}
