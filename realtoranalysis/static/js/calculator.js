@@ -5,7 +5,7 @@ $(document).ready(function() {
 
         $.ajax({
             data : {
-                price : $('#price_id').val(),
+                price : $('#price').val(),
                 down_payment : $('#down_payment_id').val(),
                 term : $('#term_id').val(),
                 interest_rate : $('#interest_rate_id').val(),
