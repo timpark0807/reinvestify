@@ -1,5 +1,12 @@
 {% extends "base.html" %}
 {% set active_page = "calculator" %}
+
+{% block header %}
+
+    <script id="baseScript" src="{{ url_for('calculator.static', filename='js/mortgage_calculator.js') }}"
+    data-path="{{ request.path }}"></script>
+{% endblock header %}
+
 {% block content %}
 
 <div class="content">
@@ -22,7 +29,7 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     {{ form.price.label(class="form-control-label") }} <br>
-                                    <div class="input-group">
+                                    <div class="input-group" >
                                         <div class="input-group-prepend">
                                           <span class="input-group-text">$</span>
                                         </div>
@@ -34,7 +41,7 @@
                                             {% endfor %}
                                         </div>
                                     {% else %}
-                                        {{ form.price(class="form-control form-control ") }}
+                                        {{ form.price(class="form-control") }}
                                     {% endif %}
                                     </div>
 
@@ -211,16 +218,6 @@
 </div>
 </div>
 
-
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
-            integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
-            crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.3.0/Chart.min.js"> </script>
-    <script src="{{ url_for('calculator.static', filename='js/script1.js') }}"></script>
-    <script id="baseScript" src="{{ url_for('calculator.static', filename='js/mortgage_calculator.js') }}"
-    data-path="{{ request.path }}"></script>
-
-    <script src="{{ url_for('calculator.static', filename='js/dynamic_typing.js') }}"></script>
-
+<script src="{{ url_for('calculator.static', filename='js/dynamic_typing.js') }}"></script>
 
 {% endblock content %}
