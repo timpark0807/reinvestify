@@ -1939,18 +1939,19 @@ fieldset[disabled] .btn-link.active {
   padding: 10px 10px 10px 10px;
 }
 
+/* THIS IS WHAT I CHANGED FOR THE APPEND AND PREPEND HEIGHT SIZES */
 .form-group .form-control+.input-group-prepend .input-group-text,
 .form-group .form-control+.input-group-append .input-group-text,
 .input-group .form-control+.input-group-prepend .input-group-text,
 .input-group .form-control+.input-group-append .input-group-text {
-  padding: 10px 10px 10px 0;
+  padding: 5px 5px 5px 0;
 }
 
 .form-group .input-group-prepend .input-group-text,
 .form-group .input-group-append .input-group-text,
 .input-group .input-group-prepend .input-group-text,
 .input-group .input-group-append .input-group-text {
-  padding: 10px 0 10px 10px;
+  padding: 5px 0 5px 5px;
 }
 
 .form-group .input-group-prepend .input-group-text+.form-control,
