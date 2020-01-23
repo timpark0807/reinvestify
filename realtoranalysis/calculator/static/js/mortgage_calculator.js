@@ -79,12 +79,12 @@ $(document).ready(function(){
          chartx = new Chart(document.getElementById("bar-chart"), {
                   type: 'doughnut',
                      data: {
-                           labels: data.labels,
+                           labels: data.chart_labels,
                            datasets: [
                            {
                             label: "Population (millions)",
                             backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f"],
-                            data: data.number
+                            data: data.chart_values
                            }
                            ]
                            },
