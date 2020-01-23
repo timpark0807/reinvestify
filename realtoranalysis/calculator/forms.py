@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SelectField, SubmitField, PasswordField, FloatField
+from wtforms import StringField, SelectField, SubmitField
 
 
 class MortgageCalculatorForm(FlaskForm):

@@ -1,7 +1,7 @@
 from . import calculator as calc
 from .forms import MortgageCalculatorForm
 from flask import render_template, request
-from .functions import remove_comma, get_mortgage_calculator_json
+from .functions import get_mortgage_calculator_json
 
 
 @calc.route('/')
@@ -12,16 +12,11 @@ def calculator():
 
 @calc.route('/process', methods=['POST'])
 def process():
-    """ Captures user input on the front end mortgage calculator form.
-        Returns a json containing chart information.
     """
-    input_price = remove_comma(request.form['price'])
-    input_down_payment = request.form['down_payment']
-    input_term = request.form['term']
-    input_interest_rate = request.form['interest_rate']
-    input_property_tax = request.form['property_tax']
-    input_insurance = request.form['insurance']
-
-    values = (input_price, input_down_payment, input_term, input_interest_rate, input_property_tax, input_insurance)
-    json = get_mortgage_calculator_json(values)
+        AJAX call sends a POST request containing form values to this route
+        Pass the form values into the calculate function which
+        Returns a json containing mortgage payment.
+    """
+    form_values = request.form.values()
+    json = get_mortgage_calculator_json(form_values)
     return json
