@@ -100,32 +100,9 @@ def update_post(post_id):
     form = AnalyzeForm()
 
     if form.is_submitted():
-        post.title = form.title.data
-        post.street = form.street.data
-        post.city = form.city.data
-        post.state = form.state.data
-        post.zipcode = form.zipcode.data
 
-        post.type = form.type.data
-        post.year = form.year.data
-        post.bed = form.bed.data
-        post.bath = form.bath.data
-        post.sqft = form.sqft.data
-
-        post.price = handle_comma(form.price.data)
-        post.term = form.term.data
-        post.down = form.down.data
-        post.interest = form.interest.data
-        post.closing = form.closing.data
-
-        post.rent = handle_comma(form.grossrent.data)
-        post.other = handle_comma(form.other.data)
-        post.expenses = form.expenses.data
-        post.vacancy = form.vacancy.data
-        post.appreciation = form.appreciation.data
-        post.income_growth = form.income_growth.data
-        post.expense_growth = form.expense_growth.data
-
+        kwargs = get_kwargs(request.form)
+        Post.query.filter_by(id=post_id).update(kwargs)
         db.session.commit()
 
         flash('Your post has been updated!', 'success')
@@ -150,7 +127,7 @@ def update_post(post_id):
         form.interest.data = post.interest
         form.closing.data = post.closing
 
-        form.grossrent.data = post.rent
+        form.rent.data = post.rent
         form.other.data = post.other
         form.expenses.data = post.expenses
         form.vacancy.data = post.vacancy

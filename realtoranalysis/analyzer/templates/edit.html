@@ -262,7 +262,7 @@
                                                 <div class="input-group-prepend">
                                                   <span class="input-group-text">$</span>
                                                 </div>
-                                            <input type="text" class="form-control" id="cashflow_grossrent_id" name="grossrent" value="{{form.grossrent.data}}">
+                                            <input type="text" class="form-control" id="cashflow_grossrent_id" name="rent" value="{{form.rent.data}}">
                                             </div>
                                         </div>
                                     </div>
@@ -483,7 +483,7 @@ $('[name="price"]').keyup(function(event) {
 </script>
 
 <script>
-$('[name="grossrent"]').keyup(function(event) {
+$('[name="rent"]').keyup(function(event) {
 
   // skip for arrow keys
   if(event.which >= 37 && event.which <= 40) return;
