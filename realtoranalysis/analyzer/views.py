@@ -2,8 +2,8 @@ from flask import render_template, request, redirect, url_for, abort, flash
 from flask_login import current_user
 from realtoranalysis import db
 from .forms import AnalyzeForm
-from realtoranalysis.models import User, Post
-from realtoranalysis.scripts.property_calculations import Calculate, comma_dollar, handle_comma, remove_comma_dollar
+from realtoranalysis.models import Post
+from realtoranalysis.scripts.property_calculations import handle_comma
 from . import analyzer
 from .functions import get_kwargs, get_data
 
@@ -17,44 +17,43 @@ def analyze():
 
     """
     Renders a template containing the form for the user to input property details and assumptions.
-    Form values are posted to the database and user is redirected to the report page on submit.
+    On submit, form inputs are posted to the database and the user is redirected to the report page.
     """
 
     form = AnalyzeForm()
 
     if form.is_submitted():
 
-        kwargs = get_kwargs(request.form)
         user = current_user
-
         if not current_user.is_authenticated:
             user = current_user.get_id()
 
-        post = Post(**kwargs,
-                    author=user)
+        kwargs = get_kwargs(request.form)
+        post = Post(**kwargs, author=user)
         db.session.add(post)
         db.session.commit()
 
         return redirect(url_for('analyzer.post', post_id=post.id))
 
-    return render_template('analyze.html', form=form)
+    return render_template('form.html', form=form)
 
 
 @analyzer.route('/<int:post_id>', methods=['POST', 'GET'])
 def post(post_id):
     """
     The user is redirected to this route after submitting the form on the /analyze/ route
-    As recap, the /analyze/ route submission inserts form inputs and calculations into a database
-    The database automatically assigns a primary key "post_id" to the row data
+        - As recap, submission of the /analyze/ route inserts form values and calculations into the database
+        - The database automatically assigns a primary key "post_id" to the row data
+        - The /analyze/ route passes this "post_id" key to this route
 
-    This route queries the database using the post id as the SQL WHERE operator (WHERE post_id = post_id)
-    We now have access to the variables input on the analyze form and inserted by the /analyze/ route
-    For example, we can get price by calling post.price
+    This route queries the database using the post id as the filter.
+    We now have access to the variables submitted via the form on the /analyze/ route
 
-    If there is an account associate with the account, we verify the user created the report.
-    Otherwise, it is a viewable public report
-    The return statement passes query results and the dictionary as a parameter in render_template()
-    Now we can access the query results and calculations in the jinja2 template
+    If there is an account associate with the report, we verify the user created the report.
+        - Otherwise, it is a viewable public report
+
+    The return statement renders the report HTML template with query
+        - Now we can access query results and calculations in the Jinja2 template
     """
 
     post = Post.query.get_or_404(post_id)
@@ -64,7 +63,7 @@ def post(post_id):
 
     data, cashflow_data = get_data(post)
 
-    return render_template('analyze_output.html',
+    return render_template('report.html',
                            title=post.title,
                            post=post,
                            cashflow_data=cashflow_data,
@@ -77,10 +76,10 @@ def post(post_id):
 ######################################################################################################
 
 
-@analyzer.route('/<int:post_id>/update', methods=['GET', 'POST'])
+@analyzer.route('/edit/<int:post_id>', methods=['GET', 'POST'])
 def update_post(post_id):
     """
-    This route renders the analyze_update.html template and allows a user to update the form inputs.
+    This route renders the edit template and allows a user to update the form inputs.
 
     This update template differs in that the form preloads query results as values
         Using a GET request:
@@ -159,7 +158,7 @@ def update_post(post_id):
         form.income_growth.data = post.income_growth
         form.expense_growth.data = post.expense_growth
 
-    return render_template('analyze_update.html', form=form)
+    return render_template('edit.html', form=form)
 
 
 @analyzer.route('/<int:post_id>/<share>')
@@ -179,7 +178,7 @@ def shared_post(post_id, share):
 
     if share == post.share:
         data, cashflow_data = get_data(post)
-        return render_template('analyze_output.html',
+        return render_template('report.html',
                                title=post.title,
                                post=post,
                                cashflow_data=cashflow_data,
@@ -189,7 +188,7 @@ def shared_post(post_id, share):
         return redirect(url_for('analyzer.analyze'))
 
 
-@analyzer.route('/<int:post_id>/delete', methods=['POST'])
+@analyzer.route('/delete/<int:post_id>', methods=['POST'])
 def delete_post(post_id):
 
     post = Post.query.get_or_404(post_id)
