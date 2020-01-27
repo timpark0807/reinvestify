@@ -7,6 +7,7 @@ from realtoranalysis.scripts.property_calculations import handle_comma
 from . import analyzer
 from .functions import get_kwargs, get_data
 
+
 ######################################################################################################
 # Analyze
 ######################################################################################################
@@ -14,7 +15,6 @@ from .functions import get_kwargs, get_data
 
 @analyzer.route('/', methods=['GET', 'POST'])
 def analyze():
-
     """
     Renders a template containing the form for the user to input property details and assumptions.
     On submit, form inputs are posted to the database and the user is redirected to the report page.
