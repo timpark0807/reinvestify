@@ -3,14 +3,18 @@ from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
+from flask_redis import FlaskRedis
 
 application = Flask(__name__)
-application.config['SECRET_KEY'] = '#ENTERKEYHERE'
+redis_client = FlaskRedis(application)
 
+application.config['SECRET_KEY'] = '#ENTERKEYHERE'
 bootstrap = Bootstrap(application)
 
 application.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///reinvest.db'
 
+# REDIS_URL = "redis://localhost:6379/0"
+#
 db = SQLAlchemy(application)
 
 bcrypt = Bcrypt(application)

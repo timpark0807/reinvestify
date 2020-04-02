@@ -6,6 +6,8 @@ from realtoranalysis.models import Post
 from realtoranalysis.scripts.property_calculations import handle_comma
 from . import analyzer
 from .functions import get_kwargs, get_data
+from realtoranalysis import redis_client
+import json
 
 
 ######################################################################################################
@@ -57,11 +59,25 @@ def post(post_id):
     """
 
     post = Post.query.get_or_404(post_id)
-
     if post.author and post.author != current_user:
         abort(403)
 
-    data, cashflow_data = get_data(post)
+    post_id_key = str(post_id)
+    data_key = post_id_key + '_data'
+    cashflow_key = post_id_key + '_cashflow'
+
+    if redis_client.exists(data_key) and redis_client.exists(cashflow_key):
+        data = redis_client.get(data_key)
+        cashflow_data = redis_client.get(cashflow_key)
+
+        # unserialize the json object
+        data = json.loads(data)
+        cashflow_data = json.loads(cashflow_data)
+
+    else:
+        data, cashflow_data = get_data(post)            # make necessary calculations
+        redis_client.set(data_key, json.dumps(data))    # cache the calculations for future use
+        redis_client.set(cashflow_key, json.dumps(cashflow_data)) # cache the calculations for future use
 
     return render_template('report.html',
                            title=post.title,
