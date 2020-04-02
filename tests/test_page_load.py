@@ -35,17 +35,17 @@ class PageLoadTestCase(unittest.TestCase):
     # test /login page
     def test_home_pageload(self):
         response = self.application.get('/home')
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 302)
 
     # test /analyze page
     def test_analyze_pageload(self):
         response = self.application.get('/analyze')
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 308)
 
     # test /calculator page
     def test_calculator_pageload(self):
-        response = self.application.get('/calculator')
-        self.assertEqual(response.status_code, 200)
+        response = self.application.get('/mortgage_calculator')
+        self.assertEqual(response.status_code, 308)
 
 
 if __name__ == '__main__':

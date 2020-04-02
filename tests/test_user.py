@@ -6,7 +6,6 @@ from realtoranalysis.models import Post
 
 class UserTestCase(unittest.TestCase):
 
-
     ################################################################################################
     # Set up and Tear Down
     ################################################################################################
@@ -227,11 +226,11 @@ class UserTestCase(unittest.TestCase):
             self.assertEqual(response.status_code, 200)
 
             # test that we can access the update form
-            response = self.application.get('analyze/1/update')
+            response = self.application.get('analyze/edit/1')
             self.assertEqual(response.status_code, 200)
 
             # send a post request to delete property 1
-            self.application.post('analyze/1/delete')
+            self.application.post('analyze/delete/1')
 
             # query all posts and check that the length returned is 0, an empty list
             query = Post.query.all()
@@ -280,11 +279,11 @@ class UserTestCase(unittest.TestCase):
             self.assertEqual(response.status_code, 200)
 
             # test that we can access the update form
-            response = self.application.get('analyze/1/update')
+            response = self.application.get('analyze/edit/1')
             self.assertEqual(response.status_code, 200)
 
             # send a post request to delete property 1
-            self.application.post('analyze/1/delete')
+            self.application.post('analyze/delete/1')
 
             # query all posts and check that the length returned is 0, an empty list
             query = Post.query.all()

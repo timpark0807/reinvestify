@@ -4,33 +4,33 @@ import secrets
 
 
 def get_kwargs(request_object):
-    temp = {}
+    temp = dict()
+    temp['share'] = secrets.token_hex(8)
+
     for key, value in request_object.items():
         if key == 'title' and len(value) == 0:
             temp[key] = 'Untitled'
-        elif key in ['sqft', 'bed', 'bath', 'year'] and len(value) == 0:
+        elif key in {'sqft', 'bed', 'bath', 'year'} and len(value) == 0:
             temp[key] = '-'
         else:
             if key == 'price':
                 temp['report_price'] = comma_dollar(remove_comma(value))
-
             temp[key] = remove_comma(value)
 
-    property = Calculate(float(temp['price']),
-                         float(temp['down']),
-                         float(temp['interest']),
-                         float(temp['term']),
-                         float(temp['rent']),
-                         float(temp['expenses']),
-                         float(temp['vacancy']),
-                         float(temp['closing']),
-                         float(temp['other'])
+    property = Calculate(temp['price'],
+                         temp['down'],
+                         temp['interest'],
+                         temp['term'],
+                         temp['rent'],
+                         temp['expenses'],
+                         temp['vacancy'],
+                         temp['closing'],
+                         temp['other']
                          )
 
     temp['cash_flow'] = comma_dollar(property.cashflow())
     temp['cap_rate'] = property.cap_rate()
-    temp['coc'] = property.cashoncash()
-    temp['share'] = secrets.token_hex(8)
+    temp['coc'] = property.cash_on_cash()
 
     return temp
 
@@ -43,15 +43,15 @@ def get_data(post):
 
     share_url = get_share_url(str(post.id), str(post.share))
 
-    property = Calculate(float(post.price),
-                         float(post.down),
-                         float(post.interest),
-                         float(post.term),
-                         float(post.rent),
-                         float(post.expenses),
-                         float(post.vacancy),
-                         float(post.closing),
-                         float(post.other)
+    property = Calculate(post.price,
+                         post.down,
+                         post.interest,
+                         post.term,
+                         post.rent,
+                         post.expenses,
+                         post.vacancy,
+                         post.closing,
+                         post.other
                          )
 
     mortgage_payment = property.mortgage_payment()
@@ -62,10 +62,10 @@ def get_data(post):
     noi = property.noi()
     cash_flow = property.cashflow()
     cap_rate = property.cap_rate()
-    coc = property.cashoncash()
+    coc = property.cash_on_cash()
 
     # 30 year appreciation, equity, loan
-    model_year, model_appreciation, model_loan, model_equity = property.year30model(float(post.appreciation))
+    model_year, model_appreciation, model_loan, model_equity = property.appreciation_model(post.appreciation)
 
     # 30 year cash flow
     bar_year, bar_rent = property.cash_flow_30_year(post.income_growth, post.expense_growth)
@@ -108,7 +108,7 @@ def get_data(post):
         1. Pass the form inputs to the database as a hashtable (kwargs = dict(), pass in **kwargs) // DONE
             -> Have to manually add a 'report_price' in get_form_dict() method // DONE 
         2. Build input validator for each step of the form
-        3. Check if report details are empty
+        3. Check if report details are empty // Done 
         4. Calculate all metrics and store them in a metrics table when we submit our report
     
         
@@ -119,8 +119,8 @@ def get_data(post):
                   /analyze/<post_id>/anon // DONE
                   /analyze/<post_id>/<share> // DONE
                   
-        2. Create function that builds share_url 
+        2. Create function that builds share_url // Done 
         
-        testtestet 
+         
     """
 

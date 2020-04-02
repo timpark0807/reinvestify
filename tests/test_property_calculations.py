@@ -11,7 +11,7 @@ class TestCalculator(unittest.TestCase):
 
     def test_down_payment(self):
         # test that 20% down of 100k is equal to 20k
-        self.assertEqual(self.property.down_payment(), 20000)
+        self.assertEqual(self.property.get_down_payment(), 20000)
 
     def test_outofpocket(self):
         # test that 20% down and 2% closing cost on 100k price is 22k out of pocket
@@ -22,15 +22,15 @@ class TestCalculator(unittest.TestCase):
 
     def test_vacancy_loss(self):
         # test vacancy loss on a 1500 rent at 10%
-        self.assertEqual(self.property.vacancy_loss(), 150)
+        self.assertEqual(self.property.get_vacancy_loss(), 150)
 
     def test_operating_income(self):
         # operating_income = rent - vacancy_loss
-        self.assertEqual(self.property.operating_income(), 1350)
+        self.assertEqual(self.property.get_operating_income(), 1350)
 
     def test_operating_expense(self):
         # tests operating expenses with rate of 50%
-        self.assertEqual(self.property.operating_expense(), 750)
+        self.assertEqual(self.property.get_operating_expense(), 750)
 
     def test_noi(self):
         # noi = operating_income - operating_expense
@@ -44,8 +44,7 @@ class TestCalculator(unittest.TestCase):
         self.assertEqual(self.property.cap_rate(), '7.2%')
 
     def test_coc(self):
-        self.assertEqual(self.property.cashoncash(), '9.3%')
-
+        self.assertEqual(self.property.cash_on_cash(), '9.3%')
 
 class TestCalculatorFloats(unittest.TestCase):
 
@@ -56,7 +55,7 @@ class TestCalculatorFloats(unittest.TestCase):
 
     def test_down_payment(self):
         # test that 20% down of 100k is equal to 20k
-        self.assertEqual(self.property.down_payment(), 20000)
+        self.assertEqual(self.property.get_down_payment(), 20000)
 
     def test_outofpocket(self):
         # test that 20% down and 2% closing cost on 100k price is 22k out of pocket
@@ -67,15 +66,15 @@ class TestCalculatorFloats(unittest.TestCase):
 
     def test_vacancy_loss(self):
         # test vacancy loss on a 1500 rent at 10%
-        self.assertEqual(self.property.vacancy_loss(), 150)
+        self.assertEqual(self.property.get_vacancy_loss(), 150)
 
     def test_operating_income(self):
         # operating_income = rent - vacancy_loss
-        self.assertEqual(self.property.operating_income(), 1350)
+        self.assertEqual(self.property.get_operating_income(), 1350)
 
     def test_operating_expense(self):
         # tests operating expenses with rate of 50%
-        self.assertEqual(self.property.operating_expense(), 750)
+        self.assertEqual(self.property.get_operating_expense(), 750)
 
     def test_noi(self):
         # noi = operating_income - operating_expense
@@ -89,7 +88,7 @@ class TestCalculatorFloats(unittest.TestCase):
         self.assertEqual(self.property.cap_rate(), '7.2%')
 
     def test_coc(self):
-        self.assertEqual(self.property.cashoncash(), '9.3%')
+        self.assertEqual(self.property.cash_on_cash(), '9.3%')
 
 
 if __name__ == '__main__':

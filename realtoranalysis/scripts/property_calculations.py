@@ -1,9 +1,10 @@
 import numpy
 
+
 class Calculate:
 
     def __init__(self, price, downpayment, interest, term, rent, expense, vacancy, closing, other_income):
-        self.price = float(price)
+        self.purchase_price = float(price)
         self.downpayment = float(downpayment)/100     # convert down payment to percent
         self.interest = float(interest)/100         # convert interest to percent
         self.term = float(term)
@@ -13,14 +14,12 @@ class Calculate:
         self.closing = float(closing)/100
         self.other_income = float(other_income)
 
-    def down_payment(self):
-
+    def get_down_payment(self):
         # The down payment amount is the purchase price x percent down
-        result = self.price * self.downpayment
+        down_payment = self.purchase_price * self.downpayment
+        return round(down_payment)
 
-        return round(result)
-
-    def mortgage_payment(self):
+    def get_discount_factor(self):
         # Annual Rate divided by number of payments per
         p_int = self.interest/12
 
@@ -31,75 +30,62 @@ class Calculate:
         d = ((1+p_int)**n)-1
         d2 = (1.0+p_int)**n
         d3 = p_int * d2
-        discountfactor = d/d3
 
-        # 20% downpayment means we are taking out a loan for 80% of the price
-        loan_amount = (1-self.downpayment) * self.price
+        return d/d3
 
-        # monthly payment
-        mortgage_payment = loan_amount/discountfactor
+    def get_loan_amount(self):
+        # 20% down payment means we are taking out a loan for 80% of the purchase price
+        return (1-self.downpayment) * self.purchase_price
 
-        return round(mortgage_payment)
+    def get_closing_cost(self):
+        closing_cost = self.purchase_price * self.closing
+        return round(closing_cost)
 
-    def outofpocket(self):
-
-        out_of_pocket = (self.price * self.downpayment) + (self.price * self.closing)
-        return round(out_of_pocket)
-
-    def vacancy_loss(self):
+    def get_vacancy_loss(self):
         vacancy_loss = self.rent * self.vacancy
-        return vacancy_loss
+        return round(vacancy_loss)
 
-    def operating_income(self):
-
-        # operating income is gross rent minus how much we project to lose
-        operating_income = self.rent + self.other_income - self.vacancy_loss()
-
+    def get_operating_income(self):
+        # gross rent minus how much we project to lose
+        operating_income = self.rent + self.other_income - self.get_vacancy_loss()
         return round(operating_income)
 
-    def operating_expense(self):
-
+    def get_operating_expense(self):
         # projecting expenses as as percent of the monthly income
         operating_expense = self.rent * self.expense
         return round(operating_expense)
 
+    def mortgage_payment(self):
+        discount_factor = self.get_discount_factor()
+        loan_amount = self.get_loan_amount()
+        mortgage_payment = loan_amount/discount_factor
+        return round(mortgage_payment)
+
+    def outofpocket(self):
+        out_of_pocket = self.get_down_payment() + self.get_closing_cost()
+        return round(out_of_pocket)
+
     def noi(self):
-
         # net operating income is equal to income minus expenses
-        noi = self.operating_income() - self.operating_expense()
-
+        noi = self.get_operating_income() - self.get_operating_expense()
         return round(noi)
 
     def cashflow(self):
-        return round(self.noi() - self.mortgage_payment())
+        cash_flow = self.noi() - self.mortgage_payment()
+        return round(cash_flow)
 
-    def cap_rate(self):
-
-        cap_rate = (self.noi() * 12) / self.price
-        if cap_rate < 0:
-            return "(" + str(round((cap_rate * 100))*-1, 1) + '%)'
-        else:
-            return str(round(cap_rate * 100, 1)) + '%'
-
-    def cashoncash(self):
-        coc = ((self.cashflow() * 12) / self.outofpocket()) * 100
-        if coc < 0:
-            return "(" + str(round(abs(coc), 1)) + "%)"
-        else:
-            return str(round(coc, 1)) + "%"
-
-    def year30model(self, appreciation):
-        appreciation = int(appreciation)
+    def appreciation_model(self, appreciation):
+        appreciation = int(float(appreciation))
 
         # set the initial value of the house, rent, and expenses for Year 0 of the model
-        initial_value = self.price
+        initial_value = self.purchase_price
 
         # These are the form inputs for expected annual increase in house value
         appreciation_assumption = 1 + (appreciation/100)
 
         # calculate the monthly mortgage and down payment by calling previously defined function
         monthly_mortgage = self.mortgage_payment()
-        downpayment = self.down_payment()
+        downpayment = self.get_down_payment()
 
         # Set up Loan Balance - Present Value calculation variables
         rate = self.interest/12
@@ -114,7 +100,7 @@ class Calculate:
         loan_balance_list = []
         equity_list = []
 
-        for i in range(1,31):
+        for i in range(1, int(self.term) + 1):
             # the appreciated value of the house is the initial value times appreciation assumption
             appreciated_value = round(appreciated_value * appreciation_assumption)
             loan_balance = round(numpy.pv(rate, num_of_periods - (12 * i), monthly_mortgage)) * -1
@@ -137,10 +123,10 @@ class Calculate:
 
         annual_other_income = self.other_income * 12
 
-        operating_income = self.operating_income()
+        operating_income = self.get_operating_income()
         annual_operating_income = operating_income * 12
 
-        operating_expenses = self.operating_expense()
+        operating_expenses = self.get_operating_expense()
         annual_operating_expenses = operating_expenses * 12
 
         noi = self.noi()
@@ -175,12 +161,12 @@ class Calculate:
         year_list = []
         cash_flow_list = []
         annual_income = (self.rent) * 12
-        annual_expense = (self.operating_expense() * 12)
+        annual_expense = (self.get_operating_expense() * 12)
         annual_debt_service = self.mortgage_payment() * 12
         float_income = 1 + (float(income_growth)/100)
         float_expense = 1 + (float(expense_growth)/100)
 
-        for i in range(1, 31):
+        for i in range(1, int(self.term)+1):
             annual_income = annual_income * float_income
             annual_vacancy = annual_income * self.vacancy
             annual_gross_income = annual_income - annual_vacancy
@@ -190,15 +176,42 @@ class Calculate:
             cash_flow_list.append(cash_flow)
         return year_list, cash_flow_list
 
+    def cap_rate(self):
+        cap_rate = ((self.noi() * 12) / self.purchase_price) * 100
+
+        if cap_rate < 0:
+            return get_negative_percent(cap_rate)
+        else:
+            return get_percent(cap_rate)
+
+    def cash_on_cash(self):
+        coc = ((self.cashflow() * 12) / self.outofpocket()) * 100
+        if coc < 0:
+            return get_negative_percent(coc)
+        else:
+            return get_percent(coc)
+
+
+def get_negative_percent(num):
+    num = round(abs(num), 1)
+    return "(" + str(num) + "%)"
+
+
+def get_percent(num):
+    num = round(num, 1)
+    return str(num) + "%"
+
 
 def handle_comma(number):
     if ',' in number:
-        return number.replace(',','')
+        return number.replace(',', '')
     else:
         return str(number)
 
 
 def comma_dollar(number):
+    """ Adds comma and dollar sign to input string
+    """
     num = int(number)
     if num < 0:
         payment_1 = format(round(num * -1), ',d')

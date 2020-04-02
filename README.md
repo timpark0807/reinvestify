@@ -2,14 +2,14 @@
 A web application that analyzes the profitability of real estate investments. 
 
 ## Introduction
-The goal of this project was to develop and showcase my programming skill set. 
+The goal of this project was to showcase my programming skill set. 
 I chose this niche due to my curiousity and interest in real estate investing. 
-The total time spent on this project was just under 2 months. 
+The total time spent on this project was ~2.5 months. 
 
-The backend of reinvestify was built using Python and the Flask framework. 
-The framework is connected to a MYSQL database instance that is hosted on AWS Relational Database Service. 
+The backend of reinvestify was built using Python's Flask framework. 
+This is connected to a MYSQL database instance that is hosted on the AWS Relational Database Service. 
 The front end pages were built in HTML with CSS styling and some Javascript to improve responsiveness. 
-The entire application was deployed on a Free Tier instance of AWS Elastic Beanstalk. 
+The entire application was deployed on a Free Tier instance of AWS using Elastic Beanstalk. 
 
 The main function of reinvestify is generating reports on real estate investments. 
 The application captures user inputs such as purchase price, mortgage rates, rental incomes, and operating expenses and calculates metrics such as capitalization rates, cash on cash return, and monthly cash flow. 
@@ -20,7 +20,6 @@ An example of a report is below.
 
 ## Features 
 #### Property Analyzer
-The main feature of reinvestify is the property analyzer. 
 The user begins by entering property and purchase assumptions on a 4 step form. 
 Different sections of the form are loaded on the same page using Javascript.
 
@@ -37,27 +36,26 @@ Now the front end HTML template has access the preprocessed calculations and for
 The mortgage calculator calculates the monthly mortgage payment based on a user's input of purchase price, down payment, loan term, and interest rate. 
 Utilizes Javascript and AJAX to asynchronously submit data.
  
-![Alt Text](https://media.giphy.com/media/dxIktx3Pd5rNFnezXG/source.gif )
-
+ 
 #### User Registration
 Users can choose to register in order to save generated reports to the "My Properties" tab.
 Registered users will also be able to edit, delete, or share saved reports.
-An unregistered user will only be able to create reports. 
+An unregistered user will only be able to create and view reports. 
+
 
 ## Lessons Learned
-This project was crucial in my development as a software engineer. 
+This project taught me more than just programming. I developed my skills such as resourcefulness, self sufficiency, and persistence. 
 
-I learned more than just programming concepts. I developed my soft skills such as resourcefulness, self sufficiency, and persistence. 
-
-Besides the Bootstrap CSS template, this entire application was built from scratch. There was no tutorial to guide me from step A to Z.
+Besides the Bootstrap CSS template, this entire application was built from scratch. 
+There was no tutorial to guide me from step A to Z.
 Instead, I was forced to break down large problems into smaller chunks, solve the smaller problems, and put it all back together.
 I learned how frustrating bugs can be, wanting to quit midway, but pushing through a successful feature implementation.
 I learned how to set deadlines so the project would not drag on indefinitely and how to use project management software such as Trello to track all outstanding items.  
 
-The time spent on this project was just under 2 months (52 days), which included a few hours everyday after work (Monday - Friday) and 4-8 hours on (Saturday/Sunday). 
-The estimated total time to completion was 160 hours and every single hour was worth it. 
+The time spent on this project was ~2.5 months, which included a few hours everyday after work (Monday - Friday) and 4-8 hours on (Saturday/Sunday). 
+The estimated total time to completion was 180 hours. 
 
-With this experience, I am confident that I can learn new technologies for any task.
+With this experience, I am confident that I can learn new technologies for any project.
 
 Technical skills utilized during this project:
 - Python

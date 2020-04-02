@@ -2,10 +2,13 @@ from flask import render_template, request, redirect, url_for, abort, flash
 from flask_login import current_user
 from realtoranalysis import db
 from .forms import AnalyzeForm
-from realtoranalysis.models import User, Post
-from realtoranalysis.scripts.property_calculations import Calculate, comma_dollar, handle_comma, remove_comma_dollar
+from realtoranalysis.models import Post
+from realtoranalysis.scripts.property_calculations import handle_comma
 from . import analyzer
 from .functions import get_kwargs, get_data
+from realtoranalysis import redis_client
+import json
+
 
 ######################################################################################################
 # Analyze
@@ -14,57 +17,69 @@ from .functions import get_kwargs, get_data
 
 @analyzer.route('/', methods=['GET', 'POST'])
 def analyze():
-
     """
     Renders a template containing the form for the user to input property details and assumptions.
-    Form values are posted to the database and user is redirected to the report page on submit.
+    On submit, form inputs are posted to the database and the user is redirected to the report page.
     """
 
     form = AnalyzeForm()
 
     if form.is_submitted():
 
-        kwargs = get_kwargs(request.form)
         user = current_user
-
         if not current_user.is_authenticated:
             user = current_user.get_id()
 
-        post = Post(**kwargs,
-                    author=user)
+        kwargs = get_kwargs(request.form)
+        post = Post(**kwargs, author=user)
         db.session.add(post)
         db.session.commit()
 
         return redirect(url_for('analyzer.post', post_id=post.id))
 
-    return render_template('analyze.html', form=form)
+    return render_template('form.html', form=form)
 
 
 @analyzer.route('/<int:post_id>', methods=['POST', 'GET'])
 def post(post_id):
     """
     The user is redirected to this route after submitting the form on the /analyze/ route
-    As recap, the /analyze/ route submission inserts form inputs and calculations into a database
-    The database automatically assigns a primary key "post_id" to the row data
+        - As recap, submission of the /analyze/ route inserts form values and calculations into the database
+        - The database automatically assigns a primary key "post_id" to the row data
+        - The /analyze/ route passes this "post_id" key to this route
 
-    This route queries the database using the post id as the SQL WHERE operator (WHERE post_id = post_id)
-    We now have access to the variables input on the analyze form and inserted by the /analyze/ route
-    For example, we can get price by calling post.price
+    This route queries the database using the post id as the filter.
+    We now have access to the variables submitted via the form on the /analyze/ route
 
-    If there is an account associate with the account, we verify the user created the report.
-    Otherwise, it is a viewable public report
-    The return statement passes query results and the dictionary as a parameter in render_template()
-    Now we can access the query results and calculations in the jinja2 template
+    If there is an account associate with the report, we verify the user created the report.
+        - Otherwise, it is a viewable public report
+
+    The return statement renders the report HTML template with query
+        - Now we can access query results and calculations in the Jinja2 template
     """
 
     post = Post.query.get_or_404(post_id)
-
     if post.author and post.author != current_user:
         abort(403)
 
-    data, cashflow_data = get_data(post)
+    post_id_key = str(post_id)
+    data_key = post_id_key + '_data'
+    cashflow_key = post_id_key + '_cashflow'
 
-    return render_template('analyze_output.html',
+    if redis_client.exists(data_key) and redis_client.exists(cashflow_key):
+        data = redis_client.get(data_key)
+        cashflow_data = redis_client.get(cashflow_key)
+
+        # unserialize the json object
+        data = json.loads(data)
+        cashflow_data = json.loads(cashflow_data)
+
+    else:
+        data, cashflow_data = get_data(post)            # make necessary calculations
+        redis_client.set(data_key, json.dumps(data))    # cache the calculations for future use
+        redis_client.set(cashflow_key, json.dumps(cashflow_data)) # cache the calculations for future use
+
+    return render_template('report.html',
                            title=post.title,
                            post=post,
                            cashflow_data=cashflow_data,
@@ -77,10 +92,10 @@ def post(post_id):
 ######################################################################################################
 
 
-@analyzer.route('/<int:post_id>/update', methods=['GET', 'POST'])
+@analyzer.route('/edit/<int:post_id>', methods=['GET', 'POST'])
 def update_post(post_id):
     """
-    This route renders the analyze_update.html template and allows a user to update the form inputs.
+    This route renders the edit template and allows a user to update the form inputs.
 
     This update template differs in that the form preloads query results as values
         Using a GET request:
@@ -101,32 +116,9 @@ def update_post(post_id):
     form = AnalyzeForm()
 
     if form.is_submitted():
-        post.title = form.title.data
-        post.street = form.street.data
-        post.city = form.city.data
-        post.state = form.state.data
-        post.zipcode = form.zipcode.data
 
-        post.type = form.type.data
-        post.year = form.year.data
-        post.bed = form.bed.data
-        post.bath = form.bath.data
-        post.sqft = form.sqft.data
-
-        post.price = handle_comma(form.price.data)
-        post.term = form.term.data
-        post.down = form.down.data
-        post.interest = form.interest.data
-        post.closing = form.closing.data
-
-        post.rent = handle_comma(form.grossrent.data)
-        post.other = handle_comma(form.other.data)
-        post.expenses = form.expenses.data
-        post.vacancy = form.vacancy.data
-        post.appreciation = form.appreciation.data
-        post.income_growth = form.income_growth.data
-        post.expense_growth = form.expense_growth.data
-
+        kwargs = get_kwargs(request.form)
+        Post.query.filter_by(id=post_id).update(kwargs)
         db.session.commit()
 
         flash('Your post has been updated!', 'success')
@@ -151,7 +143,7 @@ def update_post(post_id):
         form.interest.data = post.interest
         form.closing.data = post.closing
 
-        form.grossrent.data = post.rent
+        form.rent.data = post.rent
         form.other.data = post.other
         form.expenses.data = post.expenses
         form.vacancy.data = post.vacancy
@@ -159,7 +151,7 @@ def update_post(post_id):
         form.income_growth.data = post.income_growth
         form.expense_growth.data = post.expense_growth
 
-    return render_template('analyze_update.html', form=form)
+    return render_template('edit.html', form=form)
 
 
 @analyzer.route('/<int:post_id>/<share>')
@@ -179,7 +171,7 @@ def shared_post(post_id, share):
 
     if share == post.share:
         data, cashflow_data = get_data(post)
-        return render_template('analyze_output.html',
+        return render_template('report.html',
                                title=post.title,
                                post=post,
                                cashflow_data=cashflow_data,
@@ -189,7 +181,7 @@ def shared_post(post_id, share):
         return redirect(url_for('analyzer.analyze'))
 
 
-@analyzer.route('/<int:post_id>/delete', methods=['POST'])
+@analyzer.route('/delete/<int:post_id>', methods=['POST'])
 def delete_post(post_id):
 
     post = Post.query.get_or_404(post_id)

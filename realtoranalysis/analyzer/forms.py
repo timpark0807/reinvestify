@@ -16,7 +16,7 @@ class AnalyzeForm(FlaskForm):
                        choices=[('Single Family', 'Single Family'),
                                 ('Multi Family', 'Multi Family'),
                                 ('Apartment', 'Apartment Unit'),
-                                ('Condo', 'Condo'),])
+                                ('Condo', 'Condo')])
     year = StringField('Year')
     bed = StringField('Bed')
     bath = StringField('Bath')
@@ -28,13 +28,12 @@ class AnalyzeForm(FlaskForm):
                        choices=[
                                 ('30', '30 Year Fixed'),
                                 ('15', '15 Year Fixed')])
-
     down = FloatField('Down')
     interest = FloatField('Interest')
     closing = FloatField('Closing')
 
     # Form 4
-    grossrent = StringField('GrossRent')
+    rent = StringField('GrossRent')
     other = StringField('Other Income')
     vacancy = FloatField('Vacancy')
     taxes = FloatField('Taxes')
