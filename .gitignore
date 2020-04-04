@@ -10,3 +10,5 @@
 !.elasticbeanstalk/*.global.yml
 .ebextensions/
 *.zip
+
+*.css
