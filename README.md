@@ -31,17 +31,20 @@ This view route queries the database using the specified post_id key as the WHER
 The query results are packaged into a hashtable and returned to the front end HTML template. 
 Now the front end HTML template has access the preprocessed calculations and form text inputs previously submitted via POST request.
 
+![Imgur Image](https://i.imgur.com/GGIkdKm.png)
 
 #### Mortgage Calculator
 The mortgage calculator calculates the monthly mortgage payment based on a user's input of purchase price, down payment, loan term, and interest rate. 
 Utilizes Javascript and AJAX to asynchronously submit data.
- 
+
+![Imgur Image](https://i.imgur.com/mSnUl7.png)
  
 #### User Registration
 Users can choose to register in order to save generated reports to the "My Properties" tab.
 Registered users will also be able to edit, delete, or share saved reports.
 An unregistered user will only be able to create and view reports. 
 
+![Imgur Image](https://i.imgur.com/x9YMgab.png)
 
 ## Lessons Learned
 This project taught me more than just programming. I developed my skills such as resourcefulness, self sufficiency, and persistence. 
