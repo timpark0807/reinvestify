@@ -37,7 +37,7 @@ Now the front end HTML template has access the preprocessed calculations and for
 The mortgage calculator calculates the monthly mortgage payment based on a user's input of purchase price, down payment, loan term, and interest rate. 
 Utilizes Javascript and AJAX to asynchronously submit data.
 
-![Imgur Image](https://i.imgur.com/mSnUl7.png)
+![Imgur Image](https://i.imgur.com/9fkMWCL.png)
  
 #### User Registration
 Users can choose to register in order to save generated reports to the "My Properties" tab.
