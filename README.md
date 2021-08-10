@@ -2,10 +2,6 @@
 A web application that analyzes the profitability of real estate investments. 
 
 ## Introduction
-The goal of this project was to showcase my programming skill set. 
-I chose this niche due to my curiousity and interest in real estate investing. 
-The total time spent on this project was ~2.5 months. 
-
 The backend of reinvestify was built using Python's Flask framework. 
 This is connected to a MYSQL database instance that is hosted on the AWS Relational Database Service. 
 The front end pages were built in HTML with CSS styling and some Javascript to improve responsiveness. 
