@@ -1,6 +1,8 @@
 # reinvestify.com
 A web application that analyzes the profitability of real estate investments. 
 
+Site is currently down as I didn't want to continue paying server costs :) 
+
 ## Introduction
 The backend of reinvestify was built using Python's Flask framework. 
 This is connected to a MYSQL database instance that is hosted on the AWS Relational Database Service. 
